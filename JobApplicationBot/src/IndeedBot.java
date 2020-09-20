@@ -60,10 +60,8 @@ public class IndeedBot {
 	public void searchJobs() throws InterruptedException {
 		WebElement findJobsTab = driver.findElement(By.className("gnav-PageLink-text"));
 		WebElement findJobsBtn = driver.findElement(By.className("icl-WhatWhere-buttonWrapper"));
-		
-		System.out.print(findJobsTab);
+	
 		// explicit wait -  wait for the "Find Jobs" link to load before clicking it
-		
 		WebDriverWait wait = new WebDriverWait(driver,10);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("gnav-PageLink-text")));
 
