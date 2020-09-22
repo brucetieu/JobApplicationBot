@@ -76,7 +76,7 @@ public class IndeedBot {
 		
 		findJobsTab.click();
 		
-		Thread.sleep(8000);
+//		Thread.sleep(8000);
 		
         WebElement clearWhat = driver.findElement(By.id("text-input-what"));
         WebElement clearWhere = driver.findElement(By.id("text-input-where"));
@@ -119,7 +119,7 @@ public class IndeedBot {
 		for (int i = 0; i < JobsCard.size(); i++) {
 			
 			// Find the links to each job
-			WebElement link = JobsCard.get(i).findElement(By.className("jobtitle"));
+//			WebElement link = JobsCard.get(i).findElement(By.className("jobtitle"));
 
 			if (this.application_type.toLowerCase() == "easily apply") {
 				// Check if an easily apply exists (has a classname of iaLabel)
@@ -130,15 +130,47 @@ public class IndeedBot {
 					System.out.println("yes");
 					String selectLinkOpeninNewTab = Keys.chord(Keys.COMMAND,Keys.RETURN); 
 					JobsCard.get(i).findElement(By.className("jobtitle")).sendKeys(selectLinkOpeninNewTab);
+					
+					applyToJobs();
+					
 				}
-			
 			}
-			
 		}
-
+	}
 	
-		
-		
+	public void applyToJobs() {
+		String parentHandle = driver.getWindowHandle(); // get the current window handle
+	    System.out.println(parentHandle);               //Prints the parent window handle 
+                           //Clicking on this window
+	    for (String winHandle : driver.getWindowHandles()) { //Gets the new window handle
+	        System.out.println(winHandle);
+	        driver.switchTo().window(winHandle);        // switch focus of WebDriver to the next found window handle (that's your newly opened window)              
+	    }
+	//Now your driver works on the current new handle
+	    
+	    WebDriverWait wait = new WebDriverWait(driver, 15);
+	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("indeedApplyButtonContainer")))).click();
+//	    WebElement apply_to_job = driver.findElement(By.className("jobsearch-IndeedApplyButton-contentWrapper"));
+//	    apply_to_job.click();
+	    
+	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.name"))));
+	    driver.findElement(By.id("input-applicant.name")).sendKeys("Bruce Tieu");
+	    
+//	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.name"))));
+//	   
+//	    
+//	    
+//	    name_field.sendKeys("Bruce Tieu");
+//	    phone_field.sendKeys("7202610380");
+	    
+//	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.className("ia-ControlledFilePicker-fakeControl")))).click();
+	    
+	    
+	//Time to go back to parent window
+	    driver.close();                                 // close newly opened window when done with it
+	    driver.switchTo().window(parentHandle);         // switch back to the original window
+
+
 	}
 	
 	public void quitBrowser() {
