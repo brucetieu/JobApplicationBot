@@ -5,8 +5,7 @@ default:
 
 install:
 	$(SUDO) apt update
-	$(SUDO) apt-cache search openjdk
-	$(SUDO) apt install openjdk-8-jre maven
+	$(SUDO) apt install -y openjdk-8-jre maven
 
 test:
 	@# Run tests.
