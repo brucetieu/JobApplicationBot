@@ -5,9 +5,8 @@ default:
 	echo "Nothing to do"
 
 install:
-	$(SUDO) apt install openjdk-11-jdk-headless
+	$(SUDO) apt install openjdk-11-jdk-headless maven
 
 test:
 	@# Run tests.
-	@mkdir -p $(OUT)
-
+	@mvn test
