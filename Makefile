@@ -1,5 +1,4 @@
 SUDO=$(shell which sudo)
-OUT=out
 
 default:
 	echo "Nothing to do"
@@ -10,3 +9,8 @@ install:
 test:
 	@# Run tests.
 	@mvn test
+
+	@make clean > /dev/null
+
+clean:
+	@rm -rf target
