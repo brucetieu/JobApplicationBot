@@ -16,9 +16,14 @@ public class BotGUI {
 	public static void main(String[] args) throws InterruptedException {
 		// Create a new object which is a job application data. 
 		JobApplicationData JAD = new JobApplicationData();
-		JAD.setName("John Doe");
+		JAD.setFirstName("John");
+		JAD.setLastName("Doe");
+		JAD.setFullName("John Doe");
 		JAD.setEmail("email@email.com");
 		JAD.setPhone("5555555555");
+		JAD.setCity("Denver");
+		JAD.setJobTitle("Quantitative Analyst");
+		JAD.setCompanyName("Xcel Energy");
 		JAD.setResume("/Users/bruce/Documents/WithObj2_Bruce_Tieu_2020_Resume.pdf");
 		JAD.setURL("https://www.indeed.com/?from=gnav-util-homepage");
 		JAD.setPassword("password");
@@ -29,7 +34,7 @@ public class BotGUI {
 		// Create an IndeedBot to apply for jobs.
 		IndeedBot IB = new IndeedBot(JAD);
 		IB.navigateToUrl();
-		IB.login();
+//		IB.login();
 		IB.searchJobs();
 		IB.JobScrape();
 	}

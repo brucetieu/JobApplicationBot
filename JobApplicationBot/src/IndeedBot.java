@@ -171,9 +171,16 @@ public class IndeedBot {
 	    // Switch to child iframe element.
 	    driver.switchTo().frame(driver.findElement(By.cssSelector("iframe[title='Job application form']")));
 
+	    try {
+	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.firstName"))));
+	    driver.findElement(By.id("input-applicant.firstName")).sendKeys(jad.getFirstName());
+	    
+	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.lastName"))));
+	    driver.findElement(By.id("input-applicant.lastName")).sendKeys(jad.getLastName());
+		    
 	    // Wait up to 30 seconds the name, email, and resume elements to appear, and fill them with job application information.
 	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.name"))));
-	    driver.findElement(By.id("input-applicant.name")).sendKeys(jad.getName());
+	    driver.findElement(By.id("input-applicant.name")).sendKeys(jad.getFullName());
 	    
 	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.email"))));
 	    driver.findElement(By.id("input-applicant.email")).sendKeys(jad.getEmail());
@@ -181,15 +188,31 @@ public class IndeedBot {
 	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.phoneNumber"))));
 	    driver.findElement(By.id("input-applicant.phoneNumber")).sendKeys(jad.getPhone());
 	    
+	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.location.city"))));
+	    driver.findElement(By.id("input-applicant.location.city")).sendKeys(jad.getCity());
+	    
+	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.jobTitle"))));
+	    driver.findElement(By.id("input-applicant.jobTitle")).sendKeys(jad.getJobTitle());
+	    
+	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.companyName"))));
+	    driver.findElement(By.id("input-applicant.companyName")).sendKeys(jad.getCompanyName());
+	    
+	  
 	    WebElement chooseFile = driver.findElement(By.id("ia-CustomFilePicker-resume"));
 	    chooseFile.sendKeys(jad.getResume());
 	    
-	    // Click on continue button
-	    WebElement continueBtn = driver.findElement(By.id("form-action-continue"));
-	    Thread.sleep(5000);
-	    continueBtn.click();
+	    } catch(Exception e) {
+	    	System.out.println("Some element doesn't exist.");
+	    } finally {
+	    	
+		    // Click on continue button
+		    WebElement continueBtn = driver.findElement(By.id("form-action-continue"));
+		    Thread.sleep(5000);
+		    continueBtn.click();
+		    
+		    Thread.sleep(5000);
+	    }
 	    
-	    Thread.sleep(5000);
 	    
 	    
 	    /**
