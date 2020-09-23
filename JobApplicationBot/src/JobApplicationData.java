@@ -1,9 +1,14 @@
 
-
+/**
+ * This class holds all the job application data
+ * 
+ * @author Bruce Tieu
+ *
+ */
 public class JobApplicationData {
 	private String name, email, phone, resumePath, url, password, what, where, appType;
 	
-	
+	// Setters which allow the user to set their information
 	public void setName(String name) {this.name = name;}
 	public void setEmail(String email) {this.email = email;}
 	public void setPhone(String phone) {this.phone = phone;}
@@ -14,6 +19,7 @@ public class JobApplicationData {
 	public void setWhere(String where) {this.where = where;}
 	public void setAppType(String appType) {this.appType = appType;}
 	
+	// Getters which gets the job application information to be used when applying.
 	public String getName() {return name;}
 	public String getEmail() {return email;}
 	public String getPhone() {return phone;}
@@ -23,6 +29,4 @@ public class JobApplicationData {
 	public String getWhat() {return what;}
 	public String getWhere() {return where;}
 	public String getAppType() {return appType;}
-	
-	
 }
