@@ -8,7 +8,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,27 +15,20 @@ public class IndeedBot {
 	// Create an object of WebDriver
 	WebDriver driver;
 	
-    // Member variables
-	String url, username, password, what, where, application_type;
+	// Private job data
+	private JobApplicationData jad;
 	
-	// No parameter constructor
-	IndeedBot() {}
-	
-	// Constructor with parameters
-	public IndeedBot(String url, String username, String password, String what, String where,
-			String application_type) {
-		this.url = url;
-		this.username = username;
-		this.password = password;
-		this.what = what;
-		this.where = where;
-		this.application_type = application_type;
+	// Constructor
+	public IndeedBot(JobApplicationData jad) {
+		this.jad = jad;
 	}
 	
+	// Navigate to Indeed url
 	public void navigateToUrl() {
 		System.setProperty("webdriver.chrome.driver", "/Applications/chromedriver");
 		driver = new ChromeDriver();
-		driver.get(this.url);
+		System.out.println(jad.getURL());
+		driver.get(jad.getURL());
 		
 		// Wait for elements to load
 		driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
@@ -54,8 +46,8 @@ public class IndeedBot {
 		driver.findElement(By.id("login-email-input")).clear();
 		driver.findElement(By.id("login-password-input")).clear();
 		
-		driver.findElement(By.id("login-email-input")).sendKeys(this.username);
-		driver.findElement(By.id("login-password-input")).sendKeys(this.password);
+		driver.findElement(By.id("login-email-input")).sendKeys(jad.getEmail());
+		driver.findElement(By.id("login-password-input")).sendKeys(jad.getPassword());
 		
 		Thread.sleep(5000);
 		
@@ -65,48 +57,16 @@ public class IndeedBot {
 	
 	public void searchJobs() throws InterruptedException {
 		WebElement findJobsTab = driver.findElement(By.className("gnav-PageLink-text"));
-//		WebElement findJobsTab = driver.findElement(By.xpath("(//a[@data-gnav-action='nav'])[0]"));
-		WebElement findJobsBtn = driver.findElement(By.className("icl-WhatWhere-button"));
-//		WebElement findJobsBtn =  driver.findElement(By.xpath("//div[@class='icl-WhatWhere-buttonWrapper']//button[@type='submit']"));
 
-		// explicit wait -  wait for the "Find Jobs" link to load before clicking it
-//		WebDriverWait wait = new WebDriverWait(driver,10);
-//		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//span[@class='gnav-PageLink-text'])[0]")));
-//		Thread.sleep(8000);
-		
 		findJobsTab.click();
-		
-//		Thread.sleep(8000);
 		
         WebElement clearWhat = driver.findElement(By.id("text-input-what"));
         WebElement clearWhere = driver.findElement(By.id("text-input-where"));
         
         clearWhat.clear();
-        clearWhat.sendKeys(this.what);
-//        Thread.sleep(3000);
+        clearWhat.sendKeys(jad.getWhat());
         clearWhere.clear();
-//        clearWhere.sendKeys(this.where);
-//        Thread.sleep(3000);
-//        driver.findElement(By.xpath("//input[@value='text-input-where']")).clear();
         clearWhere.submit();
-//        clearWhere.sendKeys(Keys.chord(Keys.CONTROL,"a", Keys.DELETE));
-//        if (clearWhere.getAttribute("value") != "" ) {
-//        	clearWhere.clear();
-//        	
-//        }
-//        clearWhere.sendKeys(this.where);
-        
-//        Thread.sleep(10000);
-        
-        
-//        driver.findElement(By.id("text-input-what")).sendKeys(this.what);
-//        driver.findElement(By.id("text-input-where")).sendKeys(this.where);
-        
-//        Thread.sleep(5000);
-        
-//        findJobsBtn.click();
-//        driver.quit();
-        
 
 	}
 	
@@ -118,10 +78,8 @@ public class IndeedBot {
 		// For each job card
 		for (int i = 0; i < JobsCard.size(); i++) {
 			
-			// Find the links to each job
-//			WebElement link = JobsCard.get(i).findElement(By.className("jobtitle"));
 
-			if (this.application_type.toLowerCase() == "easily apply") {
+			if (jad.getAppType().toLowerCase() == "easily apply") {
 				// Check if an easily apply exists (has a classname of iaLabel)
 				Boolean isPresent = JobsCard.get(i).findElements(By.className("iaLabel")).size() > 0;
 				
@@ -139,15 +97,15 @@ public class IndeedBot {
 	}
 	
 	public void applyToJobs() throws InterruptedException {
-		String parentHandle = driver.getWindowHandle(); // get the current window handle
-	    System.out.println(parentHandle);               //Prints the parent window handle 
-                           //Clicking on this window
-	    for (String winHandle : driver.getWindowHandles()) { //Gets the new window handle
+		String parentHandle = driver.getWindowHandle(); // Get the current window
+	    System.out.println(parentHandle);               // Prints the parent window handle 
+                          
+	    for (String winHandle : driver.getWindowHandles()) { // Gets the new window
 	        System.out.println(winHandle);
-	        driver.switchTo().window(winHandle);        // switch focus of WebDriver to the next found window handle (that's your newly opened window)              
+	        driver.switchTo().window(winHandle);        // switch focus of WebDriver to the new window             
 	    }
-	//Now your driver works on the current new handle
 	    
+	    // Now the driver works on current window opened
 	    WebDriverWait wait = new WebDriverWait(driver, 3000);
 	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("indeedApplyButtonContainer")))).click();
 
@@ -158,46 +116,34 @@ public class IndeedBot {
 
 	    // Then locate the name, email, and resume fields
 	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.name"))));
-	    driver.findElement(By.id("input-applicant.name")).sendKeys("Bruce Tieu");
+	    driver.findElement(By.id("input-applicant.name")).sendKeys(jad.getName());
 	    
 	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.email"))));
-	    driver.findElement(By.id("input-applicant.email")).sendKeys("ucdbrucetieu@gmail.com");
+	    driver.findElement(By.id("input-applicant.email")).sendKeys(jad.getEmail());
 	    
 	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.phoneNumber"))));
-	    driver.findElement(By.id("input-applicant.phoneNumber")).sendKeys("7202610380");
+	    driver.findElement(By.id("input-applicant.phoneNumber")).sendKeys(jad.getPhone());
 	    
 	    WebElement chooseFile = driver.findElement(By.id("ia-CustomFilePicker-resume"));
-	    chooseFile.sendKeys("/Users/bruce/Documents/WithObj2_Bruce_Tieu_2020_Resume.pdf");
+	    chooseFile.sendKeys(jad.getResume());
 	    
+	    // Click on continue button
 	    WebElement continueBtn = driver.findElement(By.id("form-action-continue"));
 	    Thread.sleep(5000);
 	    continueBtn.click();
 	    
 	    Thread.sleep(5000);
 	    
-	//Time to go back to parent window
-	    driver.close();                                 // close newly opened window when done with it
-	    driver.switchTo().window(parentHandle);         // switch back to the original window
-
+	    // Close that new window
+	    driver.close(); 
+	    // Switch back to the parent window
+	    driver.switchTo().window(parentHandle);        
 
 	}
 	
 	public void quitBrowser() {
 		driver.quit();
 	}
-	
-	public static void main(String[] args) throws InterruptedException {
-		IndeedBot IB = new IndeedBot("https://www.indeed.com/?from=gnav-util-homepage",
-				"email", "password", "Software Developer", "remote", "easily apply");
-		IB.navigateToUrl();
-//		IB.login();
-		IB.searchJobs();
-		IB.JobScrape();
-//		IB.quitBrowser();
-	
-	}
-
-	
 		
 	
 }
