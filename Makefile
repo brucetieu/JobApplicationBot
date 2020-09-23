@@ -4,10 +4,9 @@ default:
 	echo "Nothing to do"
 
 install:
-	$(SUDO) add-apt-repository ppa:openjdk-r/ppa
 	$(SUDO) apt update
 	$(SUDO) apt-cache search openjdk
-	$(SUDO) apt install openjdk-11-jdk-headless maven
+	$(SUDO) apt install openjdk-8-jre maven
 
 test:
 	@# Run tests.
