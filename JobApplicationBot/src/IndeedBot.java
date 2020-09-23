@@ -138,7 +138,7 @@ public class IndeedBot {
 		}
 	}
 	
-	public void applyToJobs() {
+	public void applyToJobs() throws InterruptedException {
 		String parentHandle = driver.getWindowHandle(); // get the current window handle
 	    System.out.println(parentHandle);               //Prints the parent window handle 
                            //Clicking on this window
@@ -148,23 +148,32 @@ public class IndeedBot {
 	    }
 	//Now your driver works on the current new handle
 	    
-	    WebDriverWait wait = new WebDriverWait(driver, 15);
+	    WebDriverWait wait = new WebDriverWait(driver, 3000);
 	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("indeedApplyButtonContainer")))).click();
-//	    WebElement apply_to_job = driver.findElement(By.className("jobsearch-IndeedApplyButton-contentWrapper"));
-//	    apply_to_job.click();
-	    
+
+	    // Switch to parent iframe element
+	    driver.switchTo().frame(driver.findElement(By.cssSelector("iframe[title='Job application form container']")));
+	    // Then switch to child iframe element 
+	    driver.switchTo().frame(driver.findElement(By.cssSelector("iframe[title='Job application form']")));
+
+	    // Then locate the name, email, and resume fields
 	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.name"))));
 	    driver.findElement(By.id("input-applicant.name")).sendKeys("Bruce Tieu");
 	    
-//	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.name"))));
-//	   
-//	    
-//	    
-//	    name_field.sendKeys("Bruce Tieu");
-//	    phone_field.sendKeys("7202610380");
+	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.email"))));
+	    driver.findElement(By.id("input-applicant.email")).sendKeys("ucdbrucetieu@gmail.com");
 	    
-//	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.className("ia-ControlledFilePicker-fakeControl")))).click();
+	    wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("input-applicant.phoneNumber"))));
+	    driver.findElement(By.id("input-applicant.phoneNumber")).sendKeys("7202610380");
 	    
+	    WebElement chooseFile = driver.findElement(By.id("ia-CustomFilePicker-resume"));
+	    chooseFile.sendKeys("/Users/bruce/Documents/WithObj2_Bruce_Tieu_2020_Resume.pdf");
+	    
+	    WebElement continueBtn = driver.findElement(By.id("form-action-continue"));
+	    Thread.sleep(5000);
+	    continueBtn.click();
+	    
+	    Thread.sleep(5000);
 	    
 	//Time to go back to parent window
 	    driver.close();                                 // close newly opened window when done with it
