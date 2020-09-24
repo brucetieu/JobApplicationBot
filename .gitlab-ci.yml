@@ -1,0 +1,9 @@
+image:
+  name: jdsutton7/compute-node
+
+before_script:
+  - make install
+
+install_and_build:
+  script:
+    - make test
