@@ -58,8 +58,9 @@ public class IndeedBot {
 	 * @throws InterruptedException If the thread executing the method is interrupted, stop the method and return early 
 	 */
 	public void login() throws InterruptedException {
+        
 		// This waits up to 15 seconds before throwing a TimeoutException or if it finds the element it will return it in 0 - 15 seconds.
-		WebDriverWait wait = new WebDriverWait(driver, MAX_WAIT_TIME);
+        WebDriverWait wait = new WebDriverWait(driver, MAX_WAIT_TIME);
 		
 		// Wait for 15 seconds until the Sign In tab appears before clicking.
 		wait.until(ExpectedConditions.visibilityOf(this.driver.findElement(By.className("gnav-LoggedOutAccountLink-text")))).click();
@@ -89,8 +90,8 @@ public class IndeedBot {
 		findJobsTab.click();
 		
 		// Locate the "What" and "Where" input fields.
-        WebElement clearWhat = this.driver.findElement(By.id("text-input-what"));
-        WebElement clearWhere = this.driver.findElement(By.id("text-input-where"));
+    	WebElement clearWhat = this.driver.findElement(By.id("text-input-what"));
+    	WebElement clearWhere = this.driver.findElement(By.id("text-input-where"));
         
         // Clear the "What" field and send in the job position specified by the user.
         clearWhat.clear();
