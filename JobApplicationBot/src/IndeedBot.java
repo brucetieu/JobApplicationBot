@@ -86,18 +86,18 @@ public class IndeedBot {
     public void searchJobs() throws InterruptedException {
         // Create an actions object.
         Actions action = new Actions(this._driver);
-        
+
         WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
-        
-        // Click on the find jobs tab        
+
+        // Click on the find jobs tab
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("gnav-PageLink-text"))).click();
 
         // Locate the "What" and "Where" input fields.
         WebElement clearWhat = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("text-input-what")));
         WebElement clearWhere = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("text-input-where")));
-        
+
         clearWhat.clear();
-        clearWhere.clear();
+//        clearWhere.clear();
 
         // Clear the "What" field and send in the job position specified by the user.
         clearWhat.sendKeys(this._jobAppData.whatJob);
@@ -173,7 +173,7 @@ public class IndeedBot {
      *                              interrupted, stop the method and return early.
      */
     public void applyToJobs(String currWindow) throws InterruptedException {
-
+        Actions action = new Actions(this._driver);
         // This waits up to 30 seconds before throwing a TimeoutException or if it finds
         // the element it will return it in 0 - 30 seconds.
         WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
@@ -191,52 +191,122 @@ public class IndeedBot {
         // Switch to child iframe element.
         this._driver.switchTo().frame(this._driver.findElement(By.cssSelector("iframe[title='Job application form']")));
 
-        try {
-            // Wait up to 30 seconds the name, email, and resume elements to appear, and
-            // fill them with job application information.
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.name")));
-            this._driver.findElement(By.id("input-applicant.name")).sendKeys(this._jobAppData.fullname);
-        } catch (Exception e) {
-            System.out.println("Some element does not exist");
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.firstName")))
-                    .sendKeys(this._jobAppData.firstname);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.lastName")))
-                    .sendKeys(this._jobAppData.lastname);
-        } finally {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.email")))
-                    .sendKeys(this._jobAppData.email);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.phoneNumber")))
-                    .sendKeys(this._jobAppData.phone);
+        if (checkIfJobHasBeenAppliedTo()) {
 
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ia-CustomFilePicker-resume")))
-                    .sendKeys(this._jobAppData.resumePath);
+            try {
+                // Wait up to 30 seconds the name, email, and resume elements to appear, and
+                // fill them with job application information.
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.name")));
+                this._driver.findElement(By.id("input-applicant.name")).sendKeys(this._jobAppData.fullname);
+            } catch (Exception e) {
+                System.out.println("Some element does not exist");
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.firstName")))
+                        .sendKeys(this._jobAppData.firstname);
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.lastName")))
+                        .sendKeys(this._jobAppData.lastname);
+            } finally {
+                WebElement email = wait
+                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.email")));
+                if (this._driver.findElement(By.id("input-applicant.email")).getAttribute("readonly") == null) {
+                    email.sendKeys(this._jobAppData.email);
+                } else {
+                    action.sendKeys(Keys.TAB);
+                    action.build().perform();
 
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
+                }
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.phoneNumber")))
+                        .sendKeys(this._jobAppData.phone);
+
+//                email.sendKeys(this._jobAppData.email);
+                // wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.email")))
+                // .sendKeys(this._jobAppData.email);
+//                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.phoneNumber")))
+//                        .sendKeys(this._jobAppData.phone);
+
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ia-CustomFilePicker-resume")))
+                        .sendKeys(this._jobAppData.resumePath);
+
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
+            }
+
+            // Look for a submit button after clicking "next" in the form
+            submitApplication();
+            /**
+             * TODO: Figure out how to deal with differing application questions after the
+             * "continue" button is clicked, which varies with each "Easily apply"
+             * application.
+             */
+
+            // Close that new window (the job that was opened).
+            this._driver.close();
+
+            // Switch back to the parent window (job listing window).
+            this._driver.switchTo().window(currWindow);
+
         }
 
-        submitApplication();
-        /**
-         * TODO: Figure out how to deal with differing application questions after the
-         * "continue" button is clicked, which varies with each "Easily apply"
-         * application.
-         */
-
-        // Close that new window (the job that was opened).
-        this._driver.close();
-
-        // Switch back to the parent window (job listing window).
-        this._driver.switchTo().window(currWindow);
+        // If the job has already been applied to, close the current window and switch
+        // to the job listing page to continue searching for jobs
+        else {
+            this._driver.close();
+            this._driver.switchTo().window(currWindow);
+        }
 
     }
 
+    /**
+     * This method checks if a job has already been applied to. If it has, skip the
+     * application and search for the next one
+     * 
+     * @return True, if a job hasn't been applied to and false if it has.
+     */
+    public boolean checkIfJobHasBeenAppliedTo() {
+        // This waits up to 30 seconds before throwing a TimeoutException or if it finds
+        // the element it will return it in 0 - 30 seconds.
+        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
+
+//        // Wait until the following element appears before clicking on it.
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("indeedApplyButtonContainer"))).click();
+//
+//        wait.until(ExpectedConditions
+//                .visibilityOfElementLocated(By.cssSelector("iframe[title='Job application form container']")));
+//        // Switch to parent iframe element.
+//        this._driver.switchTo()
+//                .frame(this._driver.findElement(By.cssSelector("iframe[title='Job application form container']")));
+//        wait.until(
+//                ExpectedConditions.visibilityOfElementLocated(By.cssSelector("iframe[title='Job application form']")));
+//        // Switch to child iframe element.
+//        this._driver.switchTo().frame(this._driver.findElement(By.cssSelector("iframe[title='Job application form']")));
+
+//        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ia_success")));
+//        WebElement closePopup = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("close-popup")));
+
+        List<WebElement> indeedApplySuccess = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("ia_success")));
+        // Check if there is a message with "You have already applied to this position"
+        if (indeedApplySuccess.size() > 0) {
+            // Close the popup
+            WebElement closePopup = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("close-popup")));
+            closePopup.click();
+            return false;
+        } else
+            return true;
+    }
+    
     public void submitApplication() {
         WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
+        
+        try {
+            List<WebElement> inputFields = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.tagName("input")));
+            inputFields.get(0).sendKeys("0");
+            
+        } catch(Exception e) {
+         
+                    
+        }
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("ia-InterventionActionButtons-button")))
                 .click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
     }
-
-
 
     /**
      * This method quits the browser.
@@ -245,5 +315,26 @@ public class IndeedBot {
         this._driver.quit();
     }
 
+    public static void main(String[] args) throws InterruptedException {
+        // Create a new object which is a job application data.
+        JobApplicationData jobAppData = new JobApplicationData();
+        jobAppData.firstname = "Bruce";
+        jobAppData.lastname = "Tieu";
+        jobAppData.fullname = "Bruce Tieu";
+        jobAppData.email = "ucdbrucetieu@gmail.com";
+        jobAppData.phone = "7202610380";
+        jobAppData.resumePath = "/Users/bruce/Documents/WithObj2_Bruce_Tieu_2020_Resume.pdf";
+        jobAppData.url = "https://www.indeed.com/?from=gnav-util-homepage";
+        jobAppData.password = "password";
+        jobAppData.whatJob = "Software developer";
+        jobAppData.locationOfJob = "remote";
+
+        // Create an IndeedBot to apply for jobs.
+        IndeedBot IB = new IndeedBot(jobAppData, JobApplicationData.ApplicationType.EASILY_APPLY);
+        IB.navigateToUrl();
+//        IB.login();
+        IB.searchJobs();
+        IB.jobScrape();
+    }
 
 }
