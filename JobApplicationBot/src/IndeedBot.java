@@ -57,8 +57,8 @@ public class IndeedBot {
      */
     public void login() throws InterruptedException {
 
-        // This waits up to 15 seconds before throwing a TimeoutException or if it finds
-        // the element it will return it in 0 - 15 seconds.
+        // This waits up to 30 seconds before throwing a TimeoutException or if it finds
+        // the element it will return it in 0 - 30 seconds.
         WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
 
         // Wait for 15 seconds until the Sign In tab appears before clicking.
@@ -86,17 +86,20 @@ public class IndeedBot {
     public void searchJobs() throws InterruptedException {
         // Create an actions object.
         Actions action = new Actions(this._driver);
-
-        // Click on the "Find Jobs" tab.
-        WebElement findJobsTab = this._driver.findElement(By.className("gnav-PageLink-text"));
-        findJobsTab.click();
+        
+        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
+        
+        // Click on the find jobs tab        
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("gnav-PageLink-text"))).click();
 
         // Locate the "What" and "Where" input fields.
-        WebElement clearWhat = this._driver.findElement(By.id("text-input-what"));
-        WebElement clearWhere = this._driver.findElement(By.id("text-input-where"));
+        WebElement clearWhat = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("text-input-what")));
+        WebElement clearWhere = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("text-input-where")));
+        
+        clearWhat.clear();
+        clearWhere.clear();
 
         // Clear the "What" field and send in the job position specified by the user.
-        clearWhat.clear();
         clearWhat.sendKeys(this._jobAppData.whatJob);
 
         // Clear the "Where" field and send in the location of the job specified by the
@@ -176,27 +179,42 @@ public class IndeedBot {
         WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
 
         // Wait until the following element appears before clicking on it.
-        wait.until(ExpectedConditions.visibilityOf(this._driver.findElement(By.id("indeedApplyButtonContainer"))))
-                .click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("indeedApplyButtonContainer"))).click();
 
+        wait.until(ExpectedConditions
+                .visibilityOfElementLocated(By.cssSelector("iframe[title='Job application form container']")));
         // Switch to parent iframe element.
         this._driver.switchTo()
                 .frame(this._driver.findElement(By.cssSelector("iframe[title='Job application form container']")));
+        wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.cssSelector("iframe[title='Job application form']")));
         // Switch to child iframe element.
         this._driver.switchTo().frame(this._driver.findElement(By.cssSelector("iframe[title='Job application form']")));
 
-        // Wait up to 30 seconds the name, email, and resume elements to appear, and
-        // fill them with job application information.
-        wait.until(ExpectedConditions.visibilityOf(this._driver.findElement(By.id("input-applicant.name"))));
-        this._driver.findElement(By.id("input-applicant.name")).sendKeys(this._jobAppData.fullname);
-        wait.until(ExpectedConditions.visibilityOf(this._driver.findElement(By.id("input-applicant.email"))));
-        this._driver.findElement(By.id("input-applicant.email")).sendKeys(this._jobAppData.email);
-        wait.until(ExpectedConditions.visibilityOf(this._driver.findElement(By.id("input-applicant.phoneNumber"))));
-        this._driver.findElement(By.id("input-applicant.phoneNumber")).sendKeys(this._jobAppData.phone);
-        WebElement chooseFile = this._driver.findElement(By.id("ia-CustomFilePicker-resume"));
-        chooseFile.sendKeys(this._jobAppData.resumePath);
-        wait.until(ExpectedConditions.visibilityOf(this._driver.findElement(By.id("form-action-continue")))).click();
+        try {
+            // Wait up to 30 seconds the name, email, and resume elements to appear, and
+            // fill them with job application information.
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.name")));
+            this._driver.findElement(By.id("input-applicant.name")).sendKeys(this._jobAppData.fullname);
+        } catch (Exception e) {
+            System.out.println("Some element does not exist");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.firstName")))
+                    .sendKeys(this._jobAppData.firstname);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.lastName")))
+                    .sendKeys(this._jobAppData.lastname);
+        } finally {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.email")))
+                    .sendKeys(this._jobAppData.email);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.phoneNumber")))
+                    .sendKeys(this._jobAppData.phone);
 
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ia-CustomFilePicker-resume")))
+                    .sendKeys(this._jobAppData.resumePath);
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
+        }
+
+        submitApplication();
         /**
          * TODO: Figure out how to deal with differing application questions after the
          * "continue" button is clicked, which varies with each "Easily apply"
@@ -211,10 +229,21 @@ public class IndeedBot {
 
     }
 
+    public void submitApplication() {
+        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("ia-InterventionActionButtons-button")))
+                .click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
+    }
+
+
+
     /**
      * This method quits the browser.
      */
     public void quitBrowser() {
         this._driver.quit();
     }
+
+
 }
