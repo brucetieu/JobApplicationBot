@@ -1,31 +1,31 @@
 package net.codejava.swing;
 
+import com.jgoodies.forms.factories.DefaultComponentFactory;
+
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import org.apache.commons.io.FileUtils;
-
-import javax.swing.JButton;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.io.File;
 import java.io.IOException;
-import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.JLabel;
-import javax.swing.JPasswordField;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
-import javax.swing.JToggleButton;
-import javax.swing.JTabbedPane;
-import java.awt.CardLayout;
+
+import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.JToggleButton;
+import javax.swing.JPasswordField;
+import javax.swing.SwingConstants;
 
+import org.apache.commons.io.FileUtils;
 
 public class BotGUI extends JFrame {
 
@@ -67,26 +67,25 @@ public class BotGUI extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
-        
+
         openFileChooser = new JFileChooser();
         openFileChooser.setCurrentDirectory(new File("./"));
-        
+
         // Create a tabbed frame.
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         tabbedPane.setBounds(0, 0, 650, 650);
         contentPane.add(tabbedPane);
-        
+
         // One for Indeed
         JPanel panel = new JPanel();
         tabbedPane.addTab("Indeed", null, panel, null);
         panel.setLayout(null);
 
-        JLabel lblNewJgoodiesTitle = DefaultComponentFactory.getInstance()
-                .createTitle("Indeed Login Info");
+        JLabel lblNewJgoodiesTitle = DefaultComponentFactory.getInstance().createTitle("Indeed Login Info");
         lblNewJgoodiesTitle.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewJgoodiesTitle.setBounds(20, 32, 231, 16);
         panel.add(lblNewJgoodiesTitle);
-        
+
         // Applicant information fields.
         JLabel firstName = new JLabel("First name");
         firstName.setBounds(20, 65, 100, 16);
@@ -140,68 +139,66 @@ public class BotGUI extends JFrame {
         passwordField = new JPasswordField();
         passwordField.setBounds(125, 201, 130, 26);
         panel.add(passwordField);
-        
+
         // Job preferences column.
         JLabel lblNewJgoodiesTitle_1 = DefaultComponentFactory.getInstance().createTitle("Job Preferences");
         lblNewJgoodiesTitle_1.setBounds(391, 32, 122, 16);
         panel.add(lblNewJgoodiesTitle_1);
-        
+
         JLabel whatJob = new JLabel("What job");
         whatJob.setBounds(285, 65, 61, 16);
         panel.add(whatJob);
-        
+
         JLabel locationOfJob = new JLabel("Location of Job");
         locationOfJob.setBounds(285, 97, 100, 16);
         panel.add(locationOfJob);
-        
+
         JLabel appTypeDropdown = new JLabel("Application type");
         appTypeDropdown.setBounds(285, 128, 108, 16);
         panel.add(appTypeDropdown);
-        
+
         JComboBox<String> comboBox = new JComboBox<String>();
         comboBox.setBounds(391, 124, 122, 27);
         comboBox.addItem("Easily Apply");
         panel.add(comboBox);
-        
+
         whatJobField = new JTextField();
         whatJobField.setBounds(401, 60, 130, 26);
         panel.add(whatJobField);
         whatJobField.setColumns(10);
-        
+
         locationOfJobField = new JTextField();
         locationOfJobField.setBounds(397, 92, 130, 26);
         panel.add(locationOfJobField);
         locationOfJobField.setColumns(10);
-        
-        
+
         JLabel msgLabel = new JLabel("");
         msgLabel.setBounds(191, 295, 340, 16);
         panel.add(msgLabel);
-        
+
         // Add functionality to upload resume.
         JButton openFileBtn = new JButton("Upload resume...");
         openFileBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int returnValue = openFileChooser.showOpenDialog(contentPane);
-                
+
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = openFileChooser.getSelectedFile();
-                        msgLabel.setText("File successfully loaded");
-                        file = selectedFile;
-                        System.out.println(selectedFile);
-                }
-                else {
+                    File selectedFile = openFileChooser.getSelectedFile();
+                    msgLabel.setText("File successfully loaded");
+                    file = selectedFile;
+                    System.out.println(selectedFile);
+                } else {
                     msgLabel.setText("No file chosen");
                 }
             }
         });
         openFileBtn.setBounds(20, 290, 159, 29);
         panel.add(openFileBtn);
-        
+
         // LinkedIn tab
         JPanel panel_1 = new JPanel();
         tabbedPane.addTab("LinkedIn", null, panel_1, null);
-        
+
         // Glassdoor tab
         JPanel panel_2 = new JPanel();
         tabbedPane.addTab("Glassdoor", null, panel_2, null);
@@ -210,7 +207,7 @@ public class BotGUI extends JFrame {
         JLabel lblNewLabel = new JLabel("New label");
         lblNewLabel.setBounds(18, 17, 61, 16);
         panel_2.add(lblNewLabel);
-        
+
         // Run the IndeedBot when "Launch" button is clicked.
         JButton launchBtn = new JButton("Launch");
         launchBtn.addActionListener(new ActionListener() {
@@ -226,7 +223,7 @@ public class BotGUI extends JFrame {
                 jobAppData.password = String.valueOf(passwordField.getPassword());
                 jobAppData.whatJob = whatJobField.getText();
                 jobAppData.locationOfJob = locationOfJobField.getText();
-                
+
                 System.out.println(jobAppData.resumePath);
                 // Create an IndeedBot to apply for jobs.
                 IndeedBot IB = new IndeedBot(jobAppData, JobApplicationData.ApplicationType.EASILY_APPLY);
@@ -234,13 +231,11 @@ public class BotGUI extends JFrame {
                 try {
                     IB.searchJobs();
                 } catch (InterruptedException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
                 try {
                     IB.jobScrape();
                 } catch (InterruptedException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
