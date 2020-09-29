@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -20,11 +21,14 @@ import org.openqa.selenium.WebElement;
  */
 public class IndeedBot {
     private JobApplicationData _jobAppData;
+    private HumanBehavior _humanBehavior;
+    private Helpers _helpers;
     private JobApplicationData.ApplicationType _appType;
     private static final String _CHROME_DRIVER_PROPERTY = "webdriver.chrome.driver";
     private static final String _CHROME_DRIVER_PATH = "/Applications/chromedriver";
     private static final int _MAX_WAIT_TIME = 30;
     private WebDriver _driver;
+    private WebDriverWait _wait;
 
     /**
      * This is a class constructor which initializes job application data, job
@@ -33,12 +37,21 @@ public class IndeedBot {
      * @param jobAppData The object which holds job application data.
      * @param appType    The enum type which is a set of application types.
      */
-    public IndeedBot(JobApplicationData jobAppData, JobApplicationData.ApplicationType appType) {
+    public IndeedBot(JobApplicationData jobAppData, HumanBehavior humanBehavior, Helpers helpers,
+            JobApplicationData.ApplicationType appType) {
         this._jobAppData = jobAppData;
+        this._humanBehavior = humanBehavior;
+        this._helpers = helpers;
         this._appType = appType;
         System.setProperty(IndeedBot._CHROME_DRIVER_PROPERTY, IndeedBot._CHROME_DRIVER_PATH);
         this._driver = new ChromeDriver();
         this._driver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
+        this._wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
+
+    }
+
+    public WebDriverWait getWait() {
+        return this._wait;
     }
 
     /**
@@ -57,13 +70,15 @@ public class IndeedBot {
      */
     public void login() throws InterruptedException {
 
-        // This waits up to 30 seconds before throwing a TimeoutException or if it finds
-        // the element it will return it in 0 - 30 seconds.
-        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
+//        // This waits up to 30 seconds before throwing a TimeoutException or if it finds
+//        // the element it will return it in 0 - 30 seconds.
+//        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
 
         // Wait for 15 seconds until the Sign In tab appears before clicking.
-        wait.until(ExpectedConditions
-                .visibilityOf(this._driver.findElement(By.className("gnav-LoggedOutAccountLink-text")))).click();
+        this._wait
+                .until(ExpectedConditions
+                        .visibilityOf(this._driver.findElement(By.className("gnav-LoggedOutAccountLink-text"))))
+                .click();
 
         // Make sure the Email and Password fields are cleared out of any text.
         this._driver.findElement(By.id("login-email-input")).clear();
@@ -74,7 +89,8 @@ public class IndeedBot {
         this._driver.findElement(By.id("login-password-input")).sendKeys(this._jobAppData.password);
 
         // Wait until the following element appears before signing in.
-        wait.until(ExpectedConditions.visibilityOf(this._driver.findElement(By.id("login-submit-button")))).click();
+        this._wait.until(ExpectedConditions.visibilityOf(this._driver.findElement(By.id("login-submit-button"))))
+                .click();
     }
 
     /**
@@ -87,30 +103,28 @@ public class IndeedBot {
         // Create an actions object.
         Actions action = new Actions(this._driver);
 
-        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
-
         // Click on the find jobs tab
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("gnav-PageLink-text"))).click();
+        this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("gnav-PageLink-text"))).click();
 
         // Locate the "What" and "Where" input fields.
-        WebElement clearWhat = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("text-input-what")));
-        WebElement clearWhere = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("text-input-where")));
+        WebElement clearWhat = this._wait
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id("text-input-what")));
+        WebElement clearWhere = this._wait
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id("text-input-where")));
 
         clearWhat.clear();
 
-        // Clear the "What" field and send in the job position specified by the user.
-        clearWhat.sendKeys(this._jobAppData.whatJob);
+        // Delay typing
+        this._humanBehavior.humanTyping(clearWhat, this._jobAppData.whatJob);
 
-        // Clear the "Where" field and send in the location of the job specified by the
-        // user.
+        // Clear the "Where" field and send in the location of the job
         action.sendKeys(Keys.TAB);
+        TimeUnit.SECONDS.sleep(3);
         action.sendKeys(Keys.DELETE);
         action.build().perform();
 
-        // Also send in the location of the job in the input field.
-        clearWhere.sendKeys(this._jobAppData.locationOfJob);
-
-        // Search for jobs based on the inputs.
+        this._humanBehavior.humanTyping(clearWhere, this._jobAppData.locationOfJob);
+        TimeUnit.SECONDS.sleep(1);
         clearWhere.submit();
     }
 
@@ -121,7 +135,7 @@ public class IndeedBot {
      *                              interrupted, stop the method and return early.
      */
     public void findEasyApply() throws InterruptedException {
-
+        this._humanBehavior.randomScrolling(this._driver);
         // Create a list of type WebElement objects called JobsCard.
         List<WebElement> JobsCard = this._driver.findElements(By.className("jobsearch-SerpJobCard"));
 
@@ -173,49 +187,46 @@ public class IndeedBot {
      */
     public void applyToJobs(String currWindow) throws InterruptedException {
         Actions action = new Actions(this._driver);
-        // This waits up to 30 seconds before throwing a TimeoutException or if it finds
-        // the element it will return it in 0 - 30 seconds.
-        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
 
-        int numOfQuals = jobScrape();
+        int numOfQuals = countQualifications();
 
         // Wait until the following element appears before clicking on it.
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("indeedApplyButtonContainer"))).click();
+        this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("indeedApplyButtonContainer"))).click();
 
-        wait.until(ExpectedConditions
+        this._wait.until(ExpectedConditions
                 .visibilityOfElementLocated(By.cssSelector("iframe[title='Job application form container']")));
         // Switch to parent iframe element.
         this._driver.switchTo()
                 .frame(this._driver.findElement(By.cssSelector("iframe[title='Job application form container']")));
-        wait.until(
+        this._wait.until(
                 ExpectedConditions.visibilityOfElementLocated(By.cssSelector("iframe[title='Job application form']")));
         // Switch to child iframe element.
         this._driver.switchTo().frame(this._driver.findElement(By.cssSelector("iframe[title='Job application form']")));
 
         // Check if the job has been applied to and filter out any jobs which have forms
         // asking for years of experience in a language or field.
-        if (checkIfJobHasBeenAppliedTo() & numOfQuals == 0) {
+        if (hasJobBeenAppliedTo() & numOfQuals == 0) {
 
             // Some forms ask for a fullname while others ask for first name and last name.
             // So these try/catch/finally blocks are intended to resolve those different
             // cases.
             try {
 
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.name")));
+                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.name")));
                 this._driver.findElement(By.id("input-applicant.name")).sendKeys(this._jobAppData.fullname);
             } catch (Exception e) {
                 // If there's no full name input field, then check if there's a first name and
                 // last name field.
                 System.out.println("Full name field does not exist");
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.firstName")))
+                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.firstName")))
                         .sendKeys(this._jobAppData.firstname);
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.lastName")))
+                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.lastName")))
                         .sendKeys(this._jobAppData.lastname);
 
                 // There's always going to be an email and phone number field, so fill those in
                 // regardless of an exception being thrown.
             } finally {
-                WebElement email = wait
+                WebElement email = this._wait
                         .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.email")));
 
                 // Sometimes the email field is readonly, meaning its already been filled in.
@@ -227,14 +238,14 @@ public class IndeedBot {
                     action.build().perform();
 
                 }
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.phoneNumber")))
+                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.phoneNumber")))
                         .sendKeys(this._jobAppData.phone);
 
                 // Upload the resume and click on the continue button.
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ia-CustomFilePicker-resume")))
+                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ia-CustomFilePicker-resume")))
                         .sendKeys(this._jobAppData.resumePath);
 
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
+                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
             }
 
             // Attempt to submit application after filling the initial user information.
@@ -264,20 +275,18 @@ public class IndeedBot {
 
     /**
      * This method checks if a job has already been applied to. If it has, skip the
-     * application and search for the next one
+     * application and search for the next one.
      * 
      * @return True, if a job hasn't been applied to and false if it has.
      */
-    public boolean checkIfJobHasBeenAppliedTo() {
-        // This waits up to 30 seconds before throwing a TimeoutException or if it finds
-        // the element it will return it in 0 - 30 seconds.
-        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
+    public boolean hasJobBeenAppliedTo() {
 
         // Check if the form contains a message about the Application already being
         // applied to.
         if (this._driver.findElements(By.id("ia_success")).size() > 0) {
             // Close the popup
-            WebElement closePopup = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("close-popup")));
+            WebElement closePopup = this._wait
+                    .until(ExpectedConditions.visibilityOfElementLocated(By.id("close-popup")));
             closePopup.click();
             return false;
         } else
@@ -292,12 +301,10 @@ public class IndeedBot {
      */
     public void submitApplication(int count) {
 
-        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
-
         // Case where the application doesn't ask to fill years of qualifications.
         if (count == 0) {
             // Forms with "Enter the times you're available for a call"
-            noQualsTimeAvail();
+            this._helpers.tryFindElement(this._wait);
 
         }
         /**
@@ -317,10 +324,10 @@ public class IndeedBot {
      * 
      * @return int The number of qualifications that will appear in the form.
      */
-    public int jobScrape() {
-        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
+    public int countQualifications() {
 
-        WebElement jobDescDiv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("jobDescriptionText")));
+        WebElement jobDescDiv = this._wait
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id("jobDescriptionText")));
         List<WebElement> paragraphs = jobDescDiv.findElements(By.tagName("ul"));
 
         int count = 0;
@@ -337,75 +344,10 @@ public class IndeedBot {
     }
 
     /**
-     * This method is intended to decrease the probability that a reCAPTCHA will
-     * appear when the bot attempts to submit the application.
-     */
-    public void mimicHumanBehavior() {
-        /**
-         * TODO: Add non-linear mouse movements and random waits to mimic human
-         * behavior.
-         */
-    }
-
-    /**
-     * The method fills out the form for applications which only have one question
-     * which asks the user to enter their available times for a callback.
-     */
-    public void noQualsTimeAvail() {
-        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
-
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("textarea"))).sendKeys("Monday");
-        } catch (Exception e) {
-            System.out.println("Textarea box not found");
-        }
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
-        } catch (Exception e) {
-            System.out.println("Continue button not found");
-        }
-        try {
-            wait.until(
-                    ExpectedConditions.visibilityOfElementLocated(By.id("ia-InterventionActionButtons-buttonDesktop")))
-                    .click();
-        } catch (Exception e) {
-            System.out.println("Continue Applying button not found");
-        }
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-submit"))).click();
-        } catch (Exception e) {
-            System.out.println("Apply button not found");
-        }
-    }
-
-    /**
      * This method quits the browser.
      */
     public void quitBrowser() {
         this._driver.quit();
-    }
-    
-    // Test the bot
-    public static void main(String[] args) throws InterruptedException {
-        // Create a new object which is a job application data.
-        JobApplicationData jobAppData = new JobApplicationData();
-        jobAppData.firstname = "John";
-        jobAppData.lastname = "Doe";
-        jobAppData.fullname = "John Doe";
-        jobAppData.email = "John Doe";
-        jobAppData.phone = "5555555555";
-        jobAppData.resumePath = "/Users/bruce/Documents/WithObj2_Bruce_Tieu_2020_Resume.pdf";
-        jobAppData.url = "https://www.indeed.com/?from=gnav-util-homepage";
-        jobAppData.password = "password";
-        jobAppData.whatJob = "Software engineer";
-        jobAppData.locationOfJob = "remote";
-
-        // Create an IndeedBot to apply for jobs.
-        IndeedBot IB = new IndeedBot(jobAppData, JobApplicationData.ApplicationType.EASILY_APPLY);
-        IB.navigateToUrl();
-        IB.login();
-        IB.searchJobs();
-        IB.findEasyApply();
     }
 
 }
