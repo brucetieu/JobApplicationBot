@@ -136,6 +136,7 @@ public class IndeedBot {
      */
     public void findEasyApply() throws InterruptedException {
         this._humanBehavior.randomScrolling(this._driver);
+
         // Create a list of type WebElement objects called JobsCard.
         List<WebElement> JobsCard = this._driver.findElements(By.className("jobsearch-SerpJobCard"));
 
@@ -186,11 +187,13 @@ public class IndeedBot {
      *                              interrupted, stop the method and return early.
      */
     public void applyToJobs(String currWindow) throws InterruptedException {
+        double randNum = Math.random() * (3 - 1 + 1) + 1;
         Actions action = new Actions(this._driver);
 
         int numOfQuals = countQualifications();
 
         // Wait until the following element appears before clicking on it.
+        TimeUnit.SECONDS.sleep((long) randNum);
         this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("indeedApplyButtonContainer"))).click();
 
         this._wait.until(ExpectedConditions
@@ -212,16 +215,20 @@ public class IndeedBot {
             // cases.
             try {
 
-                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.name")));
-                this._driver.findElement(By.id("input-applicant.name")).sendKeys(this._jobAppData.fullname);
+                WebElement fullname = this._wait
+                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.name")));
+                this._humanBehavior.humanTyping(fullname, this._jobAppData.whatJob);
             } catch (Exception e) {
                 // If there's no full name input field, then check if there's a first name and
                 // last name field.
                 System.out.println("Full name field does not exist");
-                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.firstName")))
-                        .sendKeys(this._jobAppData.firstname);
-                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.lastName")))
-                        .sendKeys(this._jobAppData.lastname);
+
+                WebElement firstName = this._wait
+                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.firstName")));
+                this._humanBehavior.humanTyping(firstName, this._jobAppData.firstname);
+                WebElement lastName = this._wait
+                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.lastName")));
+                this._humanBehavior.humanTyping(lastName, this._jobAppData.lastname);
 
                 // There's always going to be an email and phone number field, so fill those in
                 // regardless of an exception being thrown.
@@ -232,19 +239,21 @@ public class IndeedBot {
                 // Sometimes the email field is readonly, meaning its already been filled in.
                 // This will skip over it and fill the phone number.
                 if (this._driver.findElement(By.id("input-applicant.email")).getAttribute("readonly") == null) {
-                    email.sendKeys(this._jobAppData.email);
+                    this._humanBehavior.humanTyping(email, this._jobAppData.email);
                 } else {
                     action.sendKeys(Keys.TAB);
                     action.build().perform();
 
                 }
-                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.phoneNumber")))
-                        .sendKeys(this._jobAppData.phone);
+                WebElement phoneNum = this._wait
+                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.phoneNumber")));
+                this._humanBehavior.humanTyping(phoneNum, this._jobAppData.phone);
 
                 // Upload the resume and click on the continue button.
-                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ia-CustomFilePicker-resume")))
-                        .sendKeys(this._jobAppData.resumePath);
-
+                WebElement uploadResume = this._wait
+                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("ia-CustomFilePicker-resume")));
+                uploadResume.sendKeys(this._jobAppData.resumePath);
+                TimeUnit.SECONDS.sleep((long) randNum);
                 this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
             }
 

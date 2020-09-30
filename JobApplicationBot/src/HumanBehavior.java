@@ -20,12 +20,11 @@ public class HumanBehavior {
     }
 
     public void randomScrolling(WebDriver driver) throws InterruptedException {
+         
         Actions action = new Actions(driver);
 
-        long scrollHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
-
-        for (int i = 0; i < 200; i++) {
-            double randNum = Math.random() * (200 - 1 + 1) + 1;
+        for (int i = 0; i < 150; i++) {
+            double randNum = Math.random() * (150 - 1 + 1) + 1;
             double anotherRandNum = Math.random() * (3 - 1 + 1) + 1;
             action.sendKeys(Keys.ARROW_DOWN);
             
@@ -37,8 +36,8 @@ public class HumanBehavior {
             
             action.build().perform();
         }
-        for (int i = 0; i < 100; i++) {
-            double randNum = Math.random() * (100 - 1 + 1) + 1;
+        for (int i = 0; i < 75; i++) {
+            double randNum = Math.random() * (75 - 1 + 1) + 1;
             double anotherRandNum = Math.random() * (3 - 1 + 1) + 1;
             action.sendKeys(Keys.ARROW_UP);
             
@@ -51,13 +50,15 @@ public class HumanBehavior {
            
             action.build().perform();
         }
-        
-      JavascriptExecutor js = (JavascriptExecutor) driver;
-      js.executeScript("window.scrollBy(0,0)", "");
+
     
     }
     
-    public void randomMouseMovement() {
+    public void randomMouseMovement(WebDriver driver) {
+        Actions action = new Actions(driver);
+        action.moveByOffset(5,5).perform(); 
+        action.moveByOffset(10, 15).perform(); 
+
         
     }
 
