@@ -1,6 +1,8 @@
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -29,13 +31,17 @@ public class IndeedBot {
     private static final int _MAX_WAIT_TIME = 30;
     private WebDriver _driver;
     private WebDriverWait _wait;
+    private ChromeOptions _chromeOptions;
+    private ArrayList<HashMap<String, String>> jobDescContainer = new ArrayList<HashMap<String, String>>();
 
     /**
      * This is a class constructor which initializes job application data, job
      * application type, a chrome driver, and sets the variables for the driver.
      * 
-     * @param jobAppData The object which holds job application data.
-     * @param appType    The enum type which is a set of application types.
+     * @param jobAppData    The object which holds job application data.
+     * @param humanBehavior The class which has all the human movement methods.
+     * @param helpers       The class which has all the helper methods.
+     * @param appType       The enum type which is a set of application types.
      */
     public IndeedBot(JobApplicationData jobAppData, HumanBehavior humanBehavior, Helpers helpers,
             JobApplicationData.ApplicationType appType) {
@@ -44,21 +50,21 @@ public class IndeedBot {
         this._helpers = helpers;
         this._appType = appType;
         System.setProperty(IndeedBot._CHROME_DRIVER_PROPERTY, IndeedBot._CHROME_DRIVER_PATH);
-        this._driver = new ChromeDriver();
+        this._chromeOptions = new ChromeOptions();
+        this._chromeOptions.addArguments("--disable-blink-features");
+        this._chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+        this._chromeOptions.addArguments("--user-data-dir=/Users/bruce/Library/Application Support/Google/Chrome");
+        this._chromeOptions.addArguments("start-maximized");
+        this._driver = new ChromeDriver(this._chromeOptions);
         this._driver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
         this._wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
 
-    }
-
-    public WebDriverWait getWait() {
-        return this._wait;
     }
 
     /**
      * This method navigates to the job page.
      */
     public void navigateToUrl() {
-        // Navigate to the url.
         this._driver.get(this._jobAppData.url);
     }
 
@@ -85,8 +91,12 @@ public class IndeedBot {
         this._driver.findElement(By.id("login-password-input")).clear();
 
         // Populate the fields with an email and a password
-        this._driver.findElement(By.id("login-email-input")).sendKeys(this._jobAppData.email);
-        this._driver.findElement(By.id("login-password-input")).sendKeys(this._jobAppData.password);
+        WebElement email = this._driver.findElement(By.id("login-email-input"));
+        WebElement password = this._driver.findElement(By.id("login-password-input"));
+        TimeUnit.SECONDS.sleep(2);
+        this._humanBehavior.humanTyping(email, this._jobAppData.email);
+        TimeUnit.SECONDS.sleep(1);
+        this._humanBehavior.humanTyping(password, this._jobAppData.password);
 
         // Wait until the following element appears before signing in.
         this._wait.until(ExpectedConditions.visibilityOf(this._driver.findElement(By.id("login-submit-button"))))
@@ -133,15 +143,17 @@ public class IndeedBot {
      * 
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
+     * @throws IOException
      */
     public void findEasyApply() throws InterruptedException {
-        this._humanBehavior.randomScrolling(this._driver);
+
+        TimeUnit.SECONDS.sleep(5);
 
         // Create a list of type WebElement objects called JobsCard.
         List<WebElement> JobsCard = this._driver.findElements(By.className("jobsearch-SerpJobCard"));
 
         // Loop through each of the jobs present on the page.
-        for (int i = 0; i < JobsCard.size(); i++) {
+        for (int i = 0; i < 5; i++) {
 
             // Check if the appType that is passed in is an "Easily Apply" one.
             if (this._appType == JobApplicationData.ApplicationType.EASILY_APPLY) {
@@ -172,10 +184,12 @@ public class IndeedBot {
                      * page, and pass in the parentWindow to keep track of the original job listing
                      * page as tabs are closed.
                      */
-                    applyToJobs(parentWindow);
+                    applyToJobs(parentWindow, href, this._appType);
                 }
             }
         }
+        // Read to csv file to track jobs applied to.
+        this._helpers.readJobsToCSV(jobDescContainer);
     }
 
     /**
@@ -186,7 +200,9 @@ public class IndeedBot {
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
-    public void applyToJobs(String currWindow) throws InterruptedException {
+    public void applyToJobs(String currWindow, String jobLink, JobApplicationData.ApplicationType appType)
+            throws InterruptedException {
+
         double randNum = Math.random() * (3 - 1 + 1) + 1;
         Actions action = new Actions(this._driver);
 
@@ -208,7 +224,8 @@ public class IndeedBot {
 
         // Check if the job has been applied to and filter out any jobs which have forms
         // asking for years of experience in a language or field.
-        if (hasJobBeenAppliedTo() & numOfQuals == 0) {
+        boolean applied = hasJobBeenAppliedTo();
+        if (applied) {
 
             // Some forms ask for a fullname while others ask for first name and last name.
             // So these try/catch/finally blocks are intended to resolve those different
@@ -217,7 +234,7 @@ public class IndeedBot {
 
                 WebElement fullname = this._wait
                         .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.name")));
-                this._humanBehavior.humanTyping(fullname, this._jobAppData.whatJob);
+                this._humanBehavior.humanTyping(fullname, this._jobAppData.fullname);
             } catch (Exception e) {
                 // If there's no full name input field, then check if there's a first name and
                 // last name field.
@@ -259,11 +276,9 @@ public class IndeedBot {
 
             // Attempt to submit application after filling the initial user information.
             submitApplication(numOfQuals);
-            /**
-             * TODO: Figure out how to deal with differing application questions after the
-             * "continue" button is clicked, which varies with each "Easily apply"
-             * application.
-             */
+            action.moveByOffset(0, 0).click().build().perform();
+            this._driver.switchTo().defaultContent();
+            jobDescContainer.add(this._helpers.getJobInformation(this._driver, this._wait, jobLink, appType, applied));
 
             // Close that new window (the job that was opened).
             this._driver.close();
@@ -276,10 +291,15 @@ public class IndeedBot {
         // If the job has already been applied to, close the current window and switch
         // to the job listing page to continue searching for jobs.
         else {
+            action.moveByOffset(0, 0).click().build().perform();
+            this._driver.switchTo().defaultContent();
+            jobDescContainer.add(this._helpers.getJobInformation(this._driver, this._wait, jobLink, appType, applied));
             this._driver.close();
             this._driver.switchTo().window(currWindow);
         }
-
+        for (int i = 0; i < jobDescContainer.size(); i++) {
+            System.out.println(jobDescContainer.get(i));
+        }
     }
 
     /**
@@ -306,22 +326,16 @@ public class IndeedBot {
      * This method submits the application after filling out the initial form in the
      * beginning.
      * 
-     * @param count
+     * @param count The number of qualifications in the position
      */
     public void submitApplication(int count) {
 
-        // Case where the application doesn't ask to fill years of qualifications.
-        if (count == 0) {
-            // Forms with "Enter the times you're available for a call"
-            this._helpers.tryFindElement(this._wait);
+        // Try to apply to the job.
+        this._helpers.tryFindElement(this._wait);
 
-        }
         /**
          * TODO: If count > 0, that means the job description contains information about
-         * years of experience needed to be considered for the job. There are so many
-         * different scenarios other than filling out the years such as work
-         * authorization, gender, sponsorship info, etc, that I still need to think
-         * about.
+         * years of experience needed to be considered for the job.
          */
     }
 
