@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
 import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -28,7 +27,7 @@ public class IndeedBot {
     private JobApplicationData.ApplicationType _appType;
     private static final String _CHROME_DRIVER_PROPERTY = "webdriver.chrome.driver";
     private static final String _CHROME_DRIVER_PATH = "/Applications/chromedriver";
-    private static final int _MAX_WAIT_TIME = 30;
+    private static final int _MAX_WAIT_TIME = 10;
     private WebDriver _driver;
     private WebDriverWait _wait;
     private ChromeOptions _chromeOptions;
@@ -76,15 +75,8 @@ public class IndeedBot {
      */
     public void login() throws InterruptedException {
 
-//        // This waits up to 30 seconds before throwing a TimeoutException or if it finds
-//        // the element it will return it in 0 - 30 seconds.
-//        WebDriverWait wait = new WebDriverWait(this._driver, _MAX_WAIT_TIME);
-
-        // Wait for 15 seconds until the Sign In tab appears before clicking.
-        this._wait
-                .until(ExpectedConditions
-                        .visibilityOf(this._driver.findElement(By.className("gnav-LoggedOutAccountLink-text"))))
-                .click();
+        // Wait for element to appear before clicking on it.
+        this._helpers.waitOnElementAndClick(this._driver, this._wait, By.className("gnav-LoggedOutAccountLink-text"));
 
         // Make sure the Email and Password fields are cleared out of any text.
         this._driver.findElement(By.id("login-email-input")).clear();
@@ -93,14 +85,10 @@ public class IndeedBot {
         // Populate the fields with an email and a password
         WebElement email = this._driver.findElement(By.id("login-email-input"));
         WebElement password = this._driver.findElement(By.id("login-password-input"));
-        TimeUnit.SECONDS.sleep(2);
         this._humanBehavior.humanTyping(email, this._jobAppData.email);
-        TimeUnit.SECONDS.sleep(1);
         this._humanBehavior.humanTyping(password, this._jobAppData.password);
 
-        // Wait until the following element appears before signing in.
-        this._wait.until(ExpectedConditions.visibilityOf(this._driver.findElement(By.id("login-submit-button"))))
-                .click();
+        this._helpers.waitOnElementAndClick(this._driver, this._wait, By.id("login-submit-button"));
     }
 
     /**
@@ -129,12 +117,10 @@ public class IndeedBot {
 
         // Clear the "Where" field and send in the location of the job
         action.sendKeys(Keys.TAB);
-        TimeUnit.SECONDS.sleep(3);
         action.sendKeys(Keys.DELETE);
         action.build().perform();
 
         this._humanBehavior.humanTyping(clearWhere, this._jobAppData.locationOfJob);
-        TimeUnit.SECONDS.sleep(1);
         clearWhere.submit();
     }
 
@@ -147,37 +133,33 @@ public class IndeedBot {
      */
     public void findEasyApply() throws InterruptedException {
 
-        TimeUnit.SECONDS.sleep(5);
-
         // Create a list of type WebElement objects called JobsCard.
-        List<WebElement> JobsCard = this._driver.findElements(By.className("jobsearch-SerpJobCard"));
+        List<WebElement> jobsCard = this._driver.findElements(By.className("jobsearch-SerpJobCard"));
+        int currPageNum = 0;
 
         // Loop through each of the jobs present on the page.
-        for (int i = 0; i < 5; i++) {
+        int i = 0;
+        while (i < jobsCard.size()) {
+
+            if (i == jobsCard.size() - 1 && currPageNum == this._jobAppData.pageNum)
+                break;
 
             // Check if the appType that is passed in is an "Easily Apply" one.
             if (this._appType == JobApplicationData.ApplicationType.EASILY_APPLY) {
 
                 // If there are one or more of these "Easily Apply" jobs, then open that job in
                 // a new tab.
-                if (JobsCard.get(i).findElements(By.className("iaLabel")).size() > 0) {
+                if (jobsCard.get(i).findElements(By.className("iaLabel")).size() > 0) {
                     System.out.println("Opening Easily Apply Job in another tab...");
 
                     // Get the current window.
                     String parentWindow = this._driver.getWindowHandle();
 
                     // Get the job link.
-                    String href = JobsCard.get(i).findElement(By.className("jobtitle")).getAttribute("href");
+                    String href = jobsCard.get(i).findElement(By.className("jobtitle")).getAttribute("href");
                     System.out.println(href);
 
-                    // Use JavaScript to open a new tab instead of "control + t".
-                    ((JavascriptExecutor) this._driver).executeScript("window.open()");
-                    // Store the available windows in a list.
-                    ArrayList<String> tabs = new ArrayList<String>(this._driver.getWindowHandles());
-                    // Switch to the newly opened tab.
-                    this._driver.switchTo().window(tabs.get(1));
-                    // Navigate to the job link in that newly opened tab.
-                    this._driver.get(href);
+                    this._helpers.switchWindows(this._driver, href);
 
                     /*
                      * Apply to each of those easy apply jobs until there are none on the first
@@ -187,8 +169,19 @@ public class IndeedBot {
                     applyToJobs(parentWindow, href, this._appType);
                 }
             }
+            if (i == jobsCard.size() - 1) {
+                // Go to the next page.
+                i = -1;
+                currPageNum += 1;
+                String url = "https://www.indeed.com/jobs?q=" + this._jobAppData.whatJob + "&l="
+                        + this._jobAppData.locationOfJob + "&start=" + currPageNum * 10;
+                this._driver.get(url);
+                jobsCard = this._wait.until(
+                        ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("jobsearch-SerpJobCard")));
+            }
+            i++;
         }
-        // Read to csv file to track jobs applied to.
+        // Populate CSV file with Easy apply jobs which haven't been applied to.
         this._helpers.readJobsToCSV(jobDescContainer);
     }
 
@@ -203,81 +196,56 @@ public class IndeedBot {
     public void applyToJobs(String currWindow, String jobLink, JobApplicationData.ApplicationType appType)
             throws InterruptedException {
 
-        double randNum = Math.random() * (3 - 1 + 1) + 1;
         Actions action = new Actions(this._driver);
 
         int numOfQuals = countQualifications();
 
-        // Wait until the following element appears before clicking on it.
-        TimeUnit.SECONDS.sleep((long) randNum);
-        this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("indeedApplyButtonContainer"))).click();
+        // Wait until the following elements to appear before clicking on it.
+        this._helpers.waitOnElementAndClick(this._driver, this._wait, By.id("indeedApplyButtonContainer"));
+        this._helpers.switchIframes(this._driver, this._wait,
+                By.cssSelector("iframe[title='Job application form container']"));
+        this._helpers.switchIframes(this._driver, this._wait, By.cssSelector("iframe[title='Job application form']"));
 
-        this._wait.until(ExpectedConditions
-                .visibilityOfElementLocated(By.cssSelector("iframe[title='Job application form container']")));
-        // Switch to parent iframe element.
-        this._driver.switchTo()
-                .frame(this._driver.findElement(By.cssSelector("iframe[title='Job application form container']")));
-        this._wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.cssSelector("iframe[title='Job application form']")));
-        // Switch to child iframe element.
-        this._driver.switchTo().frame(this._driver.findElement(By.cssSelector("iframe[title='Job application form']")));
-
-        // Check if the job has been applied to and filter out any jobs which have forms
-        // asking for years of experience in a language or field.
         boolean applied = hasJobBeenAppliedTo();
         if (applied) {
 
             // Some forms ask for a fullname while others ask for first name and last name.
             // So these try/catch/finally blocks are intended to resolve those different
             // cases.
-            try {
+            WebElement fullName = this._helpers.tryToFindElement(this._driver, this._wait,
+                    By.id("input-applicant.name"));
+            this._humanBehavior.humanTyping(fullName, this._jobAppData.fullname);
+            WebElement firstName = this._helpers.tryToFindElement(this._driver, this._wait,
+                    By.id("input-applicant.firstName"));
+            this._humanBehavior.humanTyping(firstName, this._jobAppData.firstname);
+            WebElement lastName = this._helpers.tryToFindElement(this._driver, this._wait,
+                    By.id("input-applicant.lastName"));
+            this._humanBehavior.humanTyping(lastName, this._jobAppData.lastname);
 
-                WebElement fullname = this._wait
-                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.name")));
-                this._humanBehavior.humanTyping(fullname, this._jobAppData.fullname);
-            } catch (Exception e) {
-                // If there's no full name input field, then check if there's a first name and
-                // last name field.
-                System.out.println("Full name field does not exist");
-
-                WebElement firstName = this._wait
-                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.firstName")));
-                this._humanBehavior.humanTyping(firstName, this._jobAppData.firstname);
-                WebElement lastName = this._wait
-                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.lastName")));
-                this._humanBehavior.humanTyping(lastName, this._jobAppData.lastname);
-
-                // There's always going to be an email and phone number field, so fill those in
-                // regardless of an exception being thrown.
-            } finally {
-                WebElement email = this._wait
-                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.email")));
-
-                // Sometimes the email field is readonly, meaning its already been filled in.
-                // This will skip over it and fill the phone number.
-                if (this._driver.findElement(By.id("input-applicant.email")).getAttribute("readonly") == null) {
-                    this._humanBehavior.humanTyping(email, this._jobAppData.email);
-                } else {
-                    action.sendKeys(Keys.TAB);
-                    action.build().perform();
-
-                }
-                WebElement phoneNum = this._wait
-                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("input-applicant.phoneNumber")));
-                this._humanBehavior.humanTyping(phoneNum, this._jobAppData.phone);
-
-                // Upload the resume and click on the continue button.
-                WebElement uploadResume = this._wait
-                        .until(ExpectedConditions.visibilityOfElementLocated(By.id("ia-CustomFilePicker-resume")));
-                uploadResume.sendKeys(this._jobAppData.resumePath);
-                TimeUnit.SECONDS.sleep((long) randNum);
-                this._wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
+            WebElement email = this._helpers.tryToFindElement(this._driver, this._wait, By.id("input-applicant.email"));
+            if (email.getAttribute("readonly") == null) {
+                this._humanBehavior.humanTyping(email, this._jobAppData.email);
+            } else {
+                action.sendKeys(Keys.TAB);
+                action.build().perform();
             }
+
+            WebElement phoneNumber = this._helpers.tryToFindElement(this._driver, this._wait,
+                    By.id("input-applicant.phoneNumber"));
+            this._humanBehavior.humanTyping(phoneNumber, this._jobAppData.phone);
+
+            WebElement uploadResume = this._helpers.tryToFindElement(this._driver, this._wait,
+                    By.id("ia-CustomFilePicker-resume"));
+            uploadResume.sendKeys(this._jobAppData.resumePath);
+
+            this._helpers.waitOnElementAndClick(this._driver, this._wait, By.id("form-action-continue"));
 
             // Attempt to submit application after filling the initial user information.
             submitApplication(numOfQuals);
+
             action.moveByOffset(0, 0).click().build().perform();
             this._driver.switchTo().defaultContent();
+
             jobDescContainer.add(this._helpers.getJobInformation(this._driver, this._wait, jobLink, appType, applied));
 
             // Close that new window (the job that was opened).
@@ -330,9 +298,15 @@ public class IndeedBot {
      */
     public void submitApplication(int count) {
 
-        // Try to apply to the job.
-        this._helpers.tryFindElement(this._wait);
-
+        WebElement textArea = this._helpers.tryToFindElement(this._driver, this._wait, By.tagName("textarea"));
+        if (textArea != null)
+            textArea.sendKeys("test");
+        else
+            ;
+        this._helpers.waitOnElementAndClick(this._driver, this._wait, By.id("form-action-continue"));
+        this._helpers.waitOnElementAndClick(this._driver, this._wait,
+                By.id("ia-InterventionActionButtons-buttonDesktop"));
+        this._helpers.waitOnElementAndClick(this._driver, this._wait, By.id("form-action-submit"));
         /**
          * TODO: If count > 0, that means the job description contains information about
          * years of experience needed to be considered for the job.
@@ -355,7 +329,6 @@ public class IndeedBot {
 
         int count = 0;
         for (int i = 0; i < paragraphs.size(); i++) {
-
             if (paragraphs.get(i).getText().contains("(Required)")
                     || paragraphs.get(i).getText().contains("(Preferred)")) {
                 count++;
@@ -372,5 +345,4 @@ public class IndeedBot {
     public void quitBrowser() {
         this._driver.quit();
     }
-
 }
