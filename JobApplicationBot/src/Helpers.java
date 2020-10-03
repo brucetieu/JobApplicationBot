@@ -23,36 +23,14 @@ import org.openqa.selenium.WebElement;
 public class Helpers {
 
     /**
-     * This method tries to find certain elements in the easy apply applications.
+     * This method is responsible for finding elements on a page and waiting for
+     * them.
      * 
-     * @param wait This parameter is need for waiting for elements to appear.
+     * @param driver This is the driver object.
+     * @param wait   This is the wait object.
+     * @param by     This is the specific element object in the webpage.
+     * @return This returns a null webelement or a found element.
      */
-//    public void tryFindElement(WebDriverWait wait) {
-//
-//        try {
-//            wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("textarea"))).sendKeys("Monday");
-//        } catch (Exception e) {
-//            System.out.println("Textarea box not found");
-//        }
-//        try {
-//            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-continue"))).click();
-//        } catch (Exception e) {
-//            System.out.println("Continue button not found");
-//        }
-//        try {
-//            wait.until(
-//                    ExpectedConditions.visibilityOfElementLocated(By.id("ia-InterventionActionButtons-buttonDesktop")))
-//                    .click();
-//        } catch (Exception e) {
-//            System.out.println("Continue Applying button not found");
-//        }
-//        try {
-//            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form-action-submit"))).click();
-//        } catch (Exception e) {
-//            System.out.println("Apply button not found");
-//        }
-//    }
-//    
     public WebElement tryToFindElement(WebDriver driver, WebDriverWait wait, By by) {
         WebElement element = null;
         try {
@@ -71,6 +49,12 @@ public class Helpers {
         }
     }
 
+    /**
+     * This method switches windows while applying.
+     * 
+     * @param driver The webdriver object.
+     * @param link   The job link which is a string
+     */
     public void switchWindows(WebDriver driver, String link) {
         // Use JavaScript to open a new tab instead of "control + t".
         ((JavascriptExecutor) driver).executeScript("window.open()");
@@ -82,6 +66,13 @@ public class Helpers {
         driver.get(link);
     }
 
+    /**
+     * This method switches iframes.
+     * 
+     * @param driver This is the driver object.
+     * @param wait   This is the wait object.
+     * @param by     This is the specific element object in the webpage.
+     */
     public void switchIframes(WebDriver driver, WebDriverWait wait, By by) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(by));
         driver.switchTo().frame(driver.findElement(by));
@@ -92,7 +83,8 @@ public class Helpers {
      * This method populates easy apply jobs that haven't been applied by the bot to
      * a CSV.
      * 
-     * @param list This is a list of hash maps.
+     * @param list This is a list of hash maps, and inside the map contains job
+     *             description data.
      */
     public void readJobsToCSV(ArrayList<HashMap<String, String>> list) {
         try {
