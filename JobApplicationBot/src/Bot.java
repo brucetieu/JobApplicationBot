@@ -95,13 +95,13 @@ public class Bot {
      * @param driver The webdriver object.
      * @param link   The job link which is a string.
      */
-    public void switchTabs(String link) {
+    public void navigateToLinkInNewTab(String link) {
         // Use JavaScript to open a new tab instead of "control + t".
         ((JavascriptExecutor) _driver).executeScript("window.open()");
         // Store the available windows in a list.
         ArrayList<String> tabs = new ArrayList<String>(_driver.getWindowHandles());
         // Switch to the newly opened tab.
-        _driver.switchTo().window(tabs.get(1));
+        _driver.switchTo().window(tabs.get(tabs.size()-1));
         // Navigate to the job link in that newly opened tab.
         _driver.get(link);
     }

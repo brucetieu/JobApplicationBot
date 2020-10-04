@@ -23,7 +23,7 @@ import org.openqa.selenium.WebElement;
 public class IndeedBot extends Helpers {
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
-    private ArrayList<HashMap<String, String>> jobDescContainer = new ArrayList<HashMap<String, String>>();
+    private JobPostingData _jobPostData;
 
     /**
      * This is a class constructor which initializes job application data, job
@@ -34,15 +34,17 @@ public class IndeedBot extends Helpers {
      * @param helpers       The class which has all the helper methods.
      * @param appType       The enum type which is a set of application types.
      */
-    public IndeedBot(JobApplicationData jobAppData, JobApplicationData.ApplicationType appType) {
+    public IndeedBot(JobApplicationData jobAppData, JobApplicationData.ApplicationType appType,
+            JobPostingData jobPostData) {
         this._jobAppData = jobAppData;
         this._appType = appType;
+        this._jobPostData = jobPostData;
+    }
 
-    }
-    
     public void navToIndeed() {
-        navigateToJobUrl(this._jobAppData.url);
+        navigateToJobUrl(this._jobAppData.platformUrl);
     }
+
     /**
      * This method logs in to the job site.
      * 
@@ -100,12 +102,11 @@ public class IndeedBot extends Helpers {
 
     /**
      * This method looks for Indeed Jobs that are easy to apply to (for now).
+     * @throws Exception 
      * 
-     * @throws InterruptedException If the thread executing the method is
-     *                              interrupted, stop the method and return early.
      * @throws IOException
      */
-    public void findEasyApply() throws InterruptedException {
+    public void findEasyApply() throws Exception {
 
         // Create a list of type WebElement objects called JobsCard.
         List<WebElement> jobsCard = getDriver().findElements(By.className("jobsearch-SerpJobCard"));
@@ -115,7 +116,7 @@ public class IndeedBot extends Helpers {
         int i = 0;
         while (i < jobsCard.size()) {
 
-            if (i == jobsCard.size() - 1 && currPageNum == this._jobAppData.pageNum)
+            if (i == jobsCard.size() - 1 && currPageNum == this._jobPostData.pageNum)
                 break;
 
             // Check if the appType that is passed in is an "Easily Apply" one.
@@ -133,7 +134,7 @@ public class IndeedBot extends Helpers {
                     String href = jobsCard.get(i).findElement(By.className("jobtitle")).getAttribute("href");
                     System.out.println(href);
 
-                    switchTabs(href);
+                    navigateToLinkInNewTab(href);
 
                     /*
                      * Apply to each of those easy apply jobs until there are none on the first
@@ -147,16 +148,16 @@ public class IndeedBot extends Helpers {
                 // Go to the next page.
                 i = -1;
                 currPageNum += 1;
-                String url = "https://www.indeed.com/jobs?q=" + this._jobAppData.whatJob + "&l="
+                String nextPageUrl = "https://www.indeed.com/jobs?q=" + this._jobAppData.whatJob + "&l="
                         + this._jobAppData.locationOfJob + "&start=" + currPageNum * 10;
-                getDriver().get(url);
+                getDriver().get(nextPageUrl);
                 jobsCard = getWait().until(
                         ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("jobsearch-SerpJobCard")));
             }
             i++;
         }
         // Populate CSV file with Easy apply jobs which haven't been applied to.
-        readJobsToCSV(jobDescContainer);
+        writeJobPostToCSV();
     }
 
     /**
@@ -212,7 +213,7 @@ public class IndeedBot extends Helpers {
             getActions().moveByOffset(0, 0).click().build().perform();
             getDriver().switchTo().defaultContent();
 
-            jobDescContainer.add(getJobInformation(jobLink, appType, applied));
+            this._jobPostData.jobPostingContainer.add(getJobInformation(jobLink, appType, applied));
 
             // Close that new window (the job that was opened).
             getDriver().close();
@@ -227,12 +228,12 @@ public class IndeedBot extends Helpers {
         else {
             getActions().moveByOffset(0, 0).click().build().perform();
             getDriver().switchTo().defaultContent();
-            jobDescContainer.add(getJobInformation(jobLink, appType, applied));
+            this._jobPostData.jobPostingContainer.add(getJobInformation(jobLink, appType, applied));
             getDriver().close();
             getDriver().switchTo().window(currWindow);
         }
-        for (int i = 0; i < jobDescContainer.size(); i++) {
-            System.out.println(jobDescContainer.get(i));
+        for (int i = 0; i < this._jobPostData.jobPostingContainer.size(); i++) {
+            System.out.println(this._jobPostData.jobPostingContainer.get(i));
         }
     }
 
