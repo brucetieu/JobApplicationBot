@@ -7,6 +7,13 @@ make install
 ```
 
 ## Running the tests
+
 ```
 make test
+```
+
+## Building the docs
+
+```
+make documentation
 ```

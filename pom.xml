@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-		 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.btieu.JobApplicationBot</groupId>
-    <artifactId>maven-unit-test</artifactId>
+    <artifactId>job-application-bot</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
@@ -27,6 +27,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.141.59</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -40,7 +46,28 @@
                 <version>3.0.0-M5</version>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.9.1</version>
+            </plugin>
+
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <javadocExecutable>/usr/bin/javadoc</javadocExecutable>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </reporting>  
 
 </project>
