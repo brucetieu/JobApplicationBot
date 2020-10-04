@@ -20,64 +20,7 @@ import org.openqa.selenium.WebElement;
  * @author bruce
  *
  */
-public class Helpers {
-
-    /**
-     * This method is responsible for finding elements on a page and waiting for
-     * them.
-     * 
-     * @param driver This is the driver object.
-     * @param wait   This is the wait object.
-     * @param by     This is the specific element object in the webpage.
-     * @return This returns a null webelement or a found element.
-     */
-    public WebElement tryToFindElement(WebDriver driver, WebDriverWait wait, By by) {
-        WebElement element = null;
-        try {
-            element = wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-        } catch (Exception e) {
-            System.out.println("Could not find element: " + by);
-        }
-        return element;
-    }
-
-    public void waitOnElementAndClick(WebDriver driver, WebDriverWait wait, By by) {
-        try {
-            wait.until(ExpectedConditions.visibilityOf(driver.findElement(by))).click();
-        } catch (Exception e) {
-            System.out.println("Could not locate element to click: " + by);
-        }
-    }
-
-    /**
-     * This method switches windows while applying.
-     * 
-     * @param driver The webdriver object.
-     * @param link   The job link which is a string
-     */
-    public void switchWindows(WebDriver driver, String link) {
-        // Use JavaScript to open a new tab instead of "control + t".
-        ((JavascriptExecutor) driver).executeScript("window.open()");
-        // Store the available windows in a list.
-        ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
-        // Switch to the newly opened tab.
-        driver.switchTo().window(tabs.get(1));
-        // Navigate to the job link in that newly opened tab.
-        driver.get(link);
-    }
-
-    /**
-     * This method switches iframes.
-     * 
-     * @param driver This is the driver object.
-     * @param wait   This is the wait object.
-     * @param by     This is the specific element object in the webpage.
-     */
-    public void switchIframes(WebDriver driver, WebDriverWait wait, By by) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-        driver.switchTo().frame(driver.findElement(by));
-
-    }
+public class Helpers extends Bot {
 
     /**
      * This method populates easy apply jobs that haven't been applied by the bot to
@@ -136,16 +79,16 @@ public class Helpers {
      *                been applied to.
      * @return This returns a hash map of job information.
      */
-    public HashMap<String, String> getJobInformation(WebDriver driver, WebDriverWait wait, String jobLink,
-            JobApplicationData.ApplicationType appType, boolean applied) {
+    public HashMap<String, String> getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
+            boolean applied) {
 
         HashMap<String, String> map = new HashMap<>();
         String timeStamp = new SimpleDateFormat("MMddyyy").format(Calendar.getInstance().getTime());
 
-        WebElement jobTitle = wait
-                .until(ExpectedConditions.visibilityOfElementLocated(By.className("jobsearch-JobInfoHeader-title")));
+        WebElement jobTitle = tryToFindElement(By.className("jobsearch-JobInfoHeader-title"));
         String job_title = jobTitle.getText();
-        WebElement companyLocationDiv = driver.findElement(By.className("jobsearch-DesktopStickyContainer-subtitle"));
+        WebElement companyLocationDiv = getDriver()
+                .findElement(By.className("jobsearch-DesktopStickyContainer-subtitle"));
         List<WebElement> nestedDiv = companyLocationDiv.findElements(By.tagName("div"));
         List<WebElement> innerDivs = nestedDiv.get(0).findElements(By.tagName("div"));
 
