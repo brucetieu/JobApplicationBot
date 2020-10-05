@@ -6,6 +6,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+/**
+ * Create the GUI.
+ * @author bruce
+ *
+ */
 public class BotGUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
