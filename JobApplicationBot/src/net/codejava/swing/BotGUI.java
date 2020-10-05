@@ -8,9 +8,6 @@ import javax.swing.JPanel;
 
 public class BotGUI extends JFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     private JPanel _contentPane;
     private IndeedPanel _indeedPanel;
@@ -33,7 +30,7 @@ public class BotGUI extends JFrame {
     }
 
     /**
-     * Create the frame.
+     * Create the frames.
      */
     public BotGUI(IndeedPanel indeedPanel) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

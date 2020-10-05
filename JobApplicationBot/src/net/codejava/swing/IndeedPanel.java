@@ -17,12 +17,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-
+/**
+ * This class creates and Indeed panel.
+ * @author bruce
+ *
+ */
 public class IndeedPanel extends JFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     private final JFileChooser _openFileChooser;
     private JPanel _panel;
@@ -42,8 +43,11 @@ public class IndeedPanel extends JFrame {
 
     }
 
+    /**
+     * Create the indeed tab.
+     * @param _contentPane A JPanel object.
+     */
     public void createIndeedPanel(JPanel _contentPane) {
-//      this.openFileChooser = new JFileChooser();
         this._openFileChooser.setCurrentDirectory(new File("./"));
 
         // Create a tabbed frame.
@@ -171,8 +175,10 @@ public class IndeedPanel extends JFrame {
         _panel.add(openFileBtn);
     }
 
+    /**
+     * This method launches the browser.
+     */
     public void launchApp() {
-        // Run the IndeedBot when "Launch" button is clicked.
         JButton launchBtn = new JButton("Launch");
         launchBtn.setBounds(250, 437, 117, 29);
         _panel.add(launchBtn);
