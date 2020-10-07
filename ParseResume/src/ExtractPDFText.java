@@ -25,13 +25,12 @@ public class ExtractPDFText {
     }
 
     /**
-     * This will print the documents text page by page.
+     * This will read the PDF and store each word in a string array.
      *
-     * @param args The command line arguments.
      * @throws IOException If there is an error parsing or extracting the document.
      * @return a String array of words.
      */
-    public String[] parsePDF() throws IOException {
+    public String[] readPDF() throws IOException {
 
         try (PDDocument document = PDDocument.load(new File(_pdfFile))) {
             AccessPermission ap = document.getCurrentAccessPermission();
@@ -56,7 +55,6 @@ public class ExtractPDFText {
             String[] words = parsedText.toLowerCase().split("[\\s\\.\\/\\-]+");
 
             return words;
-
         }
     }
 
