@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Declare and initialize common english stop words.
+ * @author bruce
+ *
+ */
 public class StopWords {
     public static ArrayList<String> stopWords = new ArrayList<>(Arrays.asList("i", "me", "my", "myself", "we", "our",
             "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she",

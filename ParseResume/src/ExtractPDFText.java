@@ -13,9 +13,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
  * Adapted from:
  * https://svn.apache.org/viewvc/pdfbox/trunk/examples/src/main/java/org/apache/pdfbox/examples/util/ExtractTextSimple.java?view=markup
  * 
- * This is a simple text extraction example to get started. For more advance
- * usage, see the ExtractTextByArea and the DrawPrintTextLocations examples in
- * this subproject, as well as the ExtractText tool in the tools subproject.
+ * This is a simple text extraction example to get started.
  *
  * @author Tilman Hausherr
  */
@@ -49,12 +47,9 @@ public class ExtractPDFText {
             // column order.
             stripper.setSortByPosition(true);
 
-            // Get the text of the document.
-            String text = stripper.getText(document);
-
-            // Keep as much words as possible, and replace everything else with an empty
-            // string.
-            String parsedText = text.replaceAll("[^-A-Za-z./\n\r\t\\+\\' ]+", "");
+            // Get the text of the document, keep as much words as possible, and replace
+            // everything else with an empty string.
+            String parsedText = stripper.getText(document).replaceAll("[^-A-Za-z./\n\r\t\\+\\' ]+", "");
 
             // Split up the parsedText by spaces, periods, '/', '-' and make sure it's all
             // lowercase.
@@ -66,7 +61,7 @@ public class ExtractPDFText {
     }
 
     /**
-     * This method removes words of length 1 or less and all the stopwords.
+     * This method removes words of length 1 or less and removes all the stopwords.
      * 
      * @param wordsAsArray The words that remain from the initial resume parsing.
      * @return the final word list with stop words removed.
