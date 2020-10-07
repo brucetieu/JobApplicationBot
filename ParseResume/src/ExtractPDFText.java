@@ -33,7 +33,7 @@ public class ExtractPDFText {
      * @throws IOException If there is an error parsing or extracting the document.
      * @return a String array of words.
      */
-    public String[] parsePDF() throws IOException {
+    public String readPDF() throws IOException {
 
         try (PDDocument document = PDDocument.load(new File(_pdfFile))) {
             AccessPermission ap = document.getCurrentAccessPermission();
@@ -51,7 +51,11 @@ public class ExtractPDFText {
 
             // Get the text of the document.
             String text = stripper.getText(document);
+            return text;
+        }
+    }
 
+    public String[] parseText(String text) {
             // Keep as much words as possible, and replace everything else with an empty
             // string.
             String parsedText = text.replaceAll("[^-A-Za-z./\n\r\t\\+\\' ]+", "");
@@ -61,10 +65,7 @@ public class ExtractPDFText {
             String[] words = parsedText.toLowerCase().split("[\\s\\.\\/\\-]+");
 
             return words;
-
-        }
     }
-
     /**
      * This method removes words of length 1 or less and all the stopwords.
      * 
