@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -6,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.WebDriver;
@@ -41,6 +43,7 @@ public class Bot {
         _chromeOptions.addArguments("start-maximized");
         _driver = new ChromeDriver(_chromeOptions);
         _driver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
+        _driver.manage().window().setPosition(new Point(-2000, 0));
         _wait = new WebDriverWait(_driver, _MAX_WAIT_TIME);
         _actions = new Actions(_driver);
     }
@@ -73,7 +76,7 @@ public class Bot {
     }
 
     /**
-     * This method tries to find elements on a webpage.
+     * This method tries to find a single element on a page.
      * 
      * @param by The specific element to be located.
      * @return The element if found.
@@ -82,6 +85,22 @@ public class Bot {
         WebElement element = null;
         try {
             element = _wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+        } catch (Exception e) {
+            System.out.println("Could not find element: " + by);
+        }
+        return element;
+    }
+
+    /**
+     * This method tries to find a list of elements on a page.
+     * 
+     * @param by The elements to be located
+     * @return The list of elements if found.
+     */
+    public List<WebElement> tryToFindElements(By by) {
+        List<WebElement> element = null;
+        try {
+            element = _wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
         } catch (Exception e) {
             System.out.println("Could not find element: " + by);
         }
@@ -157,5 +176,6 @@ public class Bot {
         }
 
     }
+    
 
 }

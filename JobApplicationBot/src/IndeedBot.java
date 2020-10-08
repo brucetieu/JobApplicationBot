@@ -10,27 +10,26 @@ import org.openqa.selenium.WebElement;
  * 
  * @author Bruce Tieu
  */
-public class IndeedBot extends BotIO {
+public class IndeedBot extends Bot {
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
-    private JobPostingData _jobPostData;
 
     /**
      * This is a class constructor which initializes job application data, job
      * application type, a chrome driver, and sets the variables for the driver.
      * 
-     * @param jobAppData    The object which holds job application data.
-     * @param humanBehavior The class which has all the human movement methods.
-     * @param helpers       The class which has all the helper methods.
-     * @param appType       The enum type which is a set of application types.
+     * @param jobAppData  The object which holds job application data.
+     * @param jobPostData The object which holds job posting data.
+     * @param appType     The enum type which is a set of application types.
      */
-    public IndeedBot(JobApplicationData jobAppData, JobApplicationData.ApplicationType appType,
-            JobPostingData jobPostData) {
-        this._jobAppData = jobAppData;
-        this._appType = appType;
-        this._jobPostData = jobPostData;
+    public IndeedBot(JobApplicationData _jobAppData, JobApplicationData.ApplicationType _appType) {
+        this._jobAppData = _jobAppData;
+        this._appType = _appType;
     }
 
+    /**
+     * Navigate to the Indeed site.
+     */
     public void navToIndeed() {
         navigateToJobPage(this._jobAppData.platformUrl);
     }
@@ -39,7 +38,7 @@ public class IndeedBot extends BotIO {
      * This method logs in to the job site.
      * 
      * @throws InterruptedException If the thread executing the method is
-     *                              interrupted, stop the method and return early
+     *                              interrupted, stop the method and return early.
      */
     public void login() throws InterruptedException {
 
@@ -91,7 +90,7 @@ public class IndeedBot extends BotIO {
     /**
      * This method looks for Indeed Jobs that are easy to apply to (for now).
      * 
-     * @throws Exception
+     * @throws Exception This checks for errors.
      * 
      */
     public void findEasyApply() throws Exception {
@@ -100,12 +99,9 @@ public class IndeedBot extends BotIO {
         List<WebElement> jobsCard = getDriver().findElements(By.className("jobsearch-SerpJobCard"));
         int currPageNum = 0;
 
-        // Loop through each of the jobs present on the page.
+        // Loop through each of the job divs present on the page.
         int i = 0;
         while (i < jobsCard.size()) {
-
-            if (i == jobsCard.size() - 1 && currPageNum == this._jobPostData.pageNum)
-                break;
 
             // Check if the appType that is passed in is an "Easily Apply" one.
             if (this._appType == JobApplicationData.ApplicationType.EASILY_APPLY) {
@@ -122,86 +118,51 @@ public class IndeedBot extends BotIO {
                     String href = jobsCard.get(i).findElement(By.className("jobtitle")).getAttribute("href");
                     System.out.println(href);
 
+                    // Open that job in a new tab.
                     navigateToLinkInNewTab(href);
 
                     /*
-                     * Apply to each of those easy apply jobs until there are none on the first
-                     * page, and pass in the parentWindow to keep track of the original job listing
-                     * page as tabs are closed.
+                     * Save each easy apply job until there are none on the first page, and pass in
+                     * the parentWindow to keep track of the original job listing page as tabs are
+                     * closed.
                      */
-                    applyToJobs(parentWindow, href, this._appType);
+                    saveJob(parentWindow, href, this._appType);
                 }
+
+                // TODO: If we're at the last card, and the current page is the same as what
+                // user specified, then stop.
             }
+            // Go to the next page to continue saving jobs.
             if (i == jobsCard.size() - 1) {
-                // Go to the next page.
                 i = -1;
                 currPageNum += 1;
                 String nextPageUrl = "https://www.indeed.com/jobs?q=" + this._jobAppData.whatJob + "&l="
                         + this._jobAppData.locationOfJob + "&start=" + currPageNum * 10;
                 getDriver().get(nextPageUrl);
-                jobsCard = getWait().until(
-                        ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("jobsearch-SerpJobCard")));
+                jobsCard = tryToFindElements(By.className("jobsearch-SerpJobCard"));
             }
             i++;
         }
-        // Populate CSV file with Easy apply jobs which haven't been applied to.
-        writeJobPostToCSV(this._jobPostData);
+
+        // TODO: Output saved jobs to a csv.
     }
 
     /**
-     * This method applies to the "Easily Apply" jobs on Indeed.com.
+     * This method saves "Easily Apply" jobs on Indeed.com.
      * 
      * @param currWindow The window which holds all listings of jobs on a single
      *                   page.
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
-    public void applyToJobs(String currWindow, String jobLink, JobApplicationData.ApplicationType appType)
+    public void saveJob(String currWindow, String jobLink, JobApplicationData.ApplicationType appType)
             throws InterruptedException {
 
-        int numOfQuals = countQualifications();
-
-        // Wait until the following elements to appear before clicking on it.
-        waitOnElementAndClick(By.id("indeedApplyButtonContainer"));
-        switchIframes(By.cssSelector("iframe[title='Job application form container']"));
-        switchIframes(By.cssSelector("iframe[title='Job application form']"));
-
+        // Check if job has been applied to.
         boolean applied = hasJobBeenAppliedTo();
         if (applied) {
 
-            // Some forms ask for a fullname while others ask for first name and last name.
-            // So these try/catch/finally blocks are intended to resolve those different
-            // cases.
-            WebElement fullName = tryToFindElement(By.id("input-applicant.name"));
-            humanTyping(fullName, this._jobAppData.fullname);
-            WebElement firstName = tryToFindElement(By.id("input-applicant.firstName"));
-            humanTyping(firstName, this._jobAppData.firstname);
-            WebElement lastName = tryToFindElement(By.id("input-applicant.lastName"));
-            humanTyping(lastName, this._jobAppData.lastname);
-
-            WebElement email = tryToFindElement(By.id("input-applicant.email"));
-            if (email.getAttribute("readonly") == null) {
-                humanTyping(email, this._jobAppData.email);
-            } else {
-                getActions().sendKeys(Keys.TAB);
-                getActions().build().perform();
-            }
-
-            WebElement phoneNumber = tryToFindElement(By.id("input-applicant.phoneNumber"));
-            humanTyping(phoneNumber, this._jobAppData.phone);
-
-            WebElement uploadResume = tryToFindElement(By.id("ia-CustomFilePicker-resume"));
-            uploadResume.sendKeys(this._jobAppData.resumePath);
-
-            waitOnElementAndClick(By.id("form-action-continue"));
-
-            // Attempt to submit application after filling the initial user information.
-            submitApplication(numOfQuals);
-
-            getActions().moveByOffset(0, 0).click().build().perform();
-            getDriver().switchTo().defaultContent();
-
-            this._jobPostData.jobPostingContainer.add(getJobInformation(jobLink, appType, applied));
+            // TODO: Save the job to a container.
 
             // Close that new window (the job that was opened).
             getDriver().close();
@@ -214,14 +175,10 @@ public class IndeedBot extends BotIO {
         // If the job has already been applied to, close the current window and switch
         // to the job listing page to continue searching for jobs.
         else {
-            getActions().moveByOffset(0, 0).click().build().perform();
-            getDriver().switchTo().defaultContent();
-            this._jobPostData.jobPostingContainer.add(getJobInformation(jobLink, appType, applied));
+            // TODO: Save job to container.
+
             getDriver().close();
             getDriver().switchTo().window(currWindow);
-        }
-        for (int i = 0; i < this._jobPostData.jobPostingContainer.size(); i++) {
-            System.out.println(this._jobPostData.jobPostingContainer.get(i));
         }
     }
 
@@ -242,49 +199,6 @@ public class IndeedBot extends BotIO {
             return false;
         } else
             return true;
-    }
-
-    /**
-     * This method submits the application after filling out the initial form in the
-     * beginning.
-     * 
-     * @param count The number of qualifications in the position
-     */
-    public void submitApplication(int count) {
-
-        WebElement textArea = tryToFindElement(By.tagName("textarea"));
-        if (textArea != null)
-            textArea.sendKeys("test");
-        else
-            ;
-        waitOnElementAndClick(By.id("form-action-continue"));
-        waitOnElementAndClick(By.id("ia-InterventionActionButtons-buttonDesktop"));
-        waitOnElementAndClick(By.id("form-action-submit"));
-    }
-
-    /**
-     * This method scrapes the job description with qualifications that have
-     * (Required) or (Preferred). If these key words are present, then almost always
-     * does the form ask the user to fill in their info according to those
-     * qualifications.
-     * 
-     * @return int The number of qualifications that will appear in the form.
-     */
-    public int countQualifications() {
-
-        WebElement jobDescDiv = tryToFindElement(By.id("jobDescriptionText"));
-        List<WebElement> paragraphs = jobDescDiv.findElements(By.tagName("ul"));
-
-        int count = 0;
-        for (int i = 0; i < paragraphs.size(); i++) {
-            if (paragraphs.get(i).getText().contains("(Required)")
-                    || paragraphs.get(i).getText().contains("(Preferred)")) {
-                count++;
-                System.out.println(paragraphs.get(i).getText());
-            }
-        }
-        return count;
-
     }
 
     /**
