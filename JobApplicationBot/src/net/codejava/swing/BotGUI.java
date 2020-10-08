@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 /**
  * Create the GUI.
+ * 
  * @author bruce
  *
  */
@@ -35,7 +36,8 @@ public class BotGUI extends JFrame {
     }
 
     /**
-     * Create the frames.
+     * Create the Desktop app.
+     * @param indeedPanel object which creates the indeed panel.
      */
     public BotGUI(IndeedPanel indeedPanel) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,6 +46,7 @@ public class BotGUI extends JFrame {
         this._contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(this._contentPane);
         this._contentPane.setLayout(null);
+
         this._indeedPanel = indeedPanel;
         this._indeedPanel.createIndeedPanel(this._contentPane);
         this._indeedPanel.launchApp();
