@@ -13,5 +13,11 @@ test:
 
 	@make clean > /dev/null
 
+documentation:
+	@# Generate documentation.
+	@mvn site
+
+	@xdg-open target/site/testapidocs/index.html
+
 clean:
 	@rm -rf target
