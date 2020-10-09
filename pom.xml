@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.btieu.JobApplicationBot</groupId>
-    <artifactId>job-application-bot</artifactId>
+    <artifactId>maven-unit-test</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
@@ -31,6 +31,19 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>3.141.59</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.swinglabs/swingx -->
+        <dependency>
+            <groupId>org.swinglabs</groupId>
+            <artifactId>swingx</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        
+        <!-- DefaultComponentFactory -->
+        <dependency>
+            <groupId>net.java.abeille</groupId>
+            <artifactId>abeille</artifactId>
+            <version>3.0</version>
         </dependency>
 
         <!-- SuperCSV -->
