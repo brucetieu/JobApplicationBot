@@ -13,15 +13,13 @@ import org.supercsv.prefs.CsvPreference;
  */
 public class WriteFiles {
 
-    private JobPostingData _jobPostingData = new JobPostingData();
-
     /**
      * This method writes the job posting information to a CSV so the applicant can
      * keep track of easy apply jobs.
      * 
      * @throws Exception
      */
-    public void writeJobPostToCSV(JobPostingData jobPostingData) throws Exception {
+    public void writeJobPostToCSV() throws Exception {
         final String[] header = new String[] { "jobTitle", "companyName", "companyLocation", "remote", "dateApplied",
                 "jobType", "jobLink", "submitted", "jobStatus" };
         ICsvMapWriter mapWriter = null;
@@ -34,9 +32,9 @@ public class WriteFiles {
             mapWriter.writeHeader(header);
 
             // Write each HashMap in the ArrayList
-            for (int i = 0; i < jobPostingData.jobPostingContainer.size(); i++) {
-                System.out.println(jobPostingData.jobPostingContainer.get(i));
-                mapWriter.write(jobPostingData.jobPostingContainer.get(i), header, processors);
+            for (int i = 0; i < JobPostingData.jobTitleDescContainer.size(); i++) {
+                System.out.println(JobPostingData.jobTitleDescContainer.get(i));
+                mapWriter.write(JobPostingData.jobTitleDescContainer.get(i), header, processors);
             }
         } finally {
             if (mapWriter != null) {
