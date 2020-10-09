@@ -1,10 +1,12 @@
 import java.io.FileWriter;
+import java.io.IOException;
 
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.CsvMapWriter;
-import org.supercsv.io.ICsvMapWriter;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
+
 
 /**
  * Class which writes information to files.
@@ -13,7 +15,7 @@ import org.supercsv.prefs.CsvPreference;
  */
 public class WriteFiles {
 
-    private JobPostingData _jobPostingData = new JobPostingData();
+//    private JobPostingData _jobPostingData = new JobPostingData();
 
     /**
      * This method writes the job posting information to a CSV so the applicant can
@@ -21,28 +23,33 @@ public class WriteFiles {
      * 
      * @throws Exception
      */
-    public void writeJobPostToCSV(JobPostingData jobPostingData) throws Exception {
-        final String[] header = new String[] { "jobTitle", "companyName", "companyLocation", "remote", "dateApplied",
-                "jobType", "jobLink", "submitted", "jobStatus" };
-        ICsvMapWriter mapWriter = null;
-
+    public void writeJobPostToCSV() {
+        ICsvBeanWriter beanWriter = null;
+        final String[] header = { "jobTitle", "companyName", "companyLoc", "remote", "dateApplied",
+                "appType", "jobLink", "submitted", "jobStatus" };
+        
         try {
-            mapWriter = new CsvMapWriter(new FileWriter("jobPostOutput.csv"), CsvPreference.STANDARD_PREFERENCE);
-            final CellProcessor[] processors = getProcessors();
-
-            // Write the header.
-            mapWriter.writeHeader(header);
-
-            // Write each HashMap in the ArrayList
-            for (int i = 0; i < jobPostingData.jobPostingContainer.size(); i++) {
-                System.out.println(jobPostingData.jobPostingContainer.get(i));
-                mapWriter.write(jobPostingData.jobPostingContainer.get(i), header, processors);
-            }
-        } finally {
-            if (mapWriter != null) {
-                mapWriter.close();
-            }
+        beanWriter = new CsvBeanWriter(new FileWriter("jobTitleDescOutput.csv"), CsvPreference.STANDARD_PREFERENCE);
+        final CellProcessor[] processors = getProcessors();
+        beanWriter.writeHeader(header);
+        
+        for (JobPostingData jobPost : JobPostingData.jobPostingContainer) {
+            beanWriter.write(jobPost, header, processors);
         }
+        
+        } catch (IOException e) {
+            System.err.println("Error writing to CSV file: " + e);
+        } finally {
+            if (beanWriter != null) {
+                try {
+                    beanWriter.close();
+                } catch (IOException e) {
+                    System.err.println("Error closing the writer: " + e);
+                }
+            }
+            
+        }
+
 
     }
 
