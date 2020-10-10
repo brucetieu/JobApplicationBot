@@ -7,36 +7,33 @@ import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
-
 /**
  * Class which writes information to files.
+ * 
  * @author bruce
  *
  */
 public class WriteFiles {
 
-//    private JobPostingData _jobPostingData = new JobPostingData();
-
     /**
      * This method writes the job posting information to a CSV so the applicant can
      * keep track of easy apply jobs.
      * 
-     * @throws Exception
      */
     public void writeJobPostToCSV() {
         ICsvBeanWriter beanWriter = null;
-        final String[] header = { "jobTitle", "companyName", "companyLoc", "remote", "dateApplied",
-                "appType", "jobLink", "submitted", "jobStatus" };
-        
+        final String[] header = { "jobTitle", "companyName", "companyLoc", "remote", "dateApplied", "appType",
+                "jobLink", "submitted", "jobStatus" };
+
         try {
-        beanWriter = new CsvBeanWriter(new FileWriter("jobTitleDescOutput.csv"), CsvPreference.STANDARD_PREFERENCE);
-        final CellProcessor[] processors = getProcessors();
-        beanWriter.writeHeader(header);
-        
-        for (JobPostingData jobPost : JobPostingData.jobPostingContainer) {
-            beanWriter.write(jobPost, header, processors);
-        }
-        
+            beanWriter = new CsvBeanWriter(new FileWriter("jobTitleDescOutput.csv"), CsvPreference.STANDARD_PREFERENCE);
+            final CellProcessor[] processors = getProcessors();
+            beanWriter.writeHeader(header);
+
+            for (JobPostingData jobPost : JobPostingData.jobPostingContainer) {
+                beanWriter.write(jobPost, header, processors);
+            }
+
         } catch (IOException e) {
             System.err.println("Error writing to CSV file: " + e);
         } finally {
@@ -47,9 +44,8 @@ public class WriteFiles {
                     System.err.println("Error closing the writer: " + e);
                 }
             }
-            
-        }
 
+        }
 
     }
 
