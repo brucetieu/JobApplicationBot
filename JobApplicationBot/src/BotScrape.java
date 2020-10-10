@@ -16,8 +16,6 @@ import org.openqa.selenium.WebElement;
  */
 public class BotScrape extends Bot {
 
-//    private JobPostingData _jobPostingData = new JobPostingData();
-
     /**
      * This method gets information from the job description like job title,
      * company, etc.
