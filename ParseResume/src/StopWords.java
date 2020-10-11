@@ -7,7 +7,7 @@ import java.util.Arrays;
  *
  */
 public class StopWords {
-    public static ArrayList<String> stopWords = new ArrayList<>(Arrays.asList("i", "me", "my", "myself", "we", "our",
+    public static final ArrayList<String> STOP_WORDS = new ArrayList<>(Arrays.asList("i", "me", "my", "myself", "we", "our",
             "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she",
             "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves", "what",
             "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been",
