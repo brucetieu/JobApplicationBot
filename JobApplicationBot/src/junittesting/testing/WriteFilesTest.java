@@ -48,6 +48,10 @@ class WriteFilesTest {
     }
 
     @Test
+    /**
+     * Test the bean writing capability. 
+     * @throws IOException Throw an IOException if there's an error.
+     */
     void testWriteProcessors() throws IOException {
 
         _beanWriter.writeHeader(CSVTestCases.HEADER);
