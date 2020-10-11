@@ -1,7 +1,7 @@
 package junittesting.beans;
 
 /**
- * This class holds job posting data.
+ * This class creates the job posting bean.
  * 
  * @author bruce
  *
@@ -27,10 +27,7 @@ public class JobBean {
     public JobBean() {
 
     }
-    // Static variables.
-//    public static int pageNum;
-//    public static ArrayList<JobPostingData> jobPostingContainer = new ArrayList<JobPostingData>();
-
+    
     @Override
     /**
      * Print out object member variables.
