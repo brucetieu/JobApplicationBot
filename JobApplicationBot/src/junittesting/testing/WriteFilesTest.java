@@ -39,7 +39,7 @@ class WriteFilesTest {
     private JobPostingData _jobBean;
 
     /*
-     * This constructor initializes the writer, bean writer, and bean JobBean object.
+     * This constructor initializes the writer, bean writer, and job bean.
      */
     public WriteFilesTest() {
         _writer = new StringWriter();
@@ -60,7 +60,7 @@ class WriteFilesTest {
         String actual = _writer.toString();
         actual = actual.replace("\"", "");
 
-        // Compare expected (CSVTestCases.CSV_FILE) vs actual results (temp).
+        // Compare expected (CSVTestCases.CSV_FILE) vs actual results (actual).
         assertEquals(CSVTestCases.CSV_FILE, actual);
     }
 

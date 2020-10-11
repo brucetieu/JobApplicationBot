@@ -84,7 +84,7 @@ public class CSVTestCases {
             .append(JOB2_CSV).append("\r\n").append(JOB3_CSV).append("\r\n").append(JOB4_CSV).append("\r\n")
             .append(JOB5_CSV).append("\r\n").toString();
 
-    // JOBEAN will be what is actually produced by the method.
+    // JOB_POSTING_BEAN will be what is actually produced by the method.
     public static final List<JobPostingData> JOB_POSTING_BEAN = Arrays.asList(JOB1, JOB2, JOB3, JOB4, JOB5);
 
 }
