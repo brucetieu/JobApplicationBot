@@ -2,26 +2,32 @@ package junittesting.jobappbot;
 import java.util.ArrayList;
 
 /**
- * This class holds job posting data.
+ * This class creates the job posting bean.
  * 
  * @author bruce
  *
  */
 public class JobPostingData {
 
-    private String jobTitle, companyName, companyLoc, remote, dateApplied, appType, jobLink, submitted, jobStatus;
+    private String _jobTitle, _companyName, _companyLoc, _remote, _dateApplied, _appType, _jobLink, _submitted,
+            _jobStatus;
 
-    public JobPostingData(String jobTitle, String companyName, String companyLoc, String remote, String dateApplied,
-            String appType, String jobLink, String submitted, String jobStatus) {
-        this.jobTitle = jobTitle;
-        this.companyName = companyName;
-        this.companyLoc = companyLoc;
-        this.remote = remote;
-        this.dateApplied = dateApplied;
-        this.appType = appType;
-        this.jobLink = jobLink;
-        this.submitted = submitted;
-        this.jobStatus = jobStatus;
+    public JobPostingData(String _jobTitle, String _companyName, String _companyLoc, String _remote, String _dateApplied,
+            String _appType, String _jobLink, String _submitted, String _jobStatus) {
+        this._jobTitle = _jobTitle;
+        this._companyName = _companyName;
+        this._companyLoc = _companyLoc;
+        this._remote = _remote;
+        this._dateApplied = _dateApplied;
+        this._appType = _appType;
+        this._jobLink = _jobLink;
+        this._submitted = _submitted;
+        this._jobStatus = _jobStatus;
+    }
+
+    // Default constructor.
+    public JobPostingData() {
+
     }
 
     // Static variables.
@@ -36,99 +42,110 @@ public class JobPostingData {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("JobPostingData [jobTitle=");
-        builder.append(jobTitle);
+        builder.append(this._jobTitle);
         builder.append(", companyName=");
-        builder.append(companyName);
+        builder.append(this._companyName);
         builder.append(", companyLoc=");
-        builder.append(companyLoc);
+        builder.append(this._companyLoc);
         builder.append(", remote=");
-        builder.append(remote);
+        builder.append(this._remote);
         builder.append(", dateApplied=");
-        builder.append(dateApplied);
+        builder.append(this._dateApplied);
         builder.append(", appType=");
-        builder.append(appType);
+        builder.append(this._appType);
         builder.append(", jobLink=");
-        builder.append(jobLink);
+        builder.append(this._jobLink);
         builder.append(", submitted=");
-        builder.append(submitted);
+        builder.append(this._submitted);
         builder.append(", jobStatus=");
-        builder.append(jobStatus);
+        builder.append(this._jobStatus);
         builder.append("]");
         return builder.toString();
     }
 
-    // Needed these getters so that the JobPostingData object correct writes to CSV via BeanWriter.
-    
+    // Needed these getters so that the JobPostingData object correct writes to CSV
+    // via BeanWriter.
+
     /**
      * Get the title of the job e.g Software Engineer.
+     * 
      * @return a job title of type string.
      */
     public String getJobTitle() {
-        return jobTitle;
+        return this._jobTitle;
     }
 
     /**
      * Get the company name of the job.
+     * 
      * @return The company name of type string.
      */
     public String getCompanyName() {
-        return companyName;
+        return this._companyName;
     }
 
     /**
      * Get the location of the job.
+     * 
      * @return The company name of type string.
      */
     public String getCompanyLoc() {
-        return companyLoc;
+        return this._companyLoc;
     }
 
     /**
      * Get information about the job being remote or not.
+     * 
      * @return A string that is either "yes" or "no".
      */
     public String getRemote() {
-        return remote;
+        return this._remote;
     }
 
     /**
      * Get the date the job was applied to.
+     * 
      * @return The date formatted as a string.
      */
     public String getDateApplied() {
-        return dateApplied;
+        return this._dateApplied;
     }
-    
+
     /**
      * Get the application type e.g easily apply
+     * 
      * @return The application type as a string.
      */
     public String getAppType() {
-        return appType;
+        return this._appType;
     }
 
     /**
      * Get the link to the job application.
+     * 
      * @return A job link which is a string.
      */
     public String getJobLink() {
-        return jobLink;
+        return this._jobLink;
     }
-    
+
     /**
-     * Get information about whether or not the application had already been submitted.
+     * Get information about whether or not the application had already been
+     * submitted.
+     * 
      * @return A string of either "yes" or "no".
      */
     public String getSubmitted() {
-        return submitted;
+        return this._submitted;
     }
 
     /**
      * Get the status of the application.
+     * 
      * @return An empty string.
      */
     public String getJobStatus() {
-        return jobStatus;
+        return this._jobStatus;
     }
 
 }
