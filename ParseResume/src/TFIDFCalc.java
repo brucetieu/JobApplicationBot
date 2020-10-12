@@ -87,12 +87,13 @@ public class TFIDFCalc {
      * @return The idf hashtable for both documents.
      */
     public Hashtable<String, Double> computeIDF(Hashtable<String, Double> countA, Hashtable<String, Double> countB) {
-        // IDF(t) = log_e(Total number of documents / Number of documents with term t in
-        // it).
+
         Hashtable<String, Double> idfHash = new Hashtable<String, Double>();
         int numOfDocuments = 2;
         int numDocWTermT = 0;
 
+        // IDF(t) = log_e(Total number of documents / Number of documents with term t in
+        // it).
         for (String word : countA.keySet()) {
             if (countA.get(word) > 0 || countB.get(word) > 0) {
                 numDocWTermT += 1;
