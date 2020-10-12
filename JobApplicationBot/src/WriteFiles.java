@@ -7,6 +7,7 @@ import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
+
 /**
  * Class which writes information to files.
  * 
@@ -44,7 +45,6 @@ public class WriteFiles {
                     System.err.println("Error closing the writer: " + e);
                 }
             }
-
         }
 
     }
