@@ -1,3 +1,5 @@
+package com.btieu.JobApplicationBot;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
