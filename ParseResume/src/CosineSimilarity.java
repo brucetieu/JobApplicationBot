@@ -9,14 +9,6 @@ import java.util.Hashtable;
  */
 public class CosineSimilarity {
 
-    private double dotProduct, normA, normB;
-
-    public CosineSimilarity() {
-        dotProduct = 0.0;
-        normA = 0.0;
-        normB = 0.0;
-    }
-
     /**
      * This calculates the cosine similarity of two documents.
      * 
@@ -26,6 +18,9 @@ public class CosineSimilarity {
      */
     public double cosineSimilarity(Hashtable<String, Double> vectorA, Hashtable<String, Double> vectorB) {
 
+        double dotProduct = 0.0;
+        double normA = 0.0;
+        double normB = 0.0;
         for (String word : vectorA.keySet()) {
             dotProduct += vectorA.get(word) * vectorB.get(word);
             normA += Math.pow(vectorA.get(word), 2);
