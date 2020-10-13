@@ -8,19 +8,19 @@ import java.util.ArrayList;
  */
 public class JobPostingData {
 
-    private String _jobTitle, _companyName, _companyLoc, _remote, _dateApplied, _appType, _jobLink, _submitted, _jobStatus;
+    private String jobTitle, companyName, companyLoc, remote, dateApplied, appType, jobLink, submitted, jobStatus;
 
-    public JobPostingData(String _jobTitle, String _companyName, String _companyLoc, String _remote, String _dateApplied,
-            String _appType, String _jobLink, String _submitted, String _jobStatus) {
-        this._jobTitle = _jobTitle;
-        this._companyName = _companyName;
-        this._companyLoc = _companyLoc;
-        this._remote = _remote;
-        this._dateApplied = _dateApplied;
-        this._appType = _appType;
-        this._jobLink = _jobLink;
-        this._submitted = _submitted;
-        this._jobStatus = _jobStatus;
+    public JobPostingData(String jobTitle, String companyName, String companyLoc, String remote, String dateApplied,
+            String appType, String jobLink, String submitted, String jobStatus) {
+        this.jobTitle = jobTitle;
+        this.companyName = companyName;
+        this.companyLoc = companyLoc;
+        this.remote = remote;
+        this.dateApplied = dateApplied;
+        this.appType = appType;
+        this.jobLink = jobLink;
+        this.submitted = submitted;
+        this.jobStatus = jobStatus;
     }
 
     // Static variables.
@@ -35,23 +35,23 @@ public class JobPostingData {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("JobPostingData [jobTitle=");
-        builder.append(this._jobTitle);
+        builder.append(jobTitle);
         builder.append(", companyName=");
-        builder.append(this._companyName);
+        builder.append(companyName);
         builder.append(", companyLoc=");
-        builder.append(this._companyLoc);
+        builder.append(companyLoc);
         builder.append(", remote=");
-        builder.append(this._remote);
+        builder.append(remote);
         builder.append(", dateApplied=");
-        builder.append(this._dateApplied);
+        builder.append(dateApplied);
         builder.append(", appType=");
-        builder.append(this._appType);
+        builder.append(appType);
         builder.append(", jobLink=");
-        builder.append(this._jobLink);
+        builder.append(jobLink);
         builder.append(", submitted=");
-        builder.append(this._submitted);
+        builder.append(submitted);
         builder.append(", jobStatus=");
-        builder.append(this._jobStatus);
+        builder.append(jobStatus);
         builder.append("]");
         return builder.toString();
     }
@@ -63,7 +63,7 @@ public class JobPostingData {
      * @return a job title of type string.
      */
     public String getJobTitle() {
-        return this._jobTitle;
+        return jobTitle;
     }
 
     /**
@@ -71,7 +71,7 @@ public class JobPostingData {
      * @return The company name of type string.
      */
     public String getCompanyName() {
-        return this._companyName;
+        return companyName;
     }
 
     /**
@@ -79,7 +79,7 @@ public class JobPostingData {
      * @return The company name of type string.
      */
     public String getCompanyLoc() {
-        return this._companyLoc;
+        return companyLoc;
     }
 
     /**
@@ -87,7 +87,7 @@ public class JobPostingData {
      * @return A string that is either "yes" or "no".
      */
     public String getRemote() {
-        return this._remote;
+        return remote;
     }
 
     /**
@@ -95,7 +95,7 @@ public class JobPostingData {
      * @return The date formatted as a string.
      */
     public String getDateApplied() {
-        return this._dateApplied;
+        return dateApplied;
     }
     
     /**
@@ -103,7 +103,7 @@ public class JobPostingData {
      * @return The application type as a string.
      */
     public String getAppType() {
-        return this._appType;
+        return appType;
     }
 
     /**
@@ -111,7 +111,7 @@ public class JobPostingData {
      * @return A job link which is a string.
      */
     public String getJobLink() {
-        return this._jobLink;
+        return jobLink;
     }
     
     /**
@@ -119,7 +119,7 @@ public class JobPostingData {
      * @return A string of either "yes" or "no".
      */
     public String getSubmitted() {
-        return this._submitted;
+        return submitted;
     }
 
     /**
@@ -127,7 +127,7 @@ public class JobPostingData {
      * @return An empty string.
      */
     public String getJobStatus() {
-        return this._jobStatus;
+        return jobStatus;
     }
 
 }
