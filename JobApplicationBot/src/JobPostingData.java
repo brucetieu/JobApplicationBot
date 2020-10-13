@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class JobPostingData {
 
-    private String jobTitle, companyName, companyLoc, remote, dateApplied, appType, jobLink, submitted, jobStatus;
+    public String jobTitle, companyName, companyLoc, remote, dateApplied, appType, jobLink, submitted, jobStatus;
 
     public JobPostingData(String jobTitle, String companyName, String companyLoc, String remote, String dateApplied,
             String appType, String jobLink, String submitted, String jobStatus) {
@@ -35,23 +35,23 @@ public class JobPostingData {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("JobPostingData [jobTitle=");
-        builder.append(jobTitle);
+        builder.append(this.jobTitle);
         builder.append(", companyName=");
-        builder.append(companyName);
+        builder.append(this.companyName);
         builder.append(", companyLoc=");
-        builder.append(companyLoc);
+        builder.append(this.companyLoc);
         builder.append(", remote=");
-        builder.append(remote);
+        builder.append(this.remote);
         builder.append(", dateApplied=");
-        builder.append(dateApplied);
+        builder.append(this.dateApplied);
         builder.append(", appType=");
-        builder.append(appType);
+        builder.append(this.appType);
         builder.append(", jobLink=");
-        builder.append(jobLink);
+        builder.append(this.jobLink);
         builder.append(", submitted=");
-        builder.append(submitted);
+        builder.append(this.submitted);
         builder.append(", jobStatus=");
-        builder.append(jobStatus);
+        builder.append(this.jobStatus);
         builder.append("]");
         return builder.toString();
     }
@@ -63,7 +63,7 @@ public class JobPostingData {
      * @return a job title of type string.
      */
     public String getJobTitle() {
-        return jobTitle;
+        return this.jobTitle;
     }
 
     /**
@@ -71,7 +71,7 @@ public class JobPostingData {
      * @return The company name of type string.
      */
     public String getCompanyName() {
-        return companyName;
+        return this.companyName;
     }
 
     /**
@@ -79,7 +79,7 @@ public class JobPostingData {
      * @return The company name of type string.
      */
     public String getCompanyLoc() {
-        return companyLoc;
+        return this.companyLoc;
     }
 
     /**
@@ -87,7 +87,7 @@ public class JobPostingData {
      * @return A string that is either "yes" or "no".
      */
     public String getRemote() {
-        return remote;
+        return this.remote;
     }
 
     /**
@@ -95,7 +95,7 @@ public class JobPostingData {
      * @return The date formatted as a string.
      */
     public String getDateApplied() {
-        return dateApplied;
+        return this.dateApplied;
     }
     
     /**
@@ -103,7 +103,7 @@ public class JobPostingData {
      * @return The application type as a string.
      */
     public String getAppType() {
-        return appType;
+        return this.appType;
     }
 
     /**
@@ -111,7 +111,7 @@ public class JobPostingData {
      * @return A job link which is a string.
      */
     public String getJobLink() {
-        return jobLink;
+        return this.jobLink;
     }
     
     /**
@@ -119,7 +119,7 @@ public class JobPostingData {
      * @return A string of either "yes" or "no".
      */
     public String getSubmitted() {
-        return submitted;
+        return this.submitted;
     }
 
     /**
@@ -127,7 +127,7 @@ public class JobPostingData {
      * @return An empty string.
      */
     public String getJobStatus() {
-        return jobStatus;
+        return this.jobStatus;
     }
 
 }
