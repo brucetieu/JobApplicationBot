@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package junittesting.testcases;
+package com.btieu.JobApplicationBot;
 
 import java.util.Arrays;
 import java.util.List;
-
-import junittesting.jobappbot.JobPostingData;
 
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
