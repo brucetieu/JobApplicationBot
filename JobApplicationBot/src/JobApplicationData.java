@@ -1,3 +1,4 @@
+package com.btieu.JobApplicationBot;
 
 /**
  * This class holds all the job application data.
