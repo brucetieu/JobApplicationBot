@@ -1,13 +1,3 @@
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
-import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
  * Copyright 2020 Bruce Tieu
@@ -29,12 +19,24 @@ import org.apache.pdfbox.text.PDFTextStripper;
  * 
  * @author Tilman Hausherr
  */
-public class ExtractPDFText {
-    private String _pdfFile;
 
-    public ExtractPDFText(String pdfFile) {
-        _pdfFile = pdfFile;
-    }
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+public class ExtractPDFText {
+//    private String _pdfFile;
+//
+//    public ExtractPDFText(String pdfFile) {
+//        _pdfFile = pdfFile;
+//    }
 
     /**
      * This will read the PDF and store each word in a string array.
@@ -42,32 +44,37 @@ public class ExtractPDFText {
      * @throws IOException If there is an error parsing or extracting the document.
      * @return a String array of words.
      */
-    public List<String> parsePDF() throws IOException {
+    public List<String> parseDocument(String doc) throws IOException {
 
-        try (PDDocument document = PDDocument.load(new File(_pdfFile))) {
-            AccessPermission ap = document.getCurrentAccessPermission();
-            if (!ap.canExtractContent()) {
-                throw new IOException("You do not have permission to extract text");
+        // Check if the string is a file. If it is, then
+        File file = new File(doc);
+
+        if (file.isFile()) {
+            try (PDDocument document = PDDocument.load(file)) {
+                AccessPermission ap = document.getCurrentAccessPermission();
+                if (!ap.canExtractContent()) {
+                    throw new IOException("You do not have permission to extract text");
+                }
+
+                PDFTextStripper stripper = new PDFTextStripper();
+
+                // This example uses sorting, but in some cases it is more useful to switch it
+                // off,
+                // e.g. in some files with columns where the PDF content stream respects the
+                // column order.
+                stripper.setSortByPosition(true);
+
+                return removeStopWords(parseText(stripper.getText(document)));
             }
-
-            PDFTextStripper stripper = new PDFTextStripper();
-
-            // This example uses sorting, but in some cases it is more useful to switch it
-            // off,
-            // e.g. in some files with columns where the PDF content stream respects the
-            // column order.
-            stripper.setSortByPosition(true);
-
-            // Get the text of the document, keep as much words as possible, and replace
-            // everything else with an empty string.
-            String parsedText = stripper.getText(document).replaceAll("[^-A-Za-z./\n\r\t\\+\\' ]+", "");
-
-            // Split up the parsedText by spaces, periods, '/', '-' and make sure it's all
-            // lowercase.
-            String[] words = parsedText.toLowerCase().split("[\\s\\.\\/\\-]+");
-
-            return removeStopWords(words);
+        } else {
+            return removeStopWords(parseText(doc));
         }
+    }
+
+    public String[] parseText(String text) {
+        String parsedText = text.replaceAll("[^-A-Za-z./\n\r\t\\+\\' ]+", "");
+        String[] words = parsedText.toLowerCase().split("[\\s\\.\\/\\-]+");
+        return words;
     }
 
     /**
@@ -92,5 +99,13 @@ public class ExtractPDFText {
         finalWordList.removeAll(StopWords.STOP_WORDS);
 
         return finalWordList;
+    }
+    
+    public static void main(String[] args) throws IOException {
+        ExtractPDFText extractText = new ExtractPDFText();
+       List<String> resume = extractText.parseDocument("/Users/bruce/Documents/WithObj3_Bruce_Tieu_2020_Resume");
+       for (String res : resume) {
+           System.out.println(res);
+       }
     }
 }
