@@ -26,10 +26,11 @@ public class WriteFiles {
     
     private Writer _writer;
     private File _file;
-    private final static String _FILENAME = "jobPostDataOutput.csv";
+    private static String _FILENAME = "";
 
 
-    public WriteFiles() throws IOException {
+    public WriteFiles(String filename) throws IOException {
+        _FILENAME = filename;
         _file = new File(_FILENAME);
         _writer = new FileWriter(_file);
     }

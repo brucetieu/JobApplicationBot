@@ -51,8 +51,8 @@ class WriteFilesTest {
      */
     void testWriteJobPostToCSV() throws IOException {
 
-        // Create a WriteFiles object.
-        WriteFiles writeFiles = new WriteFiles();
+        // Create a WriteFiles object, specify the filename to output the test results.
+        WriteFiles writeFiles = new WriteFiles("testOutput.csv");
         
         // Store the string of what was written to the file.
         String actualOutput = writeFiles.writeJobPostToCSV(CSVTestCases.JOB_POSTING_BEAN);
