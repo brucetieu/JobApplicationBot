@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.btieu.JobApplicationBot;
+package junittesting.testing;
+
+import com.btieu.JobApplicationBot.JobPostingData;
+import com.btieu.JobApplicationBot.WriteFiles;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
-// import JobApplicationBot.src.JobPostingData;
-// import junittesting.testcases.CSVTestCases;
+import junittesting.testcases.CSVTestCases;
 
 import org.junit.jupiter.api.Test;
-import org.supercsv.io.CsvBeanWriter;
-import org.supercsv.prefs.CsvPreference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,9 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * This is the class to test the writing of beans to a CSV file.
  */
 class WriteFilesTest {
-    private static final CsvPreference _PREFS = CsvPreference.STANDARD_PREFERENCE;
     private Writer _writer;
-    private CsvBeanWriter _beanWriter;
     private JobPostingData _jobBean;
 
     /*
@@ -43,31 +41,27 @@ class WriteFilesTest {
      */
     public WriteFilesTest() {
         _writer = new StringWriter();
-        _beanWriter = new CsvBeanWriter(_writer, _PREFS);
-        // _jobBean = new JobPostingData();
+        _jobBean = new JobPostingData();
     }
 
     @Test
     /**
-     * Test the bean writing capability. 
+     * Test if writeJobPostToCSV() in WriteFiles works. 
      * @throws IOException Throw an IOException if there's an error.
      */
-    void testWriteProcessors() throws IOException {
+    void testWriteJobPostToCSV() throws IOException {
 
-        _beanWriter.writeHeader(CSVTestCases.HEADER);
-        // TODO: JobPostingData constructor cannot be applied to a string.
-
-        // for (JobPostingData jobBean : CSVTestCases.JOB_POSTING_BEAN) {
-        //     _beanWriter.write(jobBean, CSVTestCases.HEADER, CSVTestCases.WRITE_PROCESSORS);
-        // }
-        // _beanWriter.flush();
-
-        // // Replace double quotes within the string.
-        // String actual = _writer.toString();
-        // actual = actual.replace("\"", "");
-
-        // // Compare expected (CSVTestCases.CSV_FILE) vs actual results (actual).
-        // assertEquals(CSVTestCases.CSV_FILE, actual);
+        // Create a WriteFiles object.
+        WriteFiles writeFiles = new WriteFiles();
+        
+        // Store the string of what was written to the file.
+        String actualOutput = writeFiles.writeJobPostToCSV(CSVTestCases.JOB_POSTING_BEAN);
+        
+        // Replace all double quotes with an empty string.
+        actualOutput = actualOutput.replace("\"", "");
+        
+        // Check if the expected output is equal to what was actually written to the file.
+        assertEquals(CSVTestCases.CSV_FILE, actualOutput);
     }
 
 
