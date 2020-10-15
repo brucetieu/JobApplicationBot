@@ -1,13 +1,3 @@
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
-import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
  * Copyright 2020 Bruce Tieu
@@ -29,12 +19,19 @@ import org.apache.pdfbox.text.PDFTextStripper;
  * 
  * @author Tilman Hausherr
  */
-public class ExtractPDFText {
-    private String _pdfFile;
 
-    public ExtractPDFText(String pdfFile) {
-        _pdfFile = pdfFile;
-    }
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+public class ExtractPDFText {
 
     /**
      * This will read the PDF and store each word in a string array.
@@ -42,32 +39,41 @@ public class ExtractPDFText {
      * @throws IOException If there is an error parsing or extracting the document.
      * @return a String array of words.
      */
-    public List<String> parsePDF() throws IOException {
+    public static List<String> parseDocument(String doc) throws IOException {
 
-        try (PDDocument document = PDDocument.load(new File(_pdfFile))) {
-            AccessPermission ap = document.getCurrentAccessPermission();
-            if (!ap.canExtractContent()) {
-                throw new IOException("You do not have permission to extract text");
+        // Create file object with path of the pdf.
+        File file = new File(doc);
+
+        // Check if the file is a file. If it is, then parse the pdf.
+        if (file.isFile()) {
+            try (PDDocument document = PDDocument.load(file)) {
+                AccessPermission ap = document.getCurrentAccessPermission();
+                if (!ap.canExtractContent()) {
+                    throw new IOException("You do not have permission to extract text");
+                }
+
+                PDFTextStripper stripper = new PDFTextStripper();
+
+                // This example uses sorting, but in some cases it is more useful to switch it
+                // off,
+                // e.g. in some files with columns where the PDF content stream respects the
+                // column order.
+                stripper.setSortByPosition(true);
+
+                return removeStopWords(splitText(stripper.getText(document)));
             }
 
-            PDFTextStripper stripper = new PDFTextStripper();
-
-            // This example uses sorting, but in some cases it is more useful to switch it
-            // off,
-            // e.g. in some files with columns where the PDF content stream respects the
-            // column order.
-            stripper.setSortByPosition(true);
-
-            // Get the text of the document, keep as much words as possible, and replace
-            // everything else with an empty string.
-            String parsedText = stripper.getText(document).replaceAll("[^-A-Za-z./\n\r\t\\+\\' ]+", "");
-
-            // Split up the parsedText by spaces, periods, '/', '-' and make sure it's all
-            // lowercase.
-            String[] words = parsedText.toLowerCase().split("[\\s\\.\\/\\-]+");
-
-            return removeStopWords(words);
         }
+        // Otherwise, doc is just a regular string which also needs to be reduced.
+        else {
+            return removeStopWords(splitText(doc));
+        }
+    }
+
+    public static String[] splitText(String text) {
+        String parsedText = text.replaceAll("[^-A-Za-z./\n\r\t\\+\\' ]+", "");
+        String[] words = parsedText.toLowerCase().split("[\\s\\.\\/\\-]+");
+        return words;
     }
 
     /**
@@ -76,7 +82,7 @@ public class ExtractPDFText {
      * @param wordsAsArray The words that remain from the initial resume parsing.
      * @return the final word list with stop words removed.
      */
-    public List<String> removeStopWords(String[] wordsAsArray) {
+    public static List<String> removeStopWords(String[] wordsAsArray) {
         // First convert the array of Strings to a List of Strings.
         List<String> finalWordList = new ArrayList<String>(Arrays.asList(wordsAsArray));
 
@@ -93,4 +99,5 @@ public class ExtractPDFText {
 
         return finalWordList;
     }
+
 }
