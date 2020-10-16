@@ -70,6 +70,12 @@ public class ExtractPDFText {
         }
     }
 
+    /**
+     * This method splits a text by spaces.
+     * 
+     * @param text The document.
+     * @return a string of splitted words.
+     */
     public static String[] splitText(String text) {
         String parsedText = text.replaceAll("[^-A-Za-z./\n\r\t\\+\\' ]+", "");
         String[] words = parsedText.toLowerCase().split("[\\s\\.\\/\\-]+");
