@@ -1,3 +1,5 @@
+package com.btieu.JobApplicationBot;
+
 import java.util.ArrayList;
 
 /**
@@ -27,6 +29,9 @@ public class JobPostingData {
     public static int pageNum;
     public static ArrayList<JobPostingData> jobPostingContainer = new ArrayList<JobPostingData>();
 
+    public JobPostingData() {
+        
+    }
 
     @Override
     /**
