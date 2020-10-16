@@ -26,12 +26,12 @@ public class WriteFiles {
     
     private Writer _writer;
     private File _file;
-    private static String _FILENAME = "";
+    private String _filename = "";
 
 
     public WriteFiles(String filename) throws IOException {
-        _FILENAME = filename;
-        _file = new File(_FILENAME);
+        _filename = filename;
+        _file = new File(_filename);
         _writer = new FileWriter(_file);
     }
     /**
@@ -67,7 +67,7 @@ public class WriteFiles {
         }
         
         // Return the contents of what was written to the file in a string.
-        return new String(Files.readAllBytes(Paths.get(_FILENAME)));
+        return new String(Files.readAllBytes(Paths.get(_filename)));
 
     }
 
