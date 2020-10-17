@@ -14,13 +14,20 @@ import java.util.Set;
  */
 public class TFIDFCalc {
 
-    public TextDocument vectorA = new TextDocument();
-    public TextDocument vectorB = new TextDocument();
-    public static TextDocument words = new TextDocument();
+    private TextDocument _vectorA;
+    private TextDocument _vectorB;
+    private TextDocument _words;
+
+    /**
+     * Default constructor. Initialize TextDocument object.
+     */
+    public TFIDFCalc() {
+        _words = new TextDocument();
+    }
 
     /**
      * This is a parameterized constructor which takes two TextDocuments
-     * representing tf-idf vectors.
+     * representing tf-idf vectors. Also create new TextDocument vectors.
      * 
      * @param tfidfDoc1 The tf-idf TextDocument "vector" of the first document; is a
      *                  hash table with words as keys, tf-idf as values.
@@ -28,15 +35,28 @@ public class TFIDFCalc {
      *                  a hash table with words as keys, tf-idf as values.
      */
     public TFIDFCalc(TextDocument tfidfDoc1, TextDocument tfidfDoc2) {
-        this.vectorA.hashTable = tfidfDoc1.hashTable;
-        this.vectorB.hashTable = tfidfDoc2.hashTable;
+        _vectorA = new TextDocument();
+        _vectorB = new TextDocument();
+        _vectorA.hashTable = tfidfDoc1.hashTable;
+        _vectorB.hashTable = tfidfDoc2.hashTable;
     }
 
     /**
-     * Default constructor.
+     * Get the first vector.
+     * 
+     * @return a TextDocument object which represents a vector.
      */
-    public TFIDFCalc() {
+    public TextDocument getVectorA() {
+        return _vectorA;
+    }
 
+    /**
+     * Get the second vector.
+     * 
+     * @return A TextDocument object which represents a vector.
+     */
+    public TextDocument getVectorB() {
+        return _vectorB;
     }
 
     /**
@@ -46,7 +66,7 @@ public class TFIDFCalc {
      * @param jobDescWords The second list of words from the job description.
      * @return an array list with unique words from both lists.
      */
-    public static List<String> getUnionOfLists(List<String> resumeWords, List<String> jobDescWords) {
+    public ArrayList<String> getUnionOfLists(List<String> resumeWords, List<String> jobDescWords) {
         Set<String> set = new HashSet<>();
         set.addAll(resumeWords);
         set.addAll(jobDescWords);
@@ -64,9 +84,9 @@ public class TFIDFCalc {
      *         of each unique word. Need one for the resume and another for the job
      *         description.
      */
-    public static TextDocument countUniqueWords(List<String> set, List<String> cleanedList) {
+    public TextDocument countUniqueWords(List<String> set, List<String> cleanedList) {
 
-        Hashtable<String, Double> freqUniqueWords = words.toHashTable();
+        Hashtable<String, Double> freqUniqueWords = _words.toHashTable();
 
         // Initialize the value of each key to be 0.
         for (int i = 0; i < set.size(); i++) {
@@ -92,9 +112,9 @@ public class TFIDFCalc {
      *                        union).
      * @return a new word frequency table as a TextDocument.
      */
-    public static TextDocument computeTF(TextDocument freqUniqueWords, List<String> listOfWords) {
+    public TextDocument computeTF(TextDocument freqUniqueWords, List<String> listOfWords) {
 
-        Hashtable<String, Double> tfHash = words.toHashTable();
+        Hashtable<String, Double> tfHash = _words.toHashTable();
 
         int termsInDoc = listOfWords.size();
 
@@ -115,9 +135,9 @@ public class TFIDFCalc {
      * @param freqUniqueWordsB the frequency table as a TextDocument for document 2.
      * @return The idf table as a TextDocument.
      */
-    public static TextDocument computeIDF(TextDocument freqUniqueWordsA, TextDocument freqUniqueWordsB) {
+    public TextDocument computeIDF(TextDocument freqUniqueWordsA, TextDocument freqUniqueWordsB) {
 
-        Hashtable<String, Double> idfHash = words.toHashTable();
+        Hashtable<String, Double> idfHash = _words.toHashTable();
         int numOfDocuments = 2;
         int numDocWTermT = 0;
 
@@ -142,8 +162,8 @@ public class TFIDFCalc {
      * @return A table with the tf-idf for each word in a document as a
      *         TextDocument.
      */
-    public static TextDocument computeTFIDF(TextDocument tf, TextDocument idf) {
-        Hashtable<String, Double> tfidfHash = words.toHashTable();
+    public TextDocument computeTFIDF(TextDocument tf, TextDocument idf) {
+        Hashtable<String, Double> tfidfHash = _words.toHashTable();
 
         // tfidf(t, d, D) = tf(t,d) * idf(t, D).
         for (String word : tf.hashTable.keySet()) {
@@ -160,8 +180,8 @@ public class TFIDFCalc {
      * @return A TFIDFCalc object which passes two TextDocuments.
      * @throws IOException Checks if there are any file reading errors.
      */
-    public static TFIDFCalc runTFIDFCalc(String doc1, String doc2) throws IOException {
-        
+    public TFIDFCalc runTFIDFCalc(String doc1, String doc2) throws IOException {
+
         // Get the union of words in each document.
         List<String> union = getUnionOfLists(ExtractPDFText.parseDocument(doc1), ExtractPDFText.parseDocument(doc2));
 

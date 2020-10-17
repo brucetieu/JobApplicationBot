@@ -7,14 +7,13 @@ import java.util.Hashtable;
  */
 public class TextDocument {
     
-    public Hashtable<String, Double> hashTable = new Hashtable<String, Double>();
-    
+    public Hashtable<String, Double> hashTable;
     
     /**
-     * This is the default constructor.
+     * This is the default constructor. NTS: needs to be defined if there's already a constructor with args.
      */
     public TextDocument() {
-
+        hashTable = new Hashtable<String, Double>();
     }
     
     /**

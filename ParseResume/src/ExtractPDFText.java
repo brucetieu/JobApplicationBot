@@ -35,7 +35,7 @@ public class ExtractPDFText {
 
     /**
      * This will read the PDF and store each word in a string array.
-     *
+     * @param doc Can take two forms: a file path, or the text content of the job description.
      * @throws IOException If there is an error parsing or extracting the document.
      * @return a String array of words.
      */

@@ -19,22 +19,22 @@ public class CosineSimilarity {
      * @return The cosine similarity of two documents.
      * @throws IOException Catch any file errors.
      */
-    public static String cosineSimilarity(String doc1, String doc2) throws IOException {
+    public static double cosineSimilarity(String doc1, String doc2) throws IOException {
 
-        NumberFormat formatter = new DecimalFormat("#0.00");
         // First, get the tf-idf TextDocuments.
-        TFIDFCalc tfidfObj = TFIDFCalc.runTFIDFCalc(doc1, doc2);
+        TFIDFCalc tfidfObj = new TFIDFCalc();
+        TFIDFCalc runTFIDF = tfidfObj.runTFIDFCalc(doc1, doc2);
 
         double dotProduct = 0.0;
         double normA = 0.0;
         double normB = 0.0;
 
         // Then compute the cosine similarity between the documents.
-        for (String word : tfidfObj.vectorA.hashTable.keySet()) {
-            dotProduct += tfidfObj.vectorA.hashTable.get(word) * tfidfObj.vectorB.hashTable.get(word);
-            normA += Math.pow(tfidfObj.vectorA.hashTable.get(word), 2);
-            normB += Math.pow(tfidfObj.vectorB.hashTable.get(word), 2);
+        for (String word : runTFIDF.getVectorA().hashTable.keySet()) {
+            dotProduct += runTFIDF.getVectorA().hashTable.get(word) * runTFIDF.getVectorB().hashTable.get(word);
+            normA += Math.pow(runTFIDF.getVectorA().hashTable.get(word), 2);
+            normB += Math.pow(runTFIDF.getVectorB().hashTable.get(word), 2);
         }
-        return formatter.format(dotProduct / (Math.sqrt(normA) * Math.sqrt(normB)));
+        return normA != 0 || normB != 0 ? dotProduct / (Math.sqrt(normA) * Math.sqrt(normB)) : 0.0;
     }
 }
