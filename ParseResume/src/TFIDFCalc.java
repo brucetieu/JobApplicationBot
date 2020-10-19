@@ -1,10 +1,7 @@
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Class which calculates the tf-idf of a document.
@@ -14,137 +11,93 @@ import java.util.Set;
  */
 public class TFIDFCalc {
 
-    private TextDocument _vectorA;
-    private TextDocument _vectorB;
-    private TextDocument _words;
+    private TextDocument _textDoc; // Class which stores actual text of the document.
+    private Hashtable<String, Double> _tfidfDoc1, _tfidfDoc2; // Two tf-idf hash tables with the keys being the word and
+                                                              // the values being the tf-idf weighting.
 
     /**
-     * Default constructor. Initialize TextDocument object.
+     * This constructor initializes a TextDocument and passes in the raw string
+     * content of two documents.
+     * 
+     * @param document1 The first document.
+     * @param document2 The second document.
+     * @throws IOException Catch any file errors.
      */
-    public TFIDFCalc() {
-        _words = new TextDocument();
+    public TFIDFCalc(String document1, String document2) throws IOException {
+        _textDoc = new TextDocument(document1, document2);
     }
 
     /**
-     * This is a parameterized constructor which takes two TextDocuments
-     * representing tf-idf vectors. Also create new TextDocument vectors.
+     * This constructor initializes two tf-idf hash tables to be whatever is
+     * returned from the runTFIDFCalc() method.
      * 
-     * @param tfidfDoc1 The tf-idf TextDocument "vector" of the first document; is a
-     *                  hash table with words as keys, tf-idf as values.
-     * @param tfidfDoc2 The tf-idf TextDocument "vector" of the second document; is
-     *                  a hash table with words as keys, tf-idf as values.
+     * @param _tfidfDoc1 The first document's tf-idf hash table.
+     * @param _tfidfDoc2 The second document's tf-idf hash table.
      */
-    public TFIDFCalc(TextDocument tfidfDoc1, TextDocument tfidfDoc2) {
-        _vectorA = new TextDocument();
-        _vectorB = new TextDocument();
-        _vectorA.hashTable = tfidfDoc1.hashTable;
-        _vectorB.hashTable = tfidfDoc2.hashTable;
+    public TFIDFCalc(TextDocument _tfidfDoc1, TextDocument _tfidfDoc2) {
+        this._tfidfDoc1 = _tfidfDoc1.getHashtable();
+        this._tfidfDoc2 = _tfidfDoc2.getHashtable();
+
     }
 
     /**
-     * Get the first vector.
+     * This gets the tf-idf hash table for document 1.
      * 
-     * @return a TextDocument object which represents a vector.
+     * @return a hash table.
      */
-    public TextDocument getVectorA() {
-        return _vectorA;
+    public Hashtable<String, Double> getTFIDFDoc1() {
+        return this._tfidfDoc1;
     }
 
     /**
-     * Get the second vector.
+     * This gets the tf-idf hash table for document 2.
      * 
-     * @return A TextDocument object which represents a vector.
+     * @return a hash table.
      */
-    public TextDocument getVectorB() {
-        return _vectorB;
-    }
-
-    /**
-     * This gets the union of the two documents.
-     * 
-     * @param resumeWords  The first list of words from the resume.
-     * @param jobDescWords The second list of words from the job description.
-     * @return an array list with unique words from both lists.
-     */
-    public ArrayList<String> getUnionOfLists(List<String> resumeWords, List<String> jobDescWords) {
-        Set<String> set = new HashSet<>();
-        set.addAll(resumeWords);
-        set.addAll(jobDescWords);
-
-        return new ArrayList<>(set);
-    }
-
-    /**
-     * This keeps track of how many times the unique word shows up in each document.
-     * 
-     * @param set         The array list of unique words.
-     * @param cleanedList The list of words generated from the resume or job
-     *                    description.
-     * @return a hash table represented as a TextDocument which counts the frequency
-     *         of each unique word. Need one for the resume and another for the job
-     *         description.
-     */
-    public TextDocument countUniqueWords(List<String> set, List<String> cleanedList) {
-
-        Hashtable<String, Double> freqUniqueWords = _words.toHashTable();
-
-        // Initialize the value of each key to be 0.
-        for (int i = 0; i < set.size(); i++) {
-            freqUniqueWords.put(set.get(i), 0.0);
-        }
-
-        // Count how many times the word appears in the cleanedList, populate those
-        // counts as values in the Hashtable.
-        for (String word : cleanedList) {
-            freqUniqueWords.put(word, freqUniqueWords.get(word) + 1);
-        }
-
-        return new TextDocument(freqUniqueWords);
-
+    public Hashtable<String, Double> getTFIDFDoc2() {
+        return this._tfidfDoc2;
     }
 
     /**
      * This computes the term frequency of each word.
      * 
-     * @param freqUniqueWords The TextDocument in the form of a hash table with the
-     *                        frequency of unique words in each document.
-     * @param listOfWords     The list of words for respective documents (w/o
-     *                        union).
+     * @param listOfWords The list of words for respective documents (w/o union).
      * @return a new word frequency table as a TextDocument.
      */
-    public TextDocument computeTF(TextDocument freqUniqueWords, List<String> listOfWords) {
+    public TextDocument computeTF(List<String> listOfWords) {
 
-        Hashtable<String, Double> tfHash = _words.toHashTable();
+        Hashtable<String, Double> tfHash = new Hashtable<String, Double>();
 
         int termsInDoc = listOfWords.size();
 
         // Compute the term frequency of each word.
         // TF(t) = (Number of times term t appears in a document) / (Total number of
         // terms in the document).
-        for (String word : freqUniqueWords.hashTable.keySet()) {
-            tfHash.put(word, ((double) freqUniqueWords.hashTable.get(word) / (double) termsInDoc));
+        for (String word : _textDoc.getUniqueWords(listOfWords).keySet()) {
+            tfHash.put(word, ((double) _textDoc.getUniqueWords(listOfWords).get(word) / (double) termsInDoc));
 
         }
+
         return new TextDocument(tfHash);
     }
 
     /**
      * This computes the inverse document frequency of a word.
      * 
-     * @param freqUniqueWordsA the frequency table as a TextDocument for document 1.
-     * @param freqUniqueWordsB the frequency table as a TextDocument for document 2.
+     * @param tfDoc1 the frequency table as a TextDocument for document 1.
+     * @param tfDoc2 the frequency table as a TextDocument for document 2.
      * @return The idf table as a TextDocument.
      */
-    public TextDocument computeIDF(TextDocument freqUniqueWordsA, TextDocument freqUniqueWordsB) {
+    public TextDocument computeIDF(TextDocument tfDoc1, TextDocument tfDoc2) {
 
-        Hashtable<String, Double> idfHash = _words.toHashTable();
+        Hashtable<String, Double> idfHash = new Hashtable<String, Double>();
         int numOfDocuments = 2;
         int numDocWTermT = 0;
 
         // IDF(t) = log_e(Total number of documents / Number of documents with term t in
         // it).
-        for (String word : freqUniqueWordsA.hashTable.keySet()) {
-            if (freqUniqueWordsA.hashTable.get(word) > 0 || freqUniqueWordsB.hashTable.get(word) > 0) {
+        for (String word : tfDoc1.getHashtable().keySet()) {
+            if (tfDoc1.getHashtable().get(word) > 0 || tfDoc2.getHashtable().get(word) > 0) {
                 numDocWTermT += 1;
                 idfHash.put(word, (double) Math.log((double) numOfDocuments / (double) numDocWTermT));
                 numDocWTermT = 0;
@@ -163,11 +116,11 @@ public class TFIDFCalc {
      *         TextDocument.
      */
     public TextDocument computeTFIDF(TextDocument tf, TextDocument idf) {
-        Hashtable<String, Double> tfidfHash = _words.toHashTable();
+        Hashtable<String, Double> tfidfHash = new Hashtable<String, Double>();
 
         // tfidf(t, d, D) = tf(t,d) * idf(t, D).
-        for (String word : tf.hashTable.keySet()) {
-            tfidfHash.put(word, tf.hashTable.get(word) * idf.hashTable.get(word));
+        for (String word : tf.getHashtable().keySet()) {
+            tfidfHash.put(word, tf.getHashtable().get(word) * idf.getHashtable().get(word));
         }
         return new TextDocument(tfidfHash);
     }
@@ -175,23 +128,14 @@ public class TFIDFCalc {
     /**
      * This method executes all previous methods in the class.
      * 
-     * @param doc1 The raw string contents of the first document.
-     * @param doc2 The raw string contents of the second document.
      * @return A TFIDFCalc object which passes two TextDocuments.
      * @throws IOException Checks if there are any file reading errors.
      */
-    public TFIDFCalc runTFIDFCalc(String doc1, String doc2) throws IOException {
-
-        // Get the union of words in each document.
-        List<String> union = getUnionOfLists(ExtractPDFText.parseDocument(doc1), ExtractPDFText.parseDocument(doc2));
-
-        // Count the unique words in each document.
-        TextDocument doc1Words = countUniqueWords(union, ExtractPDFText.parseDocument(doc1));
-        TextDocument doc2Words = countUniqueWords(union, ExtractPDFText.parseDocument(doc2));
+    public TFIDFCalc runTFIDFCalc() throws IOException {
 
         // Compute the term frequency of each document.
-        TextDocument tfDoc1 = computeTF(doc1Words, ExtractPDFText.parseDocument(doc1));
-        TextDocument tfDoc2 = computeTF(doc2Words, ExtractPDFText.parseDocument(doc2));
+        TextDocument tfDoc1 = computeTF(_textDoc.getDocument1());
+        TextDocument tfDoc2 = computeTF(_textDoc.getDocument2());
 
         // Compute the inverse document frequency.
         TextDocument idf = computeIDF(tfDoc1, tfDoc2);
