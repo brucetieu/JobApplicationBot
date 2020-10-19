@@ -22,18 +22,18 @@ public class CosineSimilarity {
     public static double cosineSimilarity(String doc1, String doc2) throws IOException {
 
         // First, get the tf-idf TextDocuments.
-        TFIDFCalc tfidfObj = new TFIDFCalc();
-        TFIDFCalc runTFIDF = tfidfObj.runTFIDFCalc(doc1, doc2);
+        TFIDFCalc tfidfObj = new TFIDFCalc(doc1, doc2);
+        TFIDFCalc runTFIDF = tfidfObj.runTFIDFCalc();
 
         double dotProduct = 0.0;
         double normA = 0.0;
         double normB = 0.0;
 
         // Then compute the cosine similarity between the documents.
-        for (String word : runTFIDF.getVectorA().hashTable.keySet()) {
-            dotProduct += runTFIDF.getVectorA().hashTable.get(word) * runTFIDF.getVectorB().hashTable.get(word);
-            normA += Math.pow(runTFIDF.getVectorA().hashTable.get(word), 2);
-            normB += Math.pow(runTFIDF.getVectorB().hashTable.get(word), 2);
+        for (String word : runTFIDF.getTFIDFDoc1().keySet()) {
+            dotProduct += runTFIDF.getTFIDFDoc1().get(word) * runTFIDF.getTFIDFDoc2().get(word);
+            normA += Math.pow(runTFIDF.getTFIDFDoc1().get(word), 2);
+            normB += Math.pow(runTFIDF.getTFIDFDoc2().get(word), 2);
         }
         return normA != 0 || normB != 0 ? dotProduct / (Math.sqrt(normA) * Math.sqrt(normB)) : 0.0;
     }
