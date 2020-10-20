@@ -15,26 +15,6 @@ public class TextDocument {
 
     private List<String> _document1, _document2; // The list of words for document 1 and document 2.
     private Set<String> _union; // The union of the two lists of words.
-    private Hashtable<String, Double> _hashTable;
-
-    /**
-     * This method will represent hashtables as TextDocuments.
-     * 
-     * @param _hashTable the hashtable that is passed in (will be one of tf, idf, or
-     *                   tf-idf hash tables).
-     */
-    public TextDocument(Hashtable<String, Double> _hashTable) {
-        this._hashTable = _hashTable;
-    }
-
-    /**
-     * Getter method which gets a hashtable.
-     * 
-     * @return a hashtable.
-     */
-    public Hashtable<String, Double> getHashtable() {
-        return this._hashTable;
-    }
 
     /**
      * This constructor passes two document strings to be parsed in ExtractPDFText
@@ -86,7 +66,7 @@ public class TextDocument {
      * @return a hash table with the key being the word and the value being the
      *         frequency of that word.
      */
-    public Hashtable<String, Double> getUniqueWords(List<String> cleanedList) {
+    public Hashtable<String, Double> getFrequencyByWord(List<String> cleanedList) {
 
         Hashtable<String, Double> freqUniqueWords = new Hashtable<String, Double>();
 
