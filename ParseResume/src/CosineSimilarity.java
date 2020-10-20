@@ -28,10 +28,10 @@ public class CosineSimilarity {
         double normB = 0.0;
 
         // Then compute the cosine similarity between the documents.
-        for (String word : runTFIDF.getTFIDFDoc1().keySet()) {
-            dotProduct += runTFIDF.getTFIDFDoc1().get(word) * runTFIDF.getTFIDFDoc2().get(word);
-            normA += Math.pow(runTFIDF.getTFIDFDoc1().get(word), 2);
-            normB += Math.pow(runTFIDF.getTFIDFDoc2().get(word), 2);
+        for (String word : runTFIDF.getTFIDFHashtable1().keySet()) {
+            dotProduct += runTFIDF.getTFIDFHashtable1().get(word) * runTFIDF.getTFIDFHashtable2().get(word);
+            normA += Math.pow(runTFIDF.getTFIDFHashtable1().get(word), 2);
+            normB += Math.pow(runTFIDF.getTFIDFHashtable2().get(word), 2);
         }
         return normA != 0 || normB != 0 ? dotProduct / (Math.sqrt(normA) * Math.sqrt(normB)) : 0.0;
     }
