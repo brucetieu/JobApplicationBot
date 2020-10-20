@@ -34,40 +34,41 @@ import org.apache.pdfbox.text.PDFTextStripper;
 public class ExtractPDFText {
 
     /**
-     * This will read the PDF and store each word in a string array.
-     * @param doc Can take two forms: a file path, or the text content of the job description.
-     * @throws IOException If there is an error parsing or extracting the document.
-     * @return a String array of words.
+     * This method extracts the words from a pdf resume.
+     * 
+     * @param resumePath The path of the resume.
+     * @return A list of words with all stop words removed from the resume.
+     * @throws IOException if there are any errors reading the file.
      */
-    public static List<String> parseDocument(String doc) throws IOException {
+    public static List<String> extractPDFText(File resumePath) throws IOException {
 
-        // Create file object with path of the pdf.
-        File file = new File(doc);
-
-        // Check if the file is a file. If it is, then parse the pdf.
-        if (file.isFile()) {
-            try (PDDocument document = PDDocument.load(file)) {
-                AccessPermission ap = document.getCurrentAccessPermission();
-                if (!ap.canExtractContent()) {
-                    throw new IOException("You do not have permission to extract text");
-                }
-
-                PDFTextStripper stripper = new PDFTextStripper();
-
-                // This example uses sorting, but in some cases it is more useful to switch it
-                // off,
-                // e.g. in some files with columns where the PDF content stream respects the
-                // column order.
-                stripper.setSortByPosition(true);
-
-                return removeStopWords(splitText(stripper.getText(document)));
+        try (PDDocument document = PDDocument.load(resumePath)) {
+            AccessPermission ap = document.getCurrentAccessPermission();
+            if (!ap.canExtractContent()) {
+                throw new IOException("You do not have permission to extract text");
             }
 
+            PDFTextStripper stripper = new PDFTextStripper();
+
+            // This example uses sorting, but in some cases it is more useful to switch it
+            // off,
+            // e.g. in some files with columns where the PDF content stream respects the
+            // column order.
+            stripper.setSortByPosition(true);
+
+            return removeStopWords(splitText(stripper.getText(document)));
         }
-        // Otherwise, doc is just a regular string which also needs to be reduced.
-        else {
-            return removeStopWords(splitText(doc));
-        }
+
+    }
+
+    /**
+     * This method extracts the words from text.
+     * 
+     * @param text The text (most likely the job description on the job site).
+     * @return A list of words with all stop words removed from the text.
+     */
+    public static List<String> parseText(String text) {
+        return removeStopWords(splitText(text));
     }
 
     /**
