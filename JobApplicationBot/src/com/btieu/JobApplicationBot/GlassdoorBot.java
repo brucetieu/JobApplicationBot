@@ -1,14 +1,16 @@
 package com.btieu.JobApplicationBot;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-
-public class GlassdoorBot extends Bot {
+/**
+ * Apply for jobs on Glassdoor.com.
+ * 
+ * @author bruce
+ *
+ */
+public class GlassdoorBot extends BotScrape {
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
 
@@ -47,7 +49,7 @@ public class GlassdoorBot extends Bot {
         userPassword.submit();
 
     }
-    
+
     /**
      * This method searches for jobs based on job position name and location.
      * 
@@ -71,25 +73,5 @@ public class GlassdoorBot extends Bot {
         humanTyping(searchLoc, this._jobAppData.locationOfJob);
         searchLoc.submit();
     }
-
-    /**
-     * This method aggregates all the job links and puts them in a container.
-     * @throws InterruptedException
-     */
-    public void getJobLinks() throws InterruptedException {
-        ArrayList<String> jobLinks = new ArrayList<String>();
-
-        List<WebElement> aTags = tryToFindElements((By.className("react-job-listing")));
-
-        for (int i = 0; i < aTags.size(); i++) {
-            WebElement div = aTags.get(i).findElement(By.className("d-flex"));
-            String href = div.findElement(By.className("jobLink")).getAttribute("href");
-            jobLinks.add(href);
-        }
-
-        System.out.println("End");
-
-    }
-
 
 }
