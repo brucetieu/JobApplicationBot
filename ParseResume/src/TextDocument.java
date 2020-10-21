@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -5,58 +6,53 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * A text document class which represents hash tables as a TextDocument and
- * stores the actual text of the document.
+ * A text document class to store the text of a pdf file or web page.
  * 
  * @author bruce
  *
  */
 public class TextDocument {
 
-    private List<String> _document1, _document2; // The list of words for document 1 and document 2.
-    private Set<String> _union; // The union of the two lists of words.
+    private List<String> _wordsFromDocA, _wordsFromDocB; // The list of words for document A and document B.
+    private static Set<String> _union = new HashSet<>(); // Store the union of the two lists of words.
 
     /**
-     * This constructor passes two document strings to be parsed in ExtractPDFText
-     * and then takes the union of each list to create a set of unique words.
+     * Constructor which stores PDF file as a TextDocument object.
      * 
-     * @param _document1 The first document.
-     * @param _document2 The second document.
-     * @throws IOException Throw an exception if there's an error.
+     * @param resumeFile The path to the resume.
+     * @throws IOException Catch any file errors.
      */
-    public TextDocument(String _document1, String _document2) throws IOException {
-        this._document1 = ExtractPDFText.parseDocument(_document1);
-        this._document2 = ExtractPDFText.parseDocument(_document2);
-        _union = new HashSet<>(); // Create a set.
-        _union.addAll(this._document1); // Add all words from first document to union.
-        _union.addAll(this._document2); // Add all words from second document to union.
+    public TextDocument(File resumeFile) throws IOException {
+        _wordsFromDocA = ExtractPDFText.extractPDFText(resumeFile);
+        _union.addAll(_wordsFromDocA); // Add list of words to set.
     }
 
     /**
-     * Get the first document.
+     * Constructor which stores text from the web-page as a TextDocument object.
+     * 
+     * @param text The text from the web page.
+     */
+    public TextDocument(String text) {
+        _wordsFromDocB = ExtractPDFText.parseText(text);
+        _union.addAll(_wordsFromDocB); // Add list of words to set.
+    }
+
+    /**
+     * Get the list of words from the first document.
      * 
      * @return a list of words.
      */
-    public List<String> getDocument1() {
-        return _document1;
+    public List<String> getWordsFromDocA() {
+        return _wordsFromDocA;
     }
 
     /**
-     * Get the second document.
+     * Get the list of words from the second document.
      * 
      * @return a list of words.
      */
-    public List<String> getDocument2() {
-        return _document2;
-    }
-
-    /**
-     * Get the union of two word lists.
-     * 
-     * @return a set of words with no duplicates.
-     */
-    public Set<String> getUnion() {
-        return _union;
+    public List<String> getWordsFromDocB() {
+        return _wordsFromDocB;
     }
 
     /**
@@ -82,7 +78,6 @@ public class TextDocument {
         }
 
         return freqUniqueWords;
-
     }
 
 }
