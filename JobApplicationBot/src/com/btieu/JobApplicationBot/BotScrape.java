@@ -1,16 +1,11 @@
 package com.btieu.JobApplicationBot;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
 
 /**
  * This class adds additional functionally to the Bot by getting job description
@@ -20,8 +15,6 @@ import org.openqa.selenium.WebElement;
  *
  */
 public class BotScrape extends Bot {
-
-//    private JobPostingData _jobPostingData = new JobPostingData();
 
     /**
      * This method gets information from the job description like job title,
@@ -61,17 +54,10 @@ public class BotScrape extends Bot {
             submitted = "no";
         else
             submitted = "yes";
-        
+
         // Return a new JobPostingData object.
         return new JobPostingData(job_title, companyName, companyLoc, remote, formatter.format(date), appType.name(),
                 jobLink, submitted, "");
-    }
-    
-    public String getRequestURL(String href) throws IOException {
-        URL url = new URL(href);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.getContent();
-        return connection.getURL().toString();
     }
 
 }
