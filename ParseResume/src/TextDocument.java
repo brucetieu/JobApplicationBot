@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public class TextDocument {
 
-    private List<String> _wordsFromDocA, _wordsFromDocB; // The list of words for document A and document B.
+    private List<String> _wordsFromDocument; // The list of words for document A and document B.
     private static Set<String> _union = new HashSet<>(); // Store the union of the two lists of words.
 
     /**
@@ -23,8 +23,8 @@ public class TextDocument {
      * @throws IOException Catch any file errors.
      */
     public TextDocument(File resumeFile) throws IOException {
-        _wordsFromDocA = ExtractPDFText.extractPDFText(resumeFile);
-        _union.addAll(_wordsFromDocA); // Add list of words to set.
+        _wordsFromDocument = ExtractPDFText.extractPDFText(resumeFile);
+        _union.addAll(_wordsFromDocument); // Add list of words to set.
     }
 
     /**
@@ -33,26 +33,17 @@ public class TextDocument {
      * @param text The text from the web page.
      */
     public TextDocument(String text) {
-        _wordsFromDocB = ExtractPDFText.parseText(text);
-        _union.addAll(_wordsFromDocB); // Add list of words to set.
+        _wordsFromDocument = ExtractPDFText.parseText(text);
+        _union.addAll(_wordsFromDocument); // Add list of words to set.
     }
 
     /**
-     * Get the list of words from the first document.
+     * Get the list of words from a document.
      * 
      * @return a list of words.
      */
-    public List<String> getWordsFromDocA() {
-        return _wordsFromDocA;
-    }
-
-    /**
-     * Get the list of words from the second document.
-     * 
-     * @return a list of words.
-     */
-    public List<String> getWordsFromDocB() {
-        return _wordsFromDocB;
+    public List<String> getWordsFromDocument() {
+        return _wordsFromDocument;
     }
 
     /**

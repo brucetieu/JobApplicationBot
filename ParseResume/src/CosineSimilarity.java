@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 
 /**
@@ -20,8 +19,8 @@ public class CosineSimilarity {
     public static double cosineSimilarity(TextDocument docA, TextDocument docB) throws IOException {
 
         // First, get the tf-idf of the TextDocuments.
-        TFIDFCalc tfidfObj = new TFIDFCalc(docA, docB);
-        TFIDFCalc runTFIDF = tfidfObj.runTFIDFCalc();
+        TFIDFCalc tfidfCalc = new TFIDFCalc(docA, docB);
+        TFIDFResultContainer runTFIDF = tfidfCalc.runTFIDFCalc();
 
         double dotProduct = 0.0;
         double normA = 0.0;

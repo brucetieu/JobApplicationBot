@@ -56,7 +56,7 @@ public class ExtractPDFText {
             // column order.
             stripper.setSortByPosition(true);
 
-            return removeStopWords(splitText(stripper.getText(document)));
+            return parseText(stripper.getText(document));
         }
 
     }
