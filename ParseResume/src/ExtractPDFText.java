@@ -68,7 +68,7 @@ public class ExtractPDFText {
      * @return A list of words with all stop words removed from the text.
      */
     public static List<String> parseText(String text) {
-        return removeStopWords(splitText(text));
+        return splitText(text);
     }
 
     /**
@@ -77,10 +77,18 @@ public class ExtractPDFText {
      * @param text The document.
      * @return a string of splitted words.
      */
-    public static String[] splitText(String text) {
+    public static List<String> splitText(String text) {
         String parsedText = text.replaceAll("[^-A-Za-z./\n\r\t\\+\\' ]+", "");
         String[] words = parsedText.toLowerCase().split("[\\s\\.\\/\\-]+");
-        return words;
+        List<String> finalWordList = new ArrayList<String>(Arrays.asList(words));
+        // Then, iterate through the list and remove any words with length <= 1.
+        for (Iterator<String> iter = finalWordList.iterator(); iter.hasNext();) {
+            String word = iter.next();
+            if (word.length() <= 1) {
+                iter.remove();
+            }
+        }
+        return finalWordList;
     }
 
     /**

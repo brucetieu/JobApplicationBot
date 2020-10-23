@@ -28,6 +28,7 @@ public class CosineSimilarity {
 
         // Then compute the cosine similarity between the documents.
         for (String word : runTFIDF.getTFIDFHashDocA().keySet()) {
+            System.out.println(runTFIDF.getTFIDFHashDocA().get(word) + ", " + runTFIDF.getTFIDFHashDocB().get(word));
             dotProduct += runTFIDF.getTFIDFHashDocA().get(word) * runTFIDF.getTFIDFHashDocB().get(word);
             normA += Math.pow(runTFIDF.getTFIDFHashDocA().get(word), 2);
             normB += Math.pow(runTFIDF.getTFIDFHashDocB().get(word), 2);
