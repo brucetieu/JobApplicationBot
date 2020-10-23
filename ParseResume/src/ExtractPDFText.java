@@ -91,28 +91,5 @@ public class ExtractPDFText {
         return finalWordList;
     }
 
-    /**
-     * This method removes words of length 1 or less and removes all the stopwords.
-     * 
-     * @param wordsAsArray The words that remain from the initial resume parsing.
-     * @return the final word list with stop words removed.
-     */
-    public static List<String> removeStopWords(String[] wordsAsArray) {
-        // First convert the array of Strings to a List of Strings.
-        List<String> finalWordList = new ArrayList<String>(Arrays.asList(wordsAsArray));
-
-        // Then, iterate through the list and remove any words with length <= 1.
-        for (Iterator<String> iter = finalWordList.iterator(); iter.hasNext();) {
-            String word = iter.next();
-            if (word.length() <= 1) {
-                iter.remove();
-            }
-        }
-
-        // Finally, remove all the stopwords in the list.
-        finalWordList.removeAll(StopWords.STOP_WORDS);
-
-        return finalWordList;
-    }
 
 }
