@@ -22,7 +22,7 @@ public class GlassdoorBot extends BotScrape {
     /**
      * Navigate to the Glassdoor site.
      */
-    public void navToGlassdoor() {
+    public void navigateToPage() {
         navigateToJobPage(this._jobAppData.platformUrl);
     }
 
