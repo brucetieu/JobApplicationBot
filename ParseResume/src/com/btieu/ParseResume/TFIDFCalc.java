@@ -34,7 +34,7 @@ public class TFIDFCalc {
      * @param listOfWords The list of words for each document (w/o union).
      * @return A word frequency hash table.
      */
-    private Hashtable<String, Double> computeTF(List<String> listOfWords) {
+    public Hashtable<String, Double> computeTF(List<String> listOfWords) {
 
         Hashtable<String, Double> tfHash = new Hashtable<String, Double>();
 
@@ -54,30 +54,27 @@ public class TFIDFCalc {
     /**
      * This computes the inverse document frequency of a word.
      * 
-     * @param tfDoc1 The term frequency hash table for document A.
-     * @param tfDoc2 The term frequency hash table for document B.
      * @return A idf hash table.
      */
-    private Hashtable<String, Double> computeIDF() {
+    public Hashtable<String, Double> computeIDF() {
 
         Hashtable<String, Double> idfHash = new Hashtable<String, Double>();
 
-        Hashtable<String, Double> wordFreqDocA = _textDocumentA
-                .getFrequencyByWord(_textDocumentA.getWordsFromDocument());
-        Hashtable<String, Double> wordFreqDocB = _textDocumentB
-                .getFrequencyByWord(_textDocumentB.getWordsFromDocument());
-
+        // Create a list of hash tables.
         List<Hashtable<String, Double>> listOfHashes = new ArrayList<Hashtable<String, Double>>();
 
-        listOfHashes.add(wordFreqDocA);
-        listOfHashes.add(wordFreqDocB);
+        // Add the frequency tables of words of each document to the list.
+        listOfHashes.add(_textDocumentA.getFrequencyByWord(_textDocumentA.getWordsFromDocument()));
+        listOfHashes.add(_textDocumentB.getFrequencyByWord(_textDocumentB.getWordsFromDocument()));
 
         int numOfDocuments = 2;
 
+        // Set all values in the idf hash table to be 0.
         for (String word : listOfHashes.get(0).keySet()) {
             idfHash.put(word, 0.0);
         }
 
+        // Count the number of documents with a term t (word) in it.
         for (Hashtable<String, Double> hashtable : listOfHashes) {
             for (String word : hashtable.keySet()) {
                 if (hashtable.get(word) > 0) {
@@ -86,6 +83,7 @@ public class TFIDFCalc {
             }
         }
 
+        // IDF(t) = ln(Total number of documents / Number of documents with term t in it).
         for (String word : idfHash.keySet()) {
             idfHash.put(word, (double) Math.log((double) numOfDocuments / (double) idfHash.get(word)));
         }
@@ -101,10 +99,10 @@ public class TFIDFCalc {
      * @return A tf-idf hash table.
      * 
      */
-    private Hashtable<String, Double> computeTFIDF(Hashtable<String, Double> tf) {
+    public Hashtable<String, Double> computeTFIDF(Hashtable<String, Double> tf) {
         Hashtable<String, Double> tfidfHash = new Hashtable<String, Double>();
 
-        // tfidf(t, d, D) = tf(t,d) * idf(t, D).
+        // tfidf(t, d, D) = tf(t,d) + tf(t,d) * idf(t, D).
         for (String word : tf.keySet()) {
             tfidfHash.put(word, tf.get(word) + (tf.get(word) * computeIDF().get(word)));
         }

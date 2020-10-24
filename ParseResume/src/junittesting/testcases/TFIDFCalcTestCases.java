@@ -14,12 +14,12 @@ public class TFIDFCalcTestCases {
     public static final String JOB_DESCRIPTION_STRING = "A requirement for this job is JavaScript. Python is a wonderful language.";
     public static final String RESUME_STRING = "I am learning JavaScript. Java is a cool language.";
 
-    public static Hashtable<String, Double> JOB_DESCRIPTION_TF;
-    public static Hashtable<String, Double> RESUME_TF;
-    public static Hashtable<String, Double> IDF;
+    public static Hashtable<String, Double> job_description_tf;
+    public static Hashtable<String, Double> resume_tf;
+    public static Hashtable<String, Double> idf;
 
-    public Hashtable<String, Double> JOB_DESCRIPTION_TFIDF;
-    public Hashtable<String, Double> RESUME_TFIDF;
+    public Hashtable<String, Double> job_description_tfidf;
+    public Hashtable<String, Double> resume_tfidf;
 
     /**
      * Initialize tf-idf hash tables.
@@ -27,9 +27,9 @@ public class TFIDFCalcTestCases {
      * @param tfidfResume The tf-idf hash table for the resume.
      * @param tfidfJobDescription The tf-idf hash table for the job description.
      */
-    public TFIDFCalcTestCases(Hashtable<String, Double> tfidfResume, Hashtable<String, Double> tfidfJobDescription) {
-        RESUME_TFIDF = tfidfResume;
-        JOB_DESCRIPTION_TFIDF = tfidfJobDescription;
+    public TFIDFCalcTestCases(Hashtable<String, Double> resume_tfidf, Hashtable<String, Double> job_description_tfidf) {
+        this.resume_tfidf = resume_tfidf;
+        this.job_description_tfidf = job_description_tfidf;
     }
 
     /**
@@ -44,21 +44,21 @@ public class TFIDFCalcTestCases {
      * @return a hash table.
      */
     public static Hashtable<String, Double> fakeJobDescriptionTF() {
-        JOB_DESCRIPTION_TF = new Hashtable<String, Double>();
-        JOB_DESCRIPTION_TF.put("am", (double) 1 / 7);
-        JOB_DESCRIPTION_TF.put("learning", (double) 1 / 7);
-        JOB_DESCRIPTION_TF.put("javascript", (double) 1 / 7);
-        JOB_DESCRIPTION_TF.put("java", (double) 1 / 7);
-        JOB_DESCRIPTION_TF.put("is", (double) 1 / 7);
-        JOB_DESCRIPTION_TF.put("cool", (double) 1 / 7);
-        JOB_DESCRIPTION_TF.put("language", (double) 1 / 7);
-        JOB_DESCRIPTION_TF.put("requirement", (double) 0);
-        JOB_DESCRIPTION_TF.put("for", (double) 0);
-        JOB_DESCRIPTION_TF.put("this", (double) 0);
-        JOB_DESCRIPTION_TF.put("job", (double) 0);
-        JOB_DESCRIPTION_TF.put("python", (double) 0);
-        JOB_DESCRIPTION_TF.put("wonderful", (double) 0);
-        return JOB_DESCRIPTION_TF;
+        job_description_tf = new Hashtable<String, Double>();
+        job_description_tf.put("am", (double) 1 / 7);
+        job_description_tf.put("learning", (double) 1 / 7);
+        job_description_tf.put("javascript", (double) 1 / 7);
+        job_description_tf.put("java", (double) 1 / 7);
+        job_description_tf.put("is", (double) 1 / 7);
+        job_description_tf.put("cool", (double) 1 / 7);
+        job_description_tf.put("language", (double) 1 / 7);
+        job_description_tf.put("requirement", (double) 0);
+        job_description_tf.put("for", (double) 0);
+        job_description_tf.put("this", (double) 0);
+        job_description_tf.put("job", (double) 0);
+        job_description_tf.put("python", (double) 0);
+        job_description_tf.put("wonderful", (double) 0);
+        return job_description_tf;
     }
 
     /**
@@ -67,21 +67,21 @@ public class TFIDFCalcTestCases {
      * @return a hash table.
      */
     public static Hashtable<String, Double> fakeResumeTF() {
-        RESUME_TF = new Hashtable<String, Double>();
-        RESUME_TF.put("am", (double) 0);
-        RESUME_TF.put("learning", (double) 0);
-        RESUME_TF.put("javascript", (double) 1 / 10);
-        RESUME_TF.put("java", (double) 0);
-        RESUME_TF.put("is", (double) 2 / 10);
-        RESUME_TF.put("cool", (double) 0);
-        RESUME_TF.put("language", (double) 1 / 10);
-        RESUME_TF.put("requirement", (double) 1 / 10);
-        RESUME_TF.put("for", (double) 1 / 10);
-        RESUME_TF.put("this", (double) 1 / 10);
-        RESUME_TF.put("job", (double) 1 / 10);
-        RESUME_TF.put("python", (double) 1 / 10);
-        RESUME_TF.put("wonderful", (double) 1 / 10);
-        return RESUME_TF;
+        resume_tf = new Hashtable<String, Double>();
+        resume_tf.put("am", (double) 0);
+        resume_tf.put("learning", (double) 0);
+        resume_tf.put("javascript", (double) 1 / 10);
+        resume_tf.put("java", (double) 0);
+        resume_tf.put("is", (double) 2 / 10);
+        resume_tf.put("cool", (double) 0);
+        resume_tf.put("language", (double) 1 / 10);
+        resume_tf.put("requirement", (double) 1 / 10);
+        resume_tf.put("for", (double) 1 / 10);
+        resume_tf.put("this", (double) 1 / 10);
+        resume_tf.put("job", (double) 1 / 10);
+        resume_tf.put("python", (double) 1 / 10);
+        resume_tf.put("wonderful", (double) 1 / 10);
+        return resume_tf;
     }
 
     /**
@@ -90,21 +90,21 @@ public class TFIDFCalcTestCases {
      * @return a hash table.
      */
     public static Hashtable<String, Double> fakeIDF() {
-        IDF = new Hashtable<String, Double>();
-        IDF.put("am", (double) Math.log(2));
-        IDF.put("learning", (double) Math.log(2));
-        IDF.put("javascript", (double) 0);
-        IDF.put("java", (double) Math.log(2));
-        IDF.put("is", (double) 0);
-        IDF.put("cool", (double) Math.log(2));
-        IDF.put("language", (double) 0);
-        IDF.put("requirement", (double) Math.log(2));
-        IDF.put("for", (double) Math.log(2));
-        IDF.put("this", (double) Math.log(2));
-        IDF.put("job", (double) Math.log(2));
-        IDF.put("python", (double) Math.log(2));
-        IDF.put("wonderful", (double) Math.log(2));
-        return IDF;
+        idf = new Hashtable<String, Double>();
+        idf.put("am", (double) Math.log(2));
+        idf.put("learning", (double) Math.log(2));
+        idf.put("javascript", (double) 0);
+        idf.put("java", (double) Math.log(2));
+        idf.put("is", (double) 0);
+        idf.put("cool", (double) Math.log(2));
+        idf.put("language", (double) 0);
+        idf.put("requirement", (double) Math.log(2));
+        idf.put("for", (double) Math.log(2));
+        idf.put("this", (double) Math.log(2));
+        idf.put("job", (double) Math.log(2));
+        idf.put("python", (double) Math.log(2));
+        idf.put("wonderful", (double) Math.log(2));
+        return idf;
     }
 
     /**
@@ -113,21 +113,21 @@ public class TFIDFCalcTestCases {
      * @return A hash table.
      */
     public Hashtable<String, Double> fakeJobDescriptionTFIDF() {
-        JOB_DESCRIPTION_TFIDF = new Hashtable<String, Double>();
-        JOB_DESCRIPTION_TFIDF.put("am", (double) 1 / 7 + (double) 1 / 7 * Math.log(2));
-        JOB_DESCRIPTION_TFIDF.put("learning", (double) 1 / 7 + (double) 1 / 7 * Math.log(2));
-        JOB_DESCRIPTION_TFIDF.put("javascript", (double) 1 / 7);
-        JOB_DESCRIPTION_TFIDF.put("java", (double) 1 / 7 + (double) 1 / 7 * Math.log(2));
-        JOB_DESCRIPTION_TFIDF.put("is", (double) 1 / 7);
-        JOB_DESCRIPTION_TFIDF.put("cool", (double) 1 / 7 + (double) 1 / 7 * Math.log(2));
-        JOB_DESCRIPTION_TFIDF.put("language", (double) 1 / 7);
-        JOB_DESCRIPTION_TFIDF.put("requirement", (double) 0);
-        JOB_DESCRIPTION_TFIDF.put("for", (double) 0);
-        JOB_DESCRIPTION_TFIDF.put("this", (double) 0);
-        JOB_DESCRIPTION_TFIDF.put("job", (double) 0);
-        JOB_DESCRIPTION_TFIDF.put("python", (double) 0);
-        JOB_DESCRIPTION_TFIDF.put("wonderful", (double) 0);
-        return JOB_DESCRIPTION_TFIDF;
+        job_description_tfidf = new Hashtable<String, Double>();
+        job_description_tfidf.put("am", (double) 1 / 7 + (double) 1 / 7 * Math.log(2));
+        job_description_tfidf.put("learning", (double) 1 / 7 + (double) 1 / 7 * Math.log(2));
+        job_description_tfidf.put("javascript", (double) 1 / 7);
+        job_description_tfidf.put("java", (double) 1 / 7 + (double) 1 / 7 * Math.log(2));
+        job_description_tfidf.put("is", (double) 1 / 7);
+        job_description_tfidf.put("cool", (double) 1 / 7 + (double) 1 / 7 * Math.log(2));
+        job_description_tfidf.put("language", (double) 1 / 7);
+        job_description_tfidf.put("requirement", (double) 0);
+        job_description_tfidf.put("for", (double) 0);
+        job_description_tfidf.put("this", (double) 0);
+        job_description_tfidf.put("job", (double) 0);
+        job_description_tfidf.put("python", (double) 0);
+        job_description_tfidf.put("wonderful", (double) 0);
+        return job_description_tfidf;
     }
 
     /**
@@ -136,21 +136,21 @@ public class TFIDFCalcTestCases {
      * @return a hash table.
      */
     public Hashtable<String, Double> fakeResumeTFIDF() {
-        RESUME_TFIDF = new Hashtable<String, Double>();
-        RESUME_TFIDF.put("am", (double) 0);
-        RESUME_TFIDF.put("learning", (double) 0);
-        RESUME_TFIDF.put("javascript", (double) 1 / 10);
-        RESUME_TFIDF.put("java", (double) 0);
-        RESUME_TFIDF.put("is", (double) 2 / 10);
-        RESUME_TFIDF.put("cool", (double) 0);
-        RESUME_TFIDF.put("language", (double) 1 / 10);
-        RESUME_TFIDF.put("requirement", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
-        RESUME_TFIDF.put("for", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
-        RESUME_TFIDF.put("this", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
-        RESUME_TFIDF.put("job", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
-        RESUME_TFIDF.put("python", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
-        RESUME_TFIDF.put("wonderful", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
-        return RESUME_TFIDF;
+        resume_tfidf = new Hashtable<String, Double>();
+        resume_tfidf.put("am", (double) 0);
+        resume_tfidf.put("learning", (double) 0);
+        resume_tfidf.put("javascript", (double) 1 / 10);
+        resume_tfidf.put("java", (double) 0);
+        resume_tfidf.put("is", (double) 2 / 10);
+        resume_tfidf.put("cool", (double) 0);
+        resume_tfidf.put("language", (double) 1 / 10);
+        resume_tfidf.put("requirement", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
+        resume_tfidf.put("for", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
+        resume_tfidf.put("this", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
+        resume_tfidf.put("job", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
+        resume_tfidf.put("python", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
+        resume_tfidf.put("wonderful", (double) 1 / 10 + (double) 1 / 10 * Math.log(2));
+        return resume_tfidf;
     }
 
 }
