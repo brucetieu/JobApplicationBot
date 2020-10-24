@@ -80,12 +80,12 @@ public class TFIDFCalcTest {
     void runTFIDFTest() throws IOException {
         // Get the expected resume tf-idf from the dummy data.
         Hashtable<String, Double> expectedResumeTFIDF = new TFIDFCalcTestCases(_wordListTestCases.fakeResumeTFIDF(),
-                _wordListTestCases.fakeJobDescriptionTFIDF()).RESUME_TFIDF;
+                _wordListTestCases.fakeJobDescriptionTFIDF()).resume_tfidf;
         
         // Get the expected job description tf-idf from the dummy data. 
         Hashtable<String, Double> expectedJobDescriptionTFIDF = new TFIDFCalcTestCases(
                 _wordListTestCases.fakeResumeTFIDF(),
-                _wordListTestCases.fakeJobDescriptionTFIDF()).JOB_DESCRIPTION_TFIDF;
+                _wordListTestCases.fakeJobDescriptionTFIDF()).job_description_tfidf;
 
         assertEquals(expectedResumeTFIDF, _tfidfCalc.runTFIDFCalc().getTFIDFHashDocB());
         assertEquals(expectedJobDescriptionTFIDF, _tfidfCalc.runTFIDFCalc().getTFIDFHashDocA());
