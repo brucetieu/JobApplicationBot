@@ -1,11 +1,19 @@
+package com.btieu.JobApplicationBot;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Paths;
+import java.util.List;
 
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
+
+import java.nio.file.Files;
 
 
 /**
@@ -15,23 +23,34 @@ import org.supercsv.prefs.CsvPreference;
  *
  */
 public class WriteFiles {
+    
+    private Writer _writer;
+    private File _file;
+    private String _filename = "";
 
+
+    public WriteFiles(String filename) throws IOException {
+        _filename = filename;
+        _file = new File(_filename);
+        _writer = new FileWriter(_file);
+    }
     /**
      * This method writes the job posting information to a CSV so the applicant can
      * keep track of easy apply jobs.
+     * @throws IOException 
      * 
      */
-    public void writeJobPostToCSV() {
+    public String writeJobPostToCSV(List<JobPostingData> jobPosts) throws IOException {
         ICsvBeanWriter beanWriter = null;
         final String[] header = { "jobTitle", "companyName", "companyLoc", "remote", "dateApplied", "appType",
                 "jobLink", "submitted", "jobStatus" };
 
         try {
-            beanWriter = new CsvBeanWriter(new FileWriter("jobTitleDescOutput.csv"), CsvPreference.STANDARD_PREFERENCE);
+            beanWriter = new CsvBeanWriter(_writer, CsvPreference.STANDARD_PREFERENCE);
             final CellProcessor[] processors = getProcessors();
             beanWriter.writeHeader(header);
 
-            for (JobPostingData jobPost : JobPostingData.jobPostingContainer) {
+            for (JobPostingData jobPost : jobPosts) {
                 beanWriter.write(jobPost, header, processors);
             }
 
@@ -46,6 +65,9 @@ public class WriteFiles {
                 }
             }
         }
+        
+        // Return the contents of what was written to the file in a string.
+        return new String(Files.readAllBytes(Paths.get(_filename)));
 
     }
 
