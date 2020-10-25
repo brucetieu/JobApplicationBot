@@ -1,4 +1,4 @@
-package com.btieu.ParseResume;
+package com.btieu.JobApplicationBot;
 
 import java.io.IOException;
 

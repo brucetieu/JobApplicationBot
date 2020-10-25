@@ -1,4 +1,4 @@
-package com.btieu.ParseResume;
+package com.btieu.JobApplicationBot;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,9 +8,6 @@ import java.util.Hashtable;
 
 import org.junit.jupiter.api.Test;
 
-import com.btieu.ParseResume.TFIDFCalc;
-import com.btieu.ParseResume.TFIDFCalcTestCases;
-import com.btieu.ParseResume.TextDocument;
 
 
 /**
@@ -34,7 +31,7 @@ public class TFIDFCalcTest {
     public TFIDFCalcTest() throws IOException {
         _wordListTestCases = new TFIDFCalcTestCases();
         _textDocument1 = new TextDocument(new File(
-                "/Users/2020 Senior Year/Fall 2020/SWE Apprenticeship/job-application-bot/ParseResume/src/test/resources/com/btieu/ParseResume/TestResume.pdf"));
+                "/Users/2020 Senior Year/Fall 2020/SWE Apprenticeship/job-application-bot/JobApplicationBot/src/test/resources/com/btieu/JobApplicationBot/TestResume.pdf"));
         _textDocument2 = new TextDocument(TFIDFCalcTestCases.JOB_DESCRIPTION_STRING);
         _tfidfCalc = new TFIDFCalc(_textDocument1, _textDocument2);
         _actualJobDescriptionTF = _tfidfCalc.computeTF(_textDocument1.getWordsFromDocument());
