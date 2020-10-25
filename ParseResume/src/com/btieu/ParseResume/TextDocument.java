@@ -49,7 +49,31 @@ public class TextDocument {
     }
 
     /**
-     * This method computes the frequency of words in a document.
+     * This method computes the frequency of words.
+     * 
+     * @return a hash table with the key being the word and the value being the
+     *         frequency of that word.
+     */
+    public Hashtable<String, Double> getFrequencyByWord() {
+
+        Hashtable<String, Double> freqUniqueWords = new Hashtable<String, Double>();
+
+        // Set the frequency of all words to be 0.
+        for (String unionVal : _union) {
+            freqUniqueWords.put(unionVal, 0.0);
+        }
+
+        // Count how many times the word appears in the cleanedList, populate those
+        // counts as values in the hash table.
+        for (String word : getWordsFromDocument()) {
+            freqUniqueWords.put(word, freqUniqueWords.get(word) + 1);
+        }
+
+        return freqUniqueWords;
+    }
+
+    /**
+     * This overloaded method computes the frequency of words in a document.
      * 
      * @param cleanedList The list of words to be counted.
      * @return a hash table with the key being the word and the value being the

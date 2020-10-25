@@ -64,8 +64,8 @@ public class TFIDFCalc {
         List<Hashtable<String, Double>> listOfHashes = new ArrayList<Hashtable<String, Double>>();
 
         // Add the frequency tables of words of each document to the list.
-        listOfHashes.add(_textDocumentA.getFrequencyByWord(_textDocumentA.getWordsFromDocument()));
-        listOfHashes.add(_textDocumentB.getFrequencyByWord(_textDocumentB.getWordsFromDocument()));
+        listOfHashes.add(_textDocumentA.getFrequencyByWord());
+        listOfHashes.add(_textDocumentB.getFrequencyByWord());
 
         int numOfDocuments = 2;
 
