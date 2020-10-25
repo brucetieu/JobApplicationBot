@@ -1,4 +1,4 @@
-package com.btieu.JobApplicationBot;
+package com.btieu.ParseResume;
 
 import java.util.Hashtable;
 

@@ -1,4 +1,4 @@
-package com.btieu.JobApplicationBot;
+package com.btieu.ParseResume;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,9 +8,9 @@ import java.util.Hashtable;
 
 import org.junit.jupiter.api.Test;
 
-import com.btieu.JobApplicationBot.TFIDFCalc;
-import com.btieu.JobApplicationBot.TFIDFCalcTestCases;
-import com.btieu.JobApplicationBot.TextDocument;
+import com.btieu.ParseResume.TFIDFCalc;
+import com.btieu.ParseResume.TFIDFCalcTestCases;
+import com.btieu.ParseResume.TextDocument;
 
 
 /**
