@@ -10,6 +10,8 @@ import java.util.Hashtable;
  */
 public class TFIDFCalcTestCases {
 
+    public static String FILE_PATH = "/Users/2020 Senior Year/Fall 2020/SWE Apprenticeship/job-application-bot/JobApplicationBot/bin/com/btieu/JobApplicationBot/TestResume.pdf";
+
     // Generate fake text.
     public static final String JOB_DESCRIPTION_STRING = "A requirement for this job is JavaScript. Python is a wonderful language.";
     public static final String RESUME_STRING = "I am learning JavaScript. Java is a cool language.";
@@ -24,7 +26,7 @@ public class TFIDFCalcTestCases {
     /**
      * Initialize tf-idf hash tables.
      * 
-     * @param tfidfResume The tf-idf hash table for the resume.
+     * @param tfidfResume         The tf-idf hash table for the resume.
      * @param tfidfJobDescription The tf-idf hash table for the job description.
      */
     public TFIDFCalcTestCases(Hashtable<String, Double> resume_tfidf, Hashtable<String, Double> job_description_tfidf) {
