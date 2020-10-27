@@ -2,7 +2,6 @@ package com.btieu.JobApplicationBot;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Hashtable;
@@ -30,7 +29,7 @@ public class TFIDFCalcTest {
      */
     public TFIDFCalcTest() throws IOException, URISyntaxException {
         _wordListTestCases = new TFIDFCalcTestCases();
-        _textDocument1 = new TextDocument(new File(TFIDFCalcTestCases.PATH));
+        _textDocument1 = new TextDocument(TFIDFCalcTestCases.RESUME_STRING);
         _textDocument2 = new TextDocument(TFIDFCalcTestCases.JOB_DESCRIPTION_STRING);
         _tfidfCalc = new TFIDFCalc(_textDocument1, _textDocument2);
         _actualJobDescriptionTF = _tfidfCalc.computeTF(_textDocument1.getWordsFromDocument());

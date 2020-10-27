@@ -10,8 +10,6 @@ import java.util.Hashtable;
  */
 public class TFIDFCalcTestCases {
     
-    public static final String PATH = "/Users/2020 Senior Year/Fall 2020/SWE Apprenticeship/job-application-bot/JobApplicationBot/src/test/resources/com/btieu/JobApplicationBot/TestResume.pdf";
-
     // Generate fake text.
     public static final String JOB_DESCRIPTION_STRING = "A requirement for this job is JavaScript. Python is a wonderful language.";
     public static final String RESUME_STRING = "I am learning JavaScript. Java is a cool language.";
