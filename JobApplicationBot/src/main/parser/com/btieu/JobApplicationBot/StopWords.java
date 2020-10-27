@@ -1,3 +1,5 @@
+package com.btieu.JobApplicationBot;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
