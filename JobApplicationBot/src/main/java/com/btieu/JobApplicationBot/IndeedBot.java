@@ -1,5 +1,6 @@
 package com.btieu.JobApplicationBot;
 
+import java.io.IOException;
 import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -11,9 +12,10 @@ import org.openqa.selenium.WebElement;
  * 
  * @author Bruce Tieu
  */
-public class IndeedBot extends Bot {
+public class IndeedBot extends BotScrape {
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
+    private WriteFiles _writeFiles;
 
     /**
      * This is a class constructor which initializes job application data, job
@@ -23,9 +25,11 @@ public class IndeedBot extends Bot {
      * @param jobPostData The object which holds job posting data.
      * @param appType     The enum type which is a set of application types.
      */
-    public IndeedBot(JobApplicationData _jobAppData, JobApplicationData.ApplicationType _appType) {
+    public IndeedBot(JobApplicationData _jobAppData, JobApplicationData.ApplicationType _appType,
+            WriteFiles _writeFiles) {
         this._jobAppData = _jobAppData;
         this._appType = _appType;
+        this._writeFiles = _writeFiles;
     }
 
     /**
@@ -132,6 +136,8 @@ public class IndeedBot extends Bot {
 
                 // TODO: If we're at the last card, and the current page is the same as what
                 // user specified, then stop.
+                if (i == jobsCard.size() - 1 && currPageNum == JobPostingData.pageNum)
+                    break;
             }
             // Go to the next page to continue saving jobs.
             if (i == jobsCard.size() - 1) {
@@ -146,6 +152,7 @@ public class IndeedBot extends Bot {
         }
 
         // TODO: Output saved jobs to a csv.
+        this._writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
     }
 
     /**
@@ -155,15 +162,17 @@ public class IndeedBot extends Bot {
      *                   page.
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
+     * @throws IOException 
      */
     public void saveJob(String currWindow, String jobLink, JobApplicationData.ApplicationType appType)
-            throws InterruptedException {
+            throws InterruptedException, IOException {
 
         // Check if job has been applied to.
         boolean applied = hasJobBeenAppliedTo();
         if (applied) {
 
             // TODO: Save the job to a container.
+            JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, applied));
 
             // Close that new window (the job that was opened).
             getDriver().close();
@@ -177,9 +186,12 @@ public class IndeedBot extends Bot {
         // to the job listing page to continue searching for jobs.
         else {
             // TODO: Save job to container.
-
+            JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, applied));
             getDriver().close();
             getDriver().switchTo().window(currWindow);
+        }
+        for (int i = 0; i < JobPostingData.jobPostingContainer.size(); i++) {
+            System.out.println(JobPostingData.jobPostingContainer.get(i));
         }
     }
 

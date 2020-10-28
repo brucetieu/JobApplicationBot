@@ -45,7 +45,6 @@ public class Bot {
         _chromeOptions.addArguments("start-maximized");
         _driver = new ChromeDriver(_chromeOptions);
         _driver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
-        _driver.manage().window().setPosition(new Point(-2000, 0));
         _wait = new WebDriverWait(_driver, _MAX_WAIT_TIME);
         _actions = new Actions(_driver);
     }

@@ -1,5 +1,7 @@
 package com.btieu.JobApplicationBot;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -26,11 +28,14 @@ public class BotScrape extends Bot {
      * @param applied This is bool indicating whether or not the job has already
      *                been applied to.
      * @return This returns a new JobPostingData object.
+     * @throws IOException
      */
-    public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
-            boolean applied) {
+    public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
+            throws IOException {
 
         String job_title, companyName, companyLoc, remote, submitted;
+        double jobMatch = jobMatchAlgo();
+
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm");
 
@@ -56,8 +61,22 @@ public class BotScrape extends Bot {
             submitted = "yes";
 
         // Return a new JobPostingData object.
-        return new JobPostingData(job_title, companyName, companyLoc, remote, formatter.format(date), appType.name(),
-                jobLink, submitted, "");
+        return new JobPostingData(jobMatch, job_title, companyName, companyLoc, remote, formatter.format(date),
+                appType.name(), jobLink, submitted, "");
+    }
+
+    /**
+     * Match the job description text to the resume.
+     * 
+     * @return The cosine similarity number.
+     * @throws IOException Catch any file errors.
+     */
+    public double jobMatchAlgo() throws IOException {
+
+        String jobDescriptionString = tryToFindElement(By.id("jobDescriptionText")).getText();
+        TextDocument jobDescriptionText = new TextDocument(jobDescriptionString);
+        TextDocument resumeText = new TextDocument(new File("/Users/bruce/Downloads/Resume-Software-Developer17.pdf"));
+        return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
     }
 
 }

@@ -42,7 +42,7 @@ public class WriteFiles {
      */
     public String writeJobPostToCSV(List<JobPostingData> jobPosts) throws IOException {
         ICsvBeanWriter beanWriter = null;
-        final String[] header = { "jobTitle", "companyName", "companyLoc", "remote", "dateApplied", "appType",
+        final String[] header = {"jobMatch", "jobTitle", "companyName", "companyLoc", "remote", "dateApplied", "appType",
                 "jobLink", "submitted", "jobStatus" };
 
         try {
@@ -78,7 +78,8 @@ public class WriteFiles {
      * @return The cell processors.
      */
     private static CellProcessor[] getProcessors() {
-        final CellProcessor[] processors = new CellProcessor[] { new NotNull(), // jobTitle
+        final CellProcessor[] processors = new CellProcessor[] { new NotNull(), // jobMatch
+                new NotNull(), // jobTitle
                 new NotNull(), // companyName
                 new NotNull(), // companyLocation
                 new NotNull(), // remote
