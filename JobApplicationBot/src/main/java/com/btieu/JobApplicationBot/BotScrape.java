@@ -75,6 +75,9 @@ public class BotScrape extends Bot {
 
         String jobDescriptionString = tryToFindElement(By.id("jobDescriptionText")).getText();
         TextDocument jobDescriptionText = new TextDocument(jobDescriptionString);
+
+        // TODO! This example resume is used here just for testing. This will be
+        // replaced with what the job seeker uploads in the GUI.
         TextDocument resumeText = new TextDocument(new File("/Users/bruce/Downloads/Resume-Software-Developer17.pdf"));
         return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
     }
