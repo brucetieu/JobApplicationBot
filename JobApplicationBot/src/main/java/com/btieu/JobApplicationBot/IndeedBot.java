@@ -185,13 +185,8 @@ public class IndeedBot extends BotScrape {
         // If the job has already been applied to, close the current window and switch
         // to the job listing page to continue searching for jobs.
         else {
-            // TODO: Save job to container.
-            JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, applied));
             getDriver().close();
             getDriver().switchTo().window(currWindow);
-        }
-        for (int i = 0; i < JobPostingData.jobPostingContainer.size(); i++) {
-            System.out.println(JobPostingData.jobPostingContainer.get(i));
         }
     }
 

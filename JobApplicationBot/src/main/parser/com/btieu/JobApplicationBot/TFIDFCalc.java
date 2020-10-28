@@ -83,17 +83,18 @@ public class TFIDFCalc {
             }
         }
 
-        // IDF(t) = ln(Total number of documents / Number of documents with term t in it).
+        // IDF(t) = ln(Total number of documents / Number of documents with term t in
+        // it).
         for (String word : idfHash.keySet()) {
             double numDocWithTermT = idfHash.get(word);
             double idf = Math.log((double) numOfDocuments / numDocWithTermT);
-            
+
             // Replace divide by 0 errors with a 0.
             if (numDocWithTermT == 0)
                 idfHash.put(word, 0.0);
-            else {
+            else
                 idfHash.put(word, idf);
-            }
+
         }
 
         return idfHash;
