@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package junittesting.testcases;
+package com.btieu.JobApplicationBot;
 
-import com.btieu.JobApplicationBot.JobPostingData;
 
 import java.util.Arrays;
 import java.util.List;
