@@ -55,6 +55,7 @@ public abstract class Bot {
     abstract public void searchJobs() throws InterruptedException;
     abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
             boolean isApplied) throws IOException;
+    abstract public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) throws InterruptedException, IOException;
 
     
     /**
@@ -194,7 +195,7 @@ public abstract class Bot {
         String jobDescriptionString = tryToFindElement(by).getText();
         TextDocument jobDescriptionText = new TextDocument(jobDescriptionString);
         
-        // JobApplicationData.resumePath comes from what user uploads. 
+        // JobApplicationData.resumePath is the resume uploaded by the user. 
         TextDocument resumeText = new TextDocument(new File(JobApplicationData.resumePath));
         return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
     }

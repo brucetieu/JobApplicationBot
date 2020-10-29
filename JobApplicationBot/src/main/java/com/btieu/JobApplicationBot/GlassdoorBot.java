@@ -85,5 +85,10 @@ public class GlassdoorBot extends Bot {
             boolean isApplied) throws IOException {
         return new JobPostingData();
     }
+    
+    // TODO: implement abstract method.
+    public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) {
+        
+    }
 
 }

@@ -17,6 +17,7 @@ public class IndeedBot extends Bot {
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
     private WriteFiles _writeFiles;
+    private String _parentWindow;
 
     /**
      * This is a class constructor which initializes job application data, job
@@ -33,20 +34,22 @@ public class IndeedBot extends Bot {
         this._writeFiles = _writeFiles;
     }
 
-    @Override
+    
     /**
      * Navigate to the Indeed site.
      */
+    @Override
     public void navigateToJobPage() {
         getDriver().get(this._jobAppData.platformUrl);
     }
 
-    @Override
+ 
     /**
      * This method logs in to the job site.
      * 
      * @throws InterruptedException
      */
+    @Override
     public void login() throws InterruptedException {
 
         // Wait for element to appear before clicking on it.
@@ -65,12 +68,12 @@ public class IndeedBot extends Bot {
         waitOnElementAndClick(By.id("login-submit-button"));
     }
 
-    @Override
     /**
      * This method searches for jobs based on job position name and location.
      * 
      * @throws InterruptedException Catch errors if element is not found.
      */
+    @Override
     public void searchJobs() throws InterruptedException {
 
         // Click on the find jobs tab
@@ -115,12 +118,13 @@ public class IndeedBot extends Bot {
                 // Find Easily Apply job card and open in new tab.
                 if (jobsCard.get(i).findElements(By.className("iaLabel")).size() > 0) {
 
-                    String parentWindow = getDriver().getWindowHandle(); // Get the current window.
+                    _parentWindow = getDriver().getWindowHandle(); // Get the current window.
                     String href = jobsCard.get(i).findElement(By.className("jobtitle")).getAttribute("href"); // Get the job link.
+                    href = href.replace("rc/clk", "viewjob");
                     navigateToLinkInNewTab(href);  // Open that job in a new tab.
                     System.out.println(href);
                     // Save each job, remember original job listing page as tabs close.
-                    saveJob(parentWindow, href, this._appType);
+                    saveJob(href, this._appType);
                 }
 
                 // Stop at the last job listing & pagenum specified.
@@ -151,7 +155,7 @@ public class IndeedBot extends Bot {
      * @throws InterruptedException Catch element not found errors.
      * @throws IOException          Catch file errors.
      */
-    public void saveJob(String currWindow, String jobLink, JobApplicationData.ApplicationType appType)
+    public void saveJob(String jobLink, JobApplicationData.ApplicationType appType)
             throws InterruptedException, IOException {
 
         // Check if job has been applied to.
@@ -160,13 +164,13 @@ public class IndeedBot extends Bot {
 
             JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, isApplied)); // Save job. 
             getDriver().close(); // Close that new window (the job that was opened).
-            getDriver().switchTo().window(currWindow); // Switch back to the parent window (job listing window).
+            getDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing window).
 
         }
         // Continue searching for jobs if already applied to.
         else {
             getDriver().close();
-            getDriver().switchTo().window(currWindow);
+            getDriver().switchTo().window(_parentWindow);
         }
     }
 
@@ -186,7 +190,6 @@ public class IndeedBot extends Bot {
             return true;
     }
     
-    @Override
     /**
      * This method gets information from the job description like job title.
      * 
@@ -197,6 +200,7 @@ public class IndeedBot extends Bot {
      * @return This returns a new JobPostingData object.
      * @throws IOException Catch file errors.
      */
+    @Override
     public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
             throws IOException {
 
