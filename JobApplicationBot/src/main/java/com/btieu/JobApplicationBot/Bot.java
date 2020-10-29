@@ -1,5 +1,7 @@
 package com.btieu.JobApplicationBot;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +11,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.WebDriver;
@@ -19,9 +20,8 @@ import org.openqa.selenium.WebElement;
  * This class holds common bot actions like waiting and navigating.
  * 
  * @author bruce
- *
  */
-public class Bot {
+public abstract class Bot {
 
     private static final String _CHROME_DRIVER_PROPERTY = "webdriver.chrome.driver";
     private static final String _CHROME_DRIVER_PATH = "/Applications/chromedriver";
@@ -49,6 +49,14 @@ public class Bot {
         _actions = new Actions(_driver);
     }
 
+    // Abstract methods
+    abstract public void navigateToJobPage();
+    abstract public void login() throws InterruptedException;
+    abstract public void searchJobs() throws InterruptedException;
+    abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
+            boolean isApplied) throws IOException;
+
+    
     /**
      * This is a getter method.
      * 
@@ -74,6 +82,13 @@ public class Bot {
      */
     public Actions getActions() {
         return _actions;
+    }
+
+    /**
+     * Quit the browser.
+     */
+    public void quitBrowser() {
+        this._driver.quit();
     }
 
     /**
@@ -106,15 +121,6 @@ public class Bot {
             System.out.println("Could not find element: " + by);
         }
         return element;
-    }
-
-    /**
-     * This method navigates to the job page.
-     * 
-     * @param jobUrl A string which is the job platform link.
-     */
-    public void navigateToJobPage(String jobUrl) {
-        _driver.get(jobUrl);
     }
 
     /**
@@ -165,7 +171,7 @@ public class Bot {
      * @param jobData The job application data that is supplied
      * @throws InterruptedException
      */
-    public void humanTyping(WebElement element, String jobData) throws InterruptedException {
+    public void typeLikeAHuman(WebElement element, String jobData) throws InterruptedException {
         if (element != null) {
             for (int i = 0; i < jobData.length(); i++) {
                 TimeUnit.SECONDS.sleep((long) (Math.random() * (3 - 1) * +1));
@@ -173,10 +179,24 @@ public class Bot {
                 String s = new StringBuilder().append(c).toString();
                 element.sendKeys(s);
             }
-        } else {
         }
 
     }
     
+    /**
+     * Match the job description text to the resume.
+     * 
+     * @return The cosine similarity number.
+     * @throws IOException Catch any file errors.
+     */
+    public double jobMatchScore(By by) throws IOException {
+
+        String jobDescriptionString = tryToFindElement(by).getText();
+        TextDocument jobDescriptionText = new TextDocument(jobDescriptionString);
+        
+        // JobApplicationData.resumePath comes from what user uploads. 
+        TextDocument resumeText = new TextDocument(new File(JobApplicationData.resumePath));
+        return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
+    }
 
 }
