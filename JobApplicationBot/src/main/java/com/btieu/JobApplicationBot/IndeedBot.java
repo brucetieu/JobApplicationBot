@@ -1,10 +1,11 @@
 package com.btieu.JobApplicationBot;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -12,7 +13,7 @@ import org.openqa.selenium.WebElement;
  * 
  * @author Bruce Tieu
  */
-public class IndeedBot extends BotScrape {
+public class IndeedBot extends Bot {
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
     private WriteFiles _writeFiles;
@@ -32,18 +33,19 @@ public class IndeedBot extends BotScrape {
         this._writeFiles = _writeFiles;
     }
 
+    @Override
     /**
      * Navigate to the Indeed site.
      */
-    public void navToIndeed() {
-        navigateToJobPage(this._jobAppData.platformUrl);
+    public void navigateToJobPage() {
+        getDriver().get(this._jobAppData.platformUrl);
     }
 
+    @Override
     /**
      * This method logs in to the job site.
      * 
-     * @throws InterruptedException If the thread executing the method is
-     *                              interrupted, stop the method and return early.
+     * @throws InterruptedException
      */
     public void login() throws InterruptedException {
 
@@ -57,17 +59,17 @@ public class IndeedBot extends BotScrape {
         // Populate the fields with an email and a password
         WebElement email = getDriver().findElement(By.id("login-email-input"));
         WebElement password = getDriver().findElement(By.id("login-password-input"));
-        humanTyping(email, this._jobAppData.email);
-        humanTyping(password, this._jobAppData.password);
+        typeLikeAHuman(email, this._jobAppData.email);
+        typeLikeAHuman(password, this._jobAppData.password);
 
         waitOnElementAndClick(By.id("login-submit-button"));
     }
 
+    @Override
     /**
      * This method searches for jobs based on job position name and location.
      * 
-     * @throws InterruptedException If the thread executing the method is
-     *                              interrupted, stop the method and return early.
+     * @throws InterruptedException Catch errors if element is not found.
      */
     public void searchJobs() throws InterruptedException {
 
@@ -80,15 +82,15 @@ public class IndeedBot extends BotScrape {
 
         clearWhat.clear();
 
-        // Delay typing
-        humanTyping(clearWhat, this._jobAppData.whatJob);
+        // Delay typing.
+        typeLikeAHuman(clearWhat, this._jobAppData.whatJob);
 
-        // Clear the "Where" field and send in the location of the job
+        // Clear the "Where" field and send in the location of the job.
         getActions().sendKeys(Keys.TAB);
         getActions().sendKeys(Keys.DELETE);
         getActions().build().perform();
 
-        humanTyping(clearWhere, this._jobAppData.locationOfJob);
+        typeLikeAHuman(clearWhere, this._jobAppData.locationOfJob);
         clearWhere.submit();
     }
 
@@ -96,7 +98,6 @@ public class IndeedBot extends BotScrape {
      * This method looks for Indeed Jobs that are easy to apply to (for now).
      * 
      * @throws Exception This checks for errors.
-     * 
      */
     public void findEasyApply() throws Exception {
 
@@ -111,31 +112,18 @@ public class IndeedBot extends BotScrape {
             // Check if the appType that is passed in is an "Easily Apply" one.
             if (this._appType == JobApplicationData.ApplicationType.EASILY_APPLY) {
 
-                // If there are one or more of these "Easily Apply" jobs, then open that job in
-                // a new tab.
+                // Find Easily Apply job card and open in new tab.
                 if (jobsCard.get(i).findElements(By.className("iaLabel")).size() > 0) {
-                    System.out.println("Opening Easily Apply Job in another tab...");
 
-                    // Get the current window.
-                    String parentWindow = getDriver().getWindowHandle();
-
-                    // Get the job link.
-                    String href = jobsCard.get(i).findElement(By.className("jobtitle")).getAttribute("href");
+                    String parentWindow = getDriver().getWindowHandle(); // Get the current window.
+                    String href = jobsCard.get(i).findElement(By.className("jobtitle")).getAttribute("href"); // Get the job link.
+                    navigateToLinkInNewTab(href);  // Open that job in a new tab.
                     System.out.println(href);
-
-                    // Open that job in a new tab.
-                    navigateToLinkInNewTab(href);
-
-                    /*
-                     * Save each easy apply job until there are none on the first page, and pass in
-                     * the parentWindow to keep track of the original job listing page as tabs are
-                     * closed.
-                     */
+                    // Save each job, remember original job listing page as tabs close.
                     saveJob(parentWindow, href, this._appType);
                 }
 
-                // TODO: If we're at the last card, and the current page is the same as what
-                // user specified, then stop.
+                // Stop at the last job listing & pagenum specified.
                 if (i == jobsCard.size() - 1 && currPageNum == JobPostingData.pageNum)
                     break;
             }
@@ -151,39 +139,31 @@ public class IndeedBot extends BotScrape {
             i++;
         }
 
-        // TODO: Output saved jobs to a csv.
+        // Output saved jobs to a csv.
         this._writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
+        quitBrowser();
     }
 
     /**
-     * This method saves "Easily Apply" jobs on Indeed.com.
+     * This method saves "Easily Apply" jobs to a container on Indeed.com.
      * 
-     * @param currWindow The window which holds all listings of jobs on a single
-     *                   page.
-     * @throws InterruptedException If the thread executing the method is
-     *                              interrupted, stop the method and return early.
-     * @throws IOException 
+     * @param currWindow The window with original job listings.
+     * @throws InterruptedException Catch element not found errors.
+     * @throws IOException          Catch file errors.
      */
     public void saveJob(String currWindow, String jobLink, JobApplicationData.ApplicationType appType)
             throws InterruptedException, IOException {
 
         // Check if job has been applied to.
-        boolean applied = hasJobBeenAppliedTo();
-        if (applied) {
+        boolean isApplied = hasJobBeenAppliedTo();
+        if (isApplied) {
 
-            // TODO: Save the job to a container.
-            JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, applied));
-
-            // Close that new window (the job that was opened).
-            getDriver().close();
-
-            // Switch back to the parent window (job listing window).
-            getDriver().switchTo().window(currWindow);
+            JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, isApplied)); // Save job. 
+            getDriver().close(); // Close that new window (the job that was opened).
+            getDriver().switchTo().window(currWindow); // Switch back to the parent window (job listing window).
 
         }
-
-        // If the job has already been applied to, close the current window and switch
-        // to the job listing page to continue searching for jobs.
+        // Continue searching for jobs if already applied to.
         else {
             getDriver().close();
             getDriver().switchTo().window(currWindow);
@@ -191,28 +171,60 @@ public class IndeedBot extends BotScrape {
     }
 
     /**
-     * This method checks if a job has already been applied to. If it has, skip the
-     * application and search for the next one.
+     * This method checks if a job has already been applied to.
      * 
      * @return True, if a job hasn't been applied to and false if it has.
      */
     public boolean hasJobBeenAppliedTo() {
 
-        // Check if the form contains a message about the Application already being
-        // applied to.
+        // Check if job has been applied already.
         if (getDriver().findElements(By.id("ia_success")).size() > 0) {
-            // Close the popup
-            WebElement closePopup = tryToFindElement(By.id("close-popup"));
-            closePopup.click();
+            WebElement popUp = tryToFindElement(By.id("close-popup"));
+            popUp.click();
             return false;
         } else
             return true;
     }
-
+    
+    @Override
     /**
-     * This method quits the browser.
+     * This method gets information from the job description like job title.
+     * 
+     * @param driver  This is the web driver.
+     * @param jobLink This is the link of the job of type string.
+     * @param appType This is the application type of type string.
+     * @param applied This is bool indicating whether or not the job has already been applied to.
+     * @return This returns a new JobPostingData object.
+     * @throws IOException Catch file errors.
      */
-    public void quitBrowser() {
-        getDriver().quit();
+    public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
+            throws IOException {
+
+        String remote, submitted;
+
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+
+        String jobTitle = tryToFindElement(By.className("jobsearch-JobInfoHeader-title")).getText();
+        WebElement companyLocationDiv = getDriver()
+                .findElement(By.className("jobsearch-DesktopStickyContainer-subtitle"));
+        List<WebElement> nestedDiv = companyLocationDiv.findElements(By.tagName("div"));
+        List<WebElement> innerDivs = nestedDiv.get(0).findElements(By.tagName("div"));
+
+        String companyName = innerDivs.get(0).getText();
+        String companyLoc = innerDivs.get(innerDivs.size() - 1).getText();
+        String isRemote = nestedDiv.get(nestedDiv.size() - 1).getText();
+
+        if (isRemote != null) remote = "yes";
+        else remote = "no";
+
+        if (applied) submitted = "no";
+        else submitted = "yes";
+
+        // Return a new JobPostingData object.
+        return new JobPostingData(jobMatchScore(By.id("jobDescriptionText")), jobTitle, companyName, companyLoc, remote, formatter.format(date),
+                appType.name(), jobLink, submitted, "");
     }
+    
+
 }
