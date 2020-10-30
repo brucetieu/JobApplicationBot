@@ -1,5 +1,7 @@
 package com.btieu.JobApplicationBot;
 
+import java.io.IOException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -10,7 +12,7 @@ import org.openqa.selenium.WebElement;
  * @author bruce
  *
  */
-public class GlassdoorBot extends BotScrape {
+public class GlassdoorBot extends Bot {
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
 
@@ -20,10 +22,11 @@ public class GlassdoorBot extends BotScrape {
     }
 
     /**
-     * Navigate to the Glassdoor site.
+     * Navigate to the Indeed site.
      */
-    public void navigateToPage() {
-        navigateToJobPage(this._jobAppData.platformUrl);
+    @Override
+    public void navigateToJobPage() {
+        getDriver().get(this._jobAppData.platformUrl);
     }
 
     /**
@@ -32,6 +35,7 @@ public class GlassdoorBot extends BotScrape {
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
+    @Override
     public void login() throws InterruptedException {
 
         // Wait for element to appear before clicking on it.
@@ -56,13 +60,14 @@ public class GlassdoorBot extends BotScrape {
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
+    @Override
     public void searchJobs() throws InterruptedException {
         WebElement searchKey = tryToFindElement(By.id("sc.keyword"));
         WebElement searchLoc = tryToFindElement(By.id("sc.location"));
         searchKey.clear();
         searchLoc.clear();
 
-        humanTyping(searchKey, this._jobAppData.whatJob);
+        typeLikeAHuman(searchKey, this._jobAppData.whatJob);
 
         // Clear the "Where" field and send in the location of the job
         getActions().sendKeys(Keys.TAB);
@@ -70,8 +75,20 @@ public class GlassdoorBot extends BotScrape {
         getActions().sendKeys(Keys.DELETE);
         getActions().build().perform();
 
-        humanTyping(searchLoc, this._jobAppData.locationOfJob);
+        typeLikeAHuman(searchLoc, this._jobAppData.locationOfJob);
         searchLoc.submit();
+    }
+    
+    // TODO: implement abstract method.
+    @Override
+    public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
+            boolean isApplied) throws IOException {
+        return new JobPostingData();
+    }
+    
+    // TODO: implement abstract method.
+    public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) {
+        
     }
 
 }

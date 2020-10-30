@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package junittesting.testing;
-
-import com.btieu.JobApplicationBot.JobPostingData;
-import com.btieu.JobApplicationBot.WriteFiles;
+package com.btieu.JobApplicationBot;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import junittesting.testcases.CSVTestCases;
 
 import org.junit.jupiter.api.Test;
 

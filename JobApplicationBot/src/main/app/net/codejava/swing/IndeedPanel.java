@@ -10,6 +10,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+
 /**
  * This class creates the Indeed panel.
  * 
@@ -54,13 +55,13 @@ public class IndeedPanel extends CreateGUIComponents {
         addLabels("Password", 20, 206, 61, 16);
         addLabels("Phone number", 20, 244, 91, 16);
 
-         _firstName = addTextField(125, 60, 130, 26, 10);
-         _lastName = addTextField(125, 92, 130, 26, 10);
-         _fullName = addTextField(125, 123, 130, 26, 10);
-         _email = addTextField(125, 161, 130, 26, 10);
+        _firstName = addTextField(125, 60, 130, 26, 10);
+        _lastName = addTextField(125, 92, 130, 26, 10);
+        _fullName = addTextField(125, 123, 130, 26, 10);
+        _email = addTextField(125, 161, 130, 26, 10);
 
-         _phoneNumber = addTextField(125, 239, 130, 26, 10);
-         _password = addPasswordField(125, 201, 130, 26, 10);
+        _phoneNumber = addTextField(125, 239, 130, 26, 10);
+        _password = addPasswordField(125, 201, 130, 26, 10);
 
         // Job preferences column.
         createGoodiesTitle("Job Preferences", 391, 32, 122, 16);
@@ -70,8 +71,8 @@ public class IndeedPanel extends CreateGUIComponents {
 
         addDropDown(_options, 401, 124, 150, 27);
 
-         _whatJob = addTextField(401, 60, 130, 26, 10);
-         _jobLoc = addTextField(401, 92, 130, 26, 10);
+        _whatJob = addTextField(401, 60, 130, 26, 10);
+        _jobLoc = addTextField(401, 92, 130, 26, 10);
 
         addUploadResume(191, 295, 300, 16);
     }
@@ -83,8 +84,12 @@ public class IndeedPanel extends CreateGUIComponents {
         JButton launchButton = addButton("Launch", 250, 437, 117, 29);
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: Get the values of the text fields and open browser.
+             // TODO: Get the values of the text fields and open browser.
+                // E.g for resume file: 
+                // JobApplicationData.resumePath = getFile.toString();
+             
             }
         });
+
     }
 }
