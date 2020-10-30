@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package junittesting.testcases;
-
-import com.btieu.JobApplicationBot.JobPostingData;
+package com.btieu.JobApplicationBot;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,11 +28,12 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  *
  */
 public class CSVTestCases {
-    public static final String[] HEADER = new String[] { "jobTitle", "companyName", "companyLoc", "remote",
+    public static final String[] HEADER = new String[] { "jobMatch", "jobTitle", "companyName", "companyLoc", "remote",
             "dateApplied", "appType", "jobLink", "submitted", "jobStatus" };
-    public static final String HEADER_CSV = "jobTitle,companyName,companyLoc,remote,dateApplied,appType,jobLink,submitted,jobStatus";
+    public static final String HEADER_CSV = "jobMatch,jobTitle,companyName,companyLoc,remote,dateApplied,appType,jobLink,submitted,jobStatus";
 
-    public static final CellProcessor[] WRITE_PROCESSORS = new CellProcessor[] { new NotNull(), // jobTitle
+    public static final CellProcessor[] WRITE_PROCESSORS = new CellProcessor[] { new NotNull(), // jobMatch
+            new NotNull(), // jobTitle
             new NotNull(), // companyName
             new NotNull(), // companyLocation
             new NotNull(), // remote
@@ -46,35 +45,35 @@ public class CSVTestCases {
     };
 
     // Create multiple test data. One is a string, the other is bean.
-    public static final String JOB1_CSV = "Full Stack Intern,Redko,Remote,yes,10/9/20 9:21,EASILY_APPLY,https://www.indeed.com/company/Redko/jobs/Full-Stack-Intern-737deae7d5296876?fccid=fef428aa4152bc0d&vjs=3,no,";
-    public static final JobPostingData JOB1 = new JobPostingData("Full Stack Intern", "Redko", "Remote", "yes",
-            "10/9/20 9:21", "EASILY_APPLY",
+    public static final String JOB1_CSV = "0.34136279460203306,Full Stack Intern,Redko,Remote,yes,10/9/20 9:21,EASILY_APPLY,https://www.indeed.com/company/Redko/jobs/Full-Stack-Intern-737deae7d5296876?fccid=fef428aa4152bc0d&vjs=3,no,";
+    public static final JobPostingData JOB1 = new JobPostingData(0.34136279460203306, "Full Stack Intern", "Redko",
+            "Remote", "yes", "10/9/20 9:21", "EASILY_APPLY",
             "https://www.indeed.com/company/Redko/jobs/Full-Stack-Intern-737deae7d5296876?fccid=fef428aa4152bc0d&vjs=3",
             "no", "");
 
-    public static final String JOB2_CSV = "Full Stack Engineering Intern,U.S. Xpress Enterprises, Inc.,"
+    public static final String JOB2_CSV = "0.3382327860757509,Full Stack Engineering Intern,U.S. Xpress Enterprises, Inc.,"
             + "Scottsdale, AZ"
             + ",yes,10/9/20 9:21,EASILY_APPLY,https://www.indeed.com/company/U.S.-Xpress/jobs/Full-Stack-Engineering-Intern-546d726323baa0a8?fccid=d921f5450b899369&vjs=3,no,";
-    public static final JobPostingData JOB2 = new JobPostingData("Full Stack Engineering Intern",
+    public static final JobPostingData JOB2 = new JobPostingData(0.3382327860757509, "Full Stack Engineering Intern",
             "U.S. Xpress Enterprises, Inc.", "Scottsdale, AZ", "yes", "10/9/20 9:21", "EASILY_APPLY",
             "https://www.indeed.com/company/U.S.-Xpress/jobs/Full-Stack-Engineering-Intern-546d726323baa0a8?fccid=d921f5450b899369&vjs=3",
             "no", "");
 
-    public static final String JOB3_CSV = "Intern Web Developer,Atlink Education,Remote,yes,10/9/20 9:22,EASILY_APPLY,https://www.indeed.com/company/Atlink-Education/jobs/Intern-Web-Developer-207f0c248bd8fb96?fccid=4837d661d2a76be2&vjs=3,no,";
-    public static final JobPostingData JOB3 = new JobPostingData("Intern Web Developer", "Atlink Education", "Remote",
-            "yes", "10/9/20 9:22", "EASILY_APPLY",
+    public static final String JOB3_CSV = "0.2204924699317553,Intern Web Developer,Atlink Education,Remote,yes,10/9/20 9:22,EASILY_APPLY,https://www.indeed.com/company/Atlink-Education/jobs/Intern-Web-Developer-207f0c248bd8fb96?fccid=4837d661d2a76be2&vjs=3,no,";
+    public static final JobPostingData JOB3 = new JobPostingData(0.2204924699317553, "Intern Web Developer",
+            "Atlink Education", "Remote", "yes", "10/9/20 9:22", "EASILY_APPLY",
             "https://www.indeed.com/company/Atlink-Education/jobs/Intern-Web-Developer-207f0c248bd8fb96?fccid=4837d661d2a76be2&vjs=3",
             "no", "");
 
-    public static final String JOB4_CSV = "Software Engineer Intern,EcoCart,San Francisco, CA,yes,10/9/20 9:22,EASILY_APPLY,https://www.indeed.com/company/EcoCart/jobs/Software-Engineer-Intern-6c27e2ac38c37639?fccid=fadf1499cb147e15&vjs=3,no,";
-    public static final JobPostingData JOB4 = new JobPostingData("Software Engineer Intern", "EcoCart",
-            "San Francisco, CA", "yes", "10/9/20 9:22", "EASILY_APPLY",
+    public static final String JOB4_CSV = "0.30868099269670346,Software Engineer Intern,EcoCart,San Francisco, CA,yes,10/9/20 9:22,EASILY_APPLY,https://www.indeed.com/company/EcoCart/jobs/Software-Engineer-Intern-6c27e2ac38c37639?fccid=fadf1499cb147e15&vjs=3,no,";
+    public static final JobPostingData JOB4 = new JobPostingData(0.30868099269670346, "Software Engineer Intern",
+            "EcoCart", "San Francisco, CA", "yes", "10/9/20 9:22", "EASILY_APPLY",
             "https://www.indeed.com/company/EcoCart/jobs/Software-Engineer-Intern-6c27e2ac38c37639?fccid=fadf1499cb147e15&vjs=3",
             "no", "");
 
-    public static final String JOB5_CSV = "Software Engineer,Copilot,Denver, CO,yes,10/8/20 11:14,EASILY_APPLY,https://www.indeed.com/company/Copilot/jobs/Software-Engineer-f139d9dcdff1f88e?fccid=f4de6c53d8e539bd&vjs=3,no,";
-    public static final JobPostingData JOB5 = new JobPostingData("Software Engineer", "Copilot", "Denver, CO", "yes",
-            "10/8/20 11:14", "EASILY_APPLY",
+    public static final String JOB5_CSV = "0.31895032525956524,Software Engineer,Copilot,Denver, CO,yes,10/8/20 11:14,EASILY_APPLY,https://www.indeed.com/company/Copilot/jobs/Software-Engineer-f139d9dcdff1f88e?fccid=f4de6c53d8e539bd&vjs=3,no,";
+    public static final JobPostingData JOB5 = new JobPostingData(0.31895032525956524, "Software Engineer", "Copilot",
+            "Denver, CO", "yes", "10/8/20 11:14", "EASILY_APPLY",
             "https://www.indeed.com/company/Copilot/jobs/Software-Engineer-f139d9dcdff1f88e?fccid=f4de6c53d8e539bd&vjs=3",
             "no", "");
 

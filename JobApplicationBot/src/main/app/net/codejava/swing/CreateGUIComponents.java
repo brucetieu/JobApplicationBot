@@ -44,6 +44,14 @@ public class CreateGUIComponents extends JFrame {
         this._openFileChooser.setCurrentDirectory(new File("./"));
 
     }
+    
+    /**
+     * Get the resume file path.
+     * @return The resume file.
+     */
+    public File getResumeFile() {
+        return _file;
+    }
 
     /**
      * This method adds JLabels.
@@ -183,7 +191,6 @@ public class CreateGUIComponents extends JFrame {
                     File selectedFile = _openFileChooser.getSelectedFile();
                     addLabels("File Successfully Loaded!", x, y, width, height);
                     _file = selectedFile;
-                    System.out.println(selectedFile);
                 } else {
                     addLabels("No file chosen!", x, y, width, height);
                 }
