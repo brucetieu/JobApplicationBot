@@ -79,16 +79,5 @@ public class GlassdoorBot extends Bot {
         searchLoc.submit();
     }
     
-    // TODO: implement abstract method.
-    @Override
-    public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
-            boolean isApplied) throws IOException {
-        return new JobPostingData();
-    }
-    
-    // TODO: implement abstract method.
-    public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) {
-        
-    }
 
 }

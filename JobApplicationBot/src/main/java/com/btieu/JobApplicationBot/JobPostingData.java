@@ -10,12 +10,12 @@ import java.util.ArrayList;
  */
 public class JobPostingData {
     
-    public double jobMatch;
+    public double jobMatchScore;
     public String jobTitle, companyName, companyLoc, remote, dateApplied, appType, jobLink, submitted, jobStatus;
 
-    public JobPostingData(double jobMatch, String jobTitle, String companyName, String companyLoc, String remote, String dateApplied,
+    public JobPostingData(double jobMatchScore, String jobTitle, String companyName, String companyLoc, String remote, String dateApplied,
             String appType, String jobLink, String submitted, String jobStatus) {
-        this.jobMatch = jobMatch;
+        this.jobMatchScore = jobMatchScore;
         this.jobTitle = jobTitle;
         this.companyName = companyName;
         this.companyLoc = companyLoc;
@@ -41,8 +41,8 @@ public class JobPostingData {
      */
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("JobPostingData [jobMatch=");
-        builder.append(this.jobMatch);
+        builder.append("JobPostingData [jobMatchScore=");
+        builder.append(this.jobMatchScore);
         builder.append(", jobTitle=");
         builder.append(this.jobTitle);
         builder.append(", companyName=");
@@ -71,8 +71,8 @@ public class JobPostingData {
      * Get the cosine similarity value ie. how well the resume matches the job description.
      * @return The cosine similarity. 
      */
-    public double getjobMatch() {
-        return this.jobMatch;
+    public double getjobMatchScore() {
+        return this.jobMatchScore;
     }
     
     /**
