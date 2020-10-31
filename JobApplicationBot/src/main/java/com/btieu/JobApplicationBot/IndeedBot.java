@@ -146,25 +146,6 @@ public class IndeedBot extends Bot {
     }
     
     /**
-     * Check if a job has been applied to.
-     * 
-     * @return False, if it has, true if not.
-     */
-    private boolean hasJobBeenAppliedTo() {
-
-        // Check if job has been applied already.
-        if (getDriver().findElements(By.id("ia_success")).size() > 0) {
-            WebElement popUp = tryToFindElement(By.id("close-popup"));
-            popUp.click();
-            return false;
-        } else {
-            getActions().moveByOffset(0, 0).click().build().perform();
-            getDriver().switchTo().defaultContent();
-            return true;
-        }
-    }
-    
-    /**
      * Get the actual link of the job.
      * 
      * @param index The index it's at in the list of job cards.
@@ -190,7 +171,7 @@ public class IndeedBot extends Bot {
      * @throws IOException Catch file errors.
      */
 
-    public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
+    private JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
             throws IOException {
 
         String remote, submitted;
@@ -217,6 +198,25 @@ public class IndeedBot extends Bot {
         // Return a new JobPostingData object.
         return new JobPostingData(jobMatchScore(By.id("jobDescriptionText")), jobTitle, companyName, companyLoc, remote,
                 formatter.format(date), appType.name(), jobLink, submitted, "");
+    }
+    
+    /**
+     * Check if a job has been applied to.
+     * 
+     * @return False, if it has, true if not.
+     */
+    private boolean hasJobBeenAppliedTo() {
+
+        // Check if job has been applied already.
+        if (getDriver().findElements(By.id("ia_success")).size() > 0) {
+            WebElement popUp = tryToFindElement(By.id("close-popup"));
+            popUp.click();
+            return false;
+        } else {
+            getActions().moveByOffset(0, 0).click().build().perform();
+            getDriver().switchTo().defaultContent();
+            return true;
+        }
     }
 
 
