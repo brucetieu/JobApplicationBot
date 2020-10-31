@@ -30,6 +30,11 @@ public class GreedyBot extends IndeedBot {
 
     }
 
+    /**
+     * Aggregate all jobs in a page.
+     * 
+     * @throws Exception
+     */
     public void findAllJobs() throws Exception {
 
         int currPageNum = 0;
