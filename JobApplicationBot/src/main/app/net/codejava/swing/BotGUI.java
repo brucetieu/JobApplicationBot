@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 /**
  * Create the GUI.
  * 
- * @author bruce
+ * @author Bruce Tieu
  *
  */
 public class BotGUI extends JFrame {

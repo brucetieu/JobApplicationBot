@@ -1,6 +1,9 @@
 package net.codejava.swing;
 
+import com.btieu.JobApplicationBot.JobApplicationData;
+import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -20,7 +23,7 @@ import javax.swing.SwingConstants;
  * This class contains the methods used to create swing panels, labels, buttons,
  * etc.
  * 
- * @author bruce
+ * @author Bruce Tieu
  *
  */
 public class CreateGUIComponents extends JFrame {
@@ -34,7 +37,7 @@ public class CreateGUIComponents extends JFrame {
     private JButton _button;
     private JTextField _field;
     private JPasswordField _password;
-
+    
     /**
      * Initialize a new JPanel and file chooser object.
      */
@@ -85,6 +88,7 @@ public class CreateGUIComponents extends JFrame {
         _field.setColumns(column);
         return _field;
     }
+   
 
     /**
      * This method adds a JPasswordField.
@@ -141,18 +145,37 @@ public class CreateGUIComponents extends JFrame {
     }
 
     /**
-     * This method creates a drop down menu.
+     * This method creates a drop down menu of application types.
+     * 
+     * @param applicationTypes  An array of names which represents options in the dropdown.
+     * @param x      The new x-coordinate of the component.
+     * @param y      The new y-coordinate of the component.
+     * @param width  The new width of the component.
+     * @param height The new height of the component.
+     * @return The ApplicationType combo box. 
+     */
+    public JComboBox<ApplicationType> addAppTypeDropdown(int x, int y, int width, int height) {
+        JComboBox<ApplicationType> comboBox = new JComboBox<ApplicationType>(JobApplicationData.ApplicationType.values());
+        comboBox.setBounds(x, y, width, height);
+        _panel.add(comboBox);
+        return comboBox;
+    }
+    
+    /**
+     * This method creates a drop down menu of numbers.
      * 
      * @param names  An array of names which represents options in the dropdown.
      * @param x      The new x-coordinate of the component.
      * @param y      The new y-coordinate of the component.
      * @param width  The new width of the component.
      * @param height The new height of the component.
+     * @return The Integer combo box.
      */
-    public void addDropDown(String[] names, int x, int y, int width, int height) {
-        JComboBox<String> comboBox = new JComboBox<String>(names);
+    public JComboBox<Integer> addDropdown(Integer[] nums, int x, int y, int width, int height) {
+        JComboBox<Integer> comboBox = new JComboBox<Integer>(nums);
         comboBox.setBounds(x, y, width, height);
         _panel.add(comboBox);
+        return comboBox;
     }
 
     /**
@@ -171,7 +194,7 @@ public class CreateGUIComponents extends JFrame {
         _panel.add(_button);
         return _button;
     }
-
+   
     /**
      * This method adds functionality to upload a resume.
      * 
