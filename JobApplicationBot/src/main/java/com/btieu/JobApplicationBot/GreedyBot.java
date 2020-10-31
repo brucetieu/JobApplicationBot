@@ -48,6 +48,10 @@ public class GreedyBot extends IndeedBot {
             boolean atLastPage = (currPageNum == JobPostingData.pageNum);
 
             String jobLink = getJobViewLink(i);
+            
+            // Get link to application on company site, not indeed.
+            jobLink = jobLink.replace("viewjob", "rc/clk");  
+            jobLink = jobLink.replace("vjs", "assa");
             saveJob(jobLink, _appType);
 
             // Stop at the last job listing & pagenum specified.
