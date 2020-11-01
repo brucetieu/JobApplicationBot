@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Set;
 
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -40,7 +41,7 @@ public class WriteFiles {
      * @throws IOException 
      * 
      */
-    public String writeJobPostToCSV(List<JobPostingData> jobPosts) throws IOException {
+    public String writeJobPostToCSV(Set<JobPostingData> jobPostingContainer) throws IOException {
         ICsvBeanWriter beanWriter = null;
         final String[] header = {"jobMatch", "jobTitle", "companyName", "companyLoc", "remote", "dateApplied", "appType",
                 "jobLink", "submitted", "jobStatus" };
@@ -50,7 +51,7 @@ public class WriteFiles {
             final CellProcessor[] processors = getProcessors();
             beanWriter.writeHeader(header);
 
-            for (JobPostingData jobPost : jobPosts) {
+            for (JobPostingData jobPost : jobPostingContainer) {
                 beanWriter.write(jobPost, header, processors);
             }
 

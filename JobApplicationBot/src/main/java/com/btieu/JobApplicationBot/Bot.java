@@ -41,7 +41,7 @@ public abstract class Bot {
         _chromeOptions.addArguments("--disable-blink-features");
         _chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
         // FIXME: Not applicable on every machine.
-        _chromeOptions.addArguments("--user-data-dir=/Users/bruce/Library/Application Support/Google/Chrome");
+//        _chromeOptions.addArguments("--user-data-dir=/Users/bruce/Library/Application Support/Google/Chrome");
         _chromeOptions.addArguments("start-maximized");
         _driver = new ChromeDriver(_chromeOptions);
         _driver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
@@ -53,11 +53,11 @@ public abstract class Bot {
     abstract public void navigateToJobPage();
     abstract public void login() throws InterruptedException;
     abstract public void searchJobs() throws InterruptedException;
-    abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
-            boolean isApplied) throws IOException;
-    abstract public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) throws InterruptedException, IOException;
-
-    
+//    abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
+//            boolean isApplied) throws IOException;
+//    abstract public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) throws InterruptedException, IOException;
+//
+//    
     /**
      * This is a getter method.
      * 

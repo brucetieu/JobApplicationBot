@@ -1,6 +1,8 @@
 package com.btieu.JobApplicationBot;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class holds job posting data.
@@ -29,7 +31,7 @@ public class JobPostingData {
 
     // Static variables.
     public static int pageNum;
-    public static ArrayList<JobPostingData> jobPostingContainer = new ArrayList<JobPostingData>();
+    public static Set<JobPostingData> jobPostingContainer = new HashSet<JobPostingData>();
 
     public JobPostingData() {
         
