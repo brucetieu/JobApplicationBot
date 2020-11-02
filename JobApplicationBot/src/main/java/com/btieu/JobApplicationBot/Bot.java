@@ -40,6 +40,7 @@ public abstract class Bot {
         _chromeOptions = new ChromeOptions();
         _chromeOptions.addArguments("--disable-blink-features");
         _chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
+//        _chromeOptions.addArguments("--headless");
         // FIXME: Not applicable on every machine.
 //        _chromeOptions.addArguments("--user-data-dir=/Users/bruce/Library/Application Support/Google/Chrome");
         _chromeOptions.addArguments("start-maximized");
@@ -53,11 +54,11 @@ public abstract class Bot {
     abstract public void navigateToJobPage();
     abstract public void login() throws InterruptedException;
     abstract public void searchJobs() throws InterruptedException;
-//    abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
-//            boolean isApplied) throws IOException;
-//    abstract public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) throws InterruptedException, IOException;
-//
-//    
+    abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
+            boolean isApplied) throws IOException;
+    abstract public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) throws InterruptedException, IOException;
+
+    
     /**
      * This is a getter method.
      * 
@@ -198,6 +199,25 @@ public abstract class Bot {
         // JobApplicationData.resumePath is the resume uploaded by the user. 
         TextDocument resumeText = new TextDocument(new File(JobApplicationData.resumePath));
         return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
+    }
+    
+    /**
+     * Get the text of a parent node but not the text of any of the child nodes.
+     * @param element The parent element.
+     * @return The text.
+     */
+    public String getTextExcludingChildren(WebElement element) {
+        return (String)((JavascriptExecutor)_driver).executeScript(""
+                + "let parent = arguments[0];"
+                + "let child = parent.firstChild;"
+                + "let text = '';"
+                + "while(child) {"
+                + "    if (child.nodeType === Node.TEXT_NODE) {"
+                + "        text += child.textContent;"
+                + "    }"
+                + "    child = child.nextSibling;"
+                + "}"
+                + "return text;", element);
     }
 
 }

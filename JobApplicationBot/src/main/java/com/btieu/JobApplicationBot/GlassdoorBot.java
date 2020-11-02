@@ -4,19 +4,15 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 /**
- * Apply for jobs on Glassdoor.com.
+ * This class is responsible for combining all functions that are performed on a glassdoor site.
  * 
  * @author bruce
  *
@@ -27,6 +23,11 @@ public class GlassdoorBot extends Bot {
     private String _parentWindow;
     public List<WebElement> jobsCard;
 
+    /**
+     * Initialize data objects.
+     * @param _jobAppData The applicant information.
+     * @param _appType The type of applications to apply for. 
+     */
     public GlassdoorBot(JobApplicationData _jobAppData, JobApplicationData.ApplicationType _appType) {
         this._jobAppData = _jobAppData;
         this._appType = _appType;
@@ -78,7 +79,6 @@ public class GlassdoorBot extends Bot {
         searchKey.clear();
         searchLoc.clear();
 
-//        searchKey.sendKeys(this._jobAppData.whatJob);
         typeLikeAHuman(searchKey, this._jobAppData.whatJob);
 
         // Clear the "Where" field and send in the location of the job
@@ -88,27 +88,20 @@ public class GlassdoorBot extends Bot {
         getActions().build().perform();
 
         typeLikeAHuman(searchLoc, this._jobAppData.locationOfJob);
-//        searchLoc.sendKeys(this._jobAppData.locationOfJob);
-//        WebElement submit = tryToFindElement(By.className("gd-ui-button"));
+
         searchLoc.submit();
 
-        jobsCard = getDriver().findElements(By.className("react-job-listing"));
+        jobsCard = tryToFindElements(By.className("react-job-listing"));
     }
 
-    public void getJobLinks() throws InterruptedException, IOException {
-        Set<String> jobLinks = new HashSet<String>();
 
-        jobsCard = tryToFindElements((By.className("react-job-listing")));
-
-        for (int i = 0; i < jobsCard.size(); i++) {
-            WebElement div = jobsCard.get(i).findElement(By.className("d-flex"));
-            String href = div.findElement(By.className("jobLink")).getAttribute("href");
-            String hrefReplace = href.replaceAll("GD_JOB_AD", "GD_JOB_VIEW");
-            jobLinks.add(getRequestURL(hrefReplace));
-            System.out.println(getRequestURL(hrefReplace));
-        }
-    }
-
+    /**
+     * Assemble a request and get the url of it.
+     * 
+     * @param href The url.
+     * @return The request url.
+     * @throws IOException Catch any errors.
+     */
     public String getRequestURL(String href) throws IOException {
         URL url = new URL(href);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -116,18 +109,29 @@ public class GlassdoorBot extends Bot {
         return connection.getURL().toString();
     }
 
+    /**
+     * Click on the next page.
+     * 
+     * @param pageNum The page number to go to.
+     */
     public void goToNextPage(int pageNum) {
-        String pageUrl = getDriver().getCurrentUrl();
-        String newPageNum = "_P" + Integer.toString(pageNum) + ".htm";
-        String newPageUrl = pageUrl.replace(".hml", newPageNum);
-        getDriver().get(newPageUrl);
-      
+        String pageUrl = null;
+        try {
+            pageUrl = getRequestURL(getDriver().getCurrentUrl());
+            String newPageNum = "_IP" + Integer.toString(pageNum) + ".htm";
+            String newPageUrl = pageUrl.replace(".htm", newPageNum);
+            getDriver().get(newPageUrl);
+            jobsCard = tryToFindElements(By.className("react-job-listing"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            quitBrowser();
+        }
     }
 
     /**
-     * Get the actual link of the job.
+     * Get the page to view the job description.
      * 
-     * @param index The index it's at in the list of job cards.
+     * @param index The index of the current job in the list of job cards.
      * @return The link of the job.
      */
     public String getJobViewLink(int index) {
@@ -135,7 +139,6 @@ public class GlassdoorBot extends Bot {
         _parentWindow = getDriver().getWindowHandle(); // Get the current window.
         WebElement div = jobsCard.get(index).findElement(By.className("d-flex"));
         String href = div.findElement(By.className("jobLink")).getAttribute("href");
-
         navigateToLinkInNewTab(href); // Open that job in a new tab.
         System.out.println(href);
         return href;
@@ -158,7 +161,10 @@ public class GlassdoorBot extends Bot {
 
     }
     
-    private JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
+    /**
+     * Scrape the job view page for the company name, job title, location, if it was applied to, and the job status.
+     */
+    public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
             throws IOException {
 
         String remote, submitted;
@@ -166,52 +172,25 @@ public class GlassdoorBot extends Bot {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm");
         
-        WebElement container = tryToFindElement(By.id("JobView"));
-        WebElement dflex1 = container.findElement(By.className("d-flex")).findElement(By.className("d-flex"));
-        List<WebElement> dflex2 = dflex1.findElements(By.tagName("div"));
-        List<WebElement> div = dflex2.get(0).findElements(By.tagName("div"));
-        WebElement secondDiv = div.get(div.size()-1).findElement(By.className("d-flex"));
-        WebElement thirdDiv = secondDiv.findElement(By.tagName("div"));
-        List<WebElement> infoDiv = thirdDiv.findElements(By.tagName("div"));
-        
-//        WebElement div = dflex2.get(0).findElement(By.className("d-flex"));
-//        WebElement div2 = div.findElement(By.tagName("div"));
-//        List<WebElement> moreDivs = div2.findElements(By.tagName("div"));
-//        List<WebElement> dflex3 = dflex2.get(dflex2.size()-1).findElements(By.tagName("div"));
-//        WebElement nestedDiv = dflex3.get(dflex3.size()-1).findElement(By.className("d-flex"));
-//      WebElement innerDiv = nestedDiv.findElement(By.tagName("div"));
-//      List<WebElement> infoDivs = innerDiv.findElements(By.tagName("div"));
-        
-//        List<WebElement> divs = dflex3.findElements(By.tagName("div"));
-//        WebElement nestedDiv = divs.get(divs.size()-1).findElement(By.className("d-flex"));
-//        WebElement innerDiv = nestedDiv.findElement(By.tagName("div"));
-//        List<WebElement> infoDivs = innerDiv.findElements(By.tagName("div"));
-        String companyName = infoDiv.get(0).getAttribute("innerHTML").split("\n")[0];
-        String jobTitle = infoDiv.get(1).getText();
-        String jobLocation = infoDiv.get(infoDiv.size() - 1).getText();
-        System.out.println(companyName + ", " + jobTitle + ", " + jobLocation);
-        
-//        WebElement flexContainer = tryToFindElement(By.className("d-flex"));
-//        WebElement div = flexContainer.findElement(By.tagName("div"));
-//        List<WebElement> listOfDivs = div.findElements(By.tagName("div"));
-//
-////        /html/body/div[3]/div/div/div[1]/div[1]/div[2]/div/div/div[2]/div/div[1]/div[2]/div/div/div[1]
-//        String companyName = (String)((JavascriptExecutor)getDriver()).executeScript(""
-//                + "let listOfDivs = document.querySelector('d-flex')[0].getElementByTagName('div').getElementsByTagName('div');"
-//                + "return listOfDivs[0].childNodes[0].nodeValue;");
-//        System.out.println(companyName);
-//        String jobTitle = listOfDivs.get(1).getText();
-//        String companyLoc = listOfDivs.get(listOfDivs.size() - 1).getText();
+        WebElement jobContainer = tryToFindElement(By.id("JobView"));
+        WebElement empInfo = jobContainer.findElement(By.className("smarterBannerEmpInfo"));
+        WebElement flexColumn = empInfo.findElement(By.className("flex-column"));
+        WebElement div = flexColumn.findElement(By.tagName("div"));
+        List<WebElement> divs = div.findElements(By.tagName("div"));
+        WebElement companyName = divs.get(0);
 
+        String companyNameString = getTextExcludingChildren(companyName);
+        String jobTitleString = divs.get(1).getText();
+        String jobLocationString = divs.get(2).getText();
+           
+        if (jobLocationString.toLowerCase().contains("remote")) remote = "yes";
+        else remote = "no";
 
-        if (jobLocation.toLowerCase() != "remote") remote = "no";
-        else remote = "yes";
-
-        if (applied) submitted = "no";
-        else submitted = "yes";
+        if (applied) submitted = "yes";
+        else submitted = "no";
 
         // Return a new JobPostingData object.
-        return new JobPostingData(jobMatchScore(By.id("JobDescriptionContainer")), jobTitle, companyName, jobLocation, remote,
+        return new JobPostingData(jobMatchScore(By.id("JobDescriptionContainer")), jobTitleString, companyNameString, jobLocationString, remote,
                 formatter.format(date), appType.name(), jobLink, submitted, "");
     }
 
