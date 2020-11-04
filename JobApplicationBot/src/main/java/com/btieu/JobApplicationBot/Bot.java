@@ -43,6 +43,7 @@ public abstract class Bot {
         // FIXME: Not applicable on every machine.
         _chromeOptions.addArguments("--user-data-dir=/Users/bruce/Library/Application Support/Google/Chrome");
         _chromeOptions.addArguments("start-maximized");
+        _chromeOptions.addArguments("--headless"); // Run chrome in the background.
         _driver = new ChromeDriver(_chromeOptions);
         _driver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
         _wait = new WebDriverWait(_driver, _MAX_WAIT_TIME);

@@ -1,7 +1,7 @@
 package com.btieu.JobApplicationBot;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class holds job posting data.
@@ -30,7 +30,7 @@ public class JobPostingData {
 
     // Static variables.
     public static int pagesToScrape;
-    public static Set<JobPostingData> jobPostingContainer = new HashSet<JobPostingData>();
+    public static List<JobPostingData> jobPostingContainer = new ArrayList<JobPostingData>();
 
     public JobPostingData() {
         
