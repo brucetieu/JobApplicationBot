@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Set;
 
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -19,7 +19,7 @@ import java.nio.file.Files;
 /**
  * Class which writes information to files.
  * 
- * @author bruce
+ * @author Bruce Tieu
  *
  */
 public class WriteFiles {
@@ -29,18 +29,25 @@ public class WriteFiles {
     private String _filename = "";
 
 
+    /**
+     * Initialize file name, file, and writer objects.
+     * @param filename The name of csv file.
+     * @throws IOException Catch any file IO errors.
+     */
     public WriteFiles(String filename) throws IOException {
         _filename = filename;
         _file = new File(_filename);
         _writer = new FileWriter(_file);
     }
+ 
     /**
-     * This method writes the job posting information to a CSV so the applicant can
-     * keep track of easy apply jobs.
-     * @throws IOException 
+     * This method writes a job post to a csv file.
      * 
+     * @param jobPosts A set of JobPostingData.
+     * @return A string of the file contents.
+     * @throws IOException Catch any file writing errors.
      */
-    public String writeJobPostToCSV(List<JobPostingData> jobPosts) throws IOException {
+    public String writeJobPostToCSV(Set<JobPostingData> jobPosts) throws IOException {
         ICsvBeanWriter beanWriter = null;
         final String[] header = {"jobMatchScore", "jobTitle", "companyName", "companyLoc", "remote", "dateApplied", "appType",
                 "jobLink", "submitted", "jobStatus" };
