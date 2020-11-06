@@ -2,13 +2,8 @@ package com.btieu.JobApplicationBot;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 
@@ -18,7 +13,7 @@ import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
  *
  */
 public class GDNotEasyApplyBot extends GlassdoorBot {
-//    private BotActions _botActions;
+
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
     private WriteFiles _writeFiles;
@@ -39,7 +34,6 @@ public class GDNotEasyApplyBot extends GlassdoorBot {
         _writeFiles = writeFiles;
         _greenhouseForms = new GreenhouseForms();
         _leverForms = new LeverForms();
-//        _botActions = new BotActions();
     }
     
     /**
@@ -104,43 +98,31 @@ public class GDNotEasyApplyBot extends GlassdoorBot {
        
         waitOnElementAndClick(By.className("template-btn-submit"));
         
-        _leverForms.fillAllBasicInfo();
-        _leverForms.fillAllWorkAuth();
+        _leverForms.fillAllBasicInfo(_jobAppData);
+        _leverForms.fillAllWorkAuth(_jobAppData);
+        _leverForms.uploadResume(_jobAppData);
         
-        getWebDriver().findElement(By.name("resume")).sendKeys("/Users/bruce/Documents/Resumes/WithObj3_Bruce_Tieu_2020_Resume.pdf");
-        
-       
-  
-        
-//        getDriver().findElement(By.name("resume")).sendKeys("/Users/bruce/Documents/Resumes/WithObj3_Bruce_Tieu_2020_Resume.pdf");
-//        waitOnElementAndClick(By.className("template-btn-submit"));
-         
     }
     
     public void applyToGreenhouseJobs(String greenhouseLink) throws IOException {
         getWebDriver().get(greenhouseLink);
         
-        _greenhouseForms.fillAllBasicInfo();
-        _greenhouseForms.fillAllWorkAuth();
-        _greenhouseForms.fillAllHowDidYouFindUs();
-
-
-        
-        waitOnElementAndClick(By.cssSelector("a[data-source='paste']"));
-        tryToFindElement(By.id("resume_text")).sendKeys(ExtractPDFText.extractPDFTextToString(new File("/Users/bruce/Documents/Resumes/WithObj3_Bruce_Tieu_2020_Resume.pdf")));
+        _greenhouseForms.fillAllBasicInfo(_jobAppData);
+        _greenhouseForms.fillEducation(_jobAppData);
+        _greenhouseForms.fillAllWorkAuth(_jobAppData);
+        _greenhouseForms.fillAllHowDidYouFindUs(_jobAppData);
+        _greenhouseForms.uploadResume(_jobAppData);
     
-//            _botActions.waitOnElementAndClick(By.id("submit-app"));
+   
     }
         
 
-
-    
     public static void main(String[] args) throws IOException {
         JobApplicationData jobAppData = new JobApplicationData();
         WriteFiles writeFiles = new WriteFiles("jobPostingOutput.csv");
         JobApplicationData.ApplicationType appType = JobApplicationData.ApplicationType.ALL;
         GDNotEasyApplyBot gdNotEZApplyBot = new GDNotEasyApplyBot(jobAppData, appType, writeFiles);
-        gdNotEZApplyBot.applyToGreenhouseJobs("https://boards.greenhouse.io/grammarly/jobs/476589?gh_src=tx7sab1");
+        gdNotEZApplyBot.applyToGreenhouseJobs("https://boards.greenhouse.io/singlestore/jobs/2328586?gh_src=a607b2971us");
         
     }
 
