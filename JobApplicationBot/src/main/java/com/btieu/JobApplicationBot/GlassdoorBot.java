@@ -19,6 +19,7 @@ import org.openqa.selenium.WebElement;
  *
  */
 public class GlassdoorBot extends Bot {
+//    private BotActions _botActions;
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
     private String _parentWindow;
@@ -33,14 +34,14 @@ public class GlassdoorBot extends Bot {
     public GlassdoorBot(JobApplicationData _jobAppData, JobApplicationData.ApplicationType _appType) {
         this._jobAppData = _jobAppData;
         this._appType = _appType;
+//        _botActions = new BotActions();
     }
 
     /**
      * Navigate to the Indeed site.
      */
-    @Override
     public void navigateToJobPage() {
-        getDriver().get(this._jobAppData.platformUrl);
+        getWebDriver().get(this._jobAppData.platformUrl);
     }
 
     /**
@@ -49,7 +50,6 @@ public class GlassdoorBot extends Bot {
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
-    @Override
     public void login() throws InterruptedException {
 
         // Wait for element to appear before clicking on it.
@@ -74,7 +74,6 @@ public class GlassdoorBot extends Bot {
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
-    @Override
     public void searchJobs() throws InterruptedException {
         WebElement searchKey = tryToFindElement(By.id("sc.keyword"));
         WebElement searchLoc = tryToFindElement(By.id("sc.location"));
@@ -118,10 +117,10 @@ public class GlassdoorBot extends Bot {
     public void goToNextPage(int pageNum) {
         String pageUrl = null;
         try {
-            pageUrl = getRequestURL(getDriver().getCurrentUrl());
+            pageUrl = getRequestURL(getWebDriver().getCurrentUrl());
             String newPageNum = "_IP" + Integer.toString(pageNum) + ".htm";
             String newPageUrl = pageUrl.replace(".htm", newPageNum);
-            getDriver().get(newPageUrl);
+            getWebDriver().get(newPageUrl);
             jobsCard = tryToFindElements(By.className("react-job-listing"));
         } catch (IOException e) {
             e.printStackTrace();
@@ -137,7 +136,7 @@ public class GlassdoorBot extends Bot {
      */
     public String getJobViewLink(int index) {
 
-        _parentWindow = getDriver().getWindowHandle(); // Get the current window.
+        _parentWindow = getWebDriver().getWindowHandle(); // Get the current window.
         WebElement div = jobsCard.get(index).findElement(By.className("d-flex"));
         String href = div.findElement(By.className("jobLink")).getAttribute("href");
         navigateToLinkInNewTab(href); // Open that job in a new tab.
@@ -158,8 +157,8 @@ public class GlassdoorBot extends Bot {
 
         if ((!JobPostingData.jobPostingContainer.contains(getJobInformation(jobLink, appType, false)))) {
             JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, false)); // Save job.
-            getDriver().close(); // Close that new window (the job that was opened).
-            getDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing window).
+            getWebDriver().close(); // Close that new window (the job that was opened).
+            getWebDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing window).
         }
     }
 
