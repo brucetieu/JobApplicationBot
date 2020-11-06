@@ -46,7 +46,7 @@ public class GDGreedyBot extends GlassdoorBot {
             while (i < numOfJobs) {
 
                 boolean atLastCard = (i == jobsCard.size() - 1);
-                boolean atLastPage = (currPageNum == JobPostingData.pageNum);
+                boolean atLastPage = (currPageNum == JobPostingData.pagesToScrape);
 
                 String jobLink = getJobViewLink(i);
                 jobLink = jobLink.replaceAll("GD_JOB_AD", "GD_JOB_VIEW");

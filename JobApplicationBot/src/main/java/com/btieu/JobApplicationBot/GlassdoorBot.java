@@ -12,7 +12,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 /**
- * This class is responsible for combining all functions that are performed on a glassdoor site.
+ * This class is responsible for combining all functions that are performed on a
+ * glassdoor site.
  * 
  * @author bruce
  *
@@ -25,8 +26,9 @@ public class GlassdoorBot extends Bot {
 
     /**
      * Initialize data objects.
+     * 
      * @param _jobAppData The applicant information.
-     * @param _appType The type of applications to apply for. 
+     * @param _appType    The type of applications to apply for.
      */
     public GlassdoorBot(JobApplicationData _jobAppData, JobApplicationData.ApplicationType _appType) {
         this._jobAppData = _jobAppData;
@@ -94,7 +96,6 @@ public class GlassdoorBot extends Bot {
         jobsCard = tryToFindElements(By.className("react-job-listing"));
     }
 
-
     /**
      * Assemble a request and get the url of it.
      * 
@@ -155,14 +156,16 @@ public class GlassdoorBot extends Bot {
     public void saveJob(String jobLink, JobApplicationData.ApplicationType appType)
             throws InterruptedException, IOException {
 
-        JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, false)); // Save job.
-        getDriver().close(); // Close that new window (the job that was opened).
-        getDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing window).
-
+        if ((!JobPostingData.jobPostingContainer.contains(getJobInformation(jobLink, appType, false)))) {
+            JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, false)); // Save job.
+            getDriver().close(); // Close that new window (the job that was opened).
+            getDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing window).
+        }
     }
-    
+
     /**
-     * Scrape the job view page for the company name, job title, location, if it was applied to, and the job status.
+     * Scrape the job view page for the company name, job title, location, if it was
+     * applied to, and the job status.
      */
     public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
             throws IOException {
@@ -171,7 +174,7 @@ public class GlassdoorBot extends Bot {
 
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm");
-        
+
         WebElement jobContainer = tryToFindElement(By.id("JobView"));
         WebElement empInfo = jobContainer.findElement(By.className("smarterBannerEmpInfo"));
         WebElement flexColumn = empInfo.findElement(By.className("flex-column"));
@@ -182,17 +185,20 @@ public class GlassdoorBot extends Bot {
         String companyNameString = getTextExcludingChildren(companyName);
         String jobTitleString = divs.get(1).getText();
         String jobLocationString = divs.get(2).getText();
-           
-        if (jobLocationString.toLowerCase().contains("remote")) remote = "yes";
-        else remote = "no";
 
-        if (applied) submitted = "yes";
-        else submitted = "no";
+        if (jobLocationString.toLowerCase().contains("remote"))
+            remote = "yes";
+        else
+            remote = "no";
+
+        if (applied)
+            submitted = "yes";
+        else
+            submitted = "no";
 
         // Return a new JobPostingData object.
-        return new JobPostingData(jobMatchScore(By.id("JobDescriptionContainer")), jobTitleString, companyNameString, jobLocationString, remote,
-                formatter.format(date), appType.name(), jobLink, submitted, "");
+        return new JobPostingData(jobMatchScore(By.id("JobDescriptionContainer")), jobTitleString, companyNameString,
+                jobLocationString, remote, formatter.format(date), appType.name(), jobLink, submitted, "");
     }
-
 
 }

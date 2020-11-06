@@ -41,7 +41,7 @@ public class WriteFiles {
      * @throws IOException 
      * 
      */
-    public String writeJobPostToCSV(Set<JobPostingData> jobPostingContainer) throws IOException {
+    public String writeJobPostToCSV(List<JobPostingData> jobPostingContainer) throws IOException {
         ICsvBeanWriter beanWriter = null;
         final String[] header = {"jobMatch", "jobTitle", "companyName", "companyLoc", "remote", "dateApplied", "appType",
                 "jobLink", "submitted", "jobStatus" };

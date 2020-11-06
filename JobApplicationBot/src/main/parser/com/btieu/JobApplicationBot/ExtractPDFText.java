@@ -62,6 +62,27 @@ public class ExtractPDFText {
         }
 
     }
+    
+    public static String extractPDFTextToString(File resumePath) throws IOException {
+
+        try (PDDocument document = PDDocument.load(resumePath)) {
+            AccessPermission ap = document.getCurrentAccessPermission();
+            if (!ap.canExtractContent()) {
+                throw new IOException("You do not have permission to extract text");
+            }
+
+            PDFTextStripper stripper = new PDFTextStripper();
+
+            // This example uses sorting, but in some cases it is more useful to switch it
+            // off,
+            // e.g. in some files with columns where the PDF content stream respects the
+            // column order.
+            stripper.setSortByPosition(true);
+
+            return stripper.getText(document);
+        }
+
+    }
 
     /**
      * This method extracts the words from text.

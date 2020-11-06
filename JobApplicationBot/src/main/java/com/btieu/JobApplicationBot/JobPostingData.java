@@ -30,8 +30,8 @@ public class JobPostingData {
     }
 
     // Static variables.
-    public static int pageNum;
-    public static Set<JobPostingData> jobPostingContainer = new HashSet<JobPostingData>();
+    public static int pagesToScrape;
+    public static ArrayList<JobPostingData> jobPostingContainer = new ArrayList<JobPostingData>();
 
     public JobPostingData() {
         

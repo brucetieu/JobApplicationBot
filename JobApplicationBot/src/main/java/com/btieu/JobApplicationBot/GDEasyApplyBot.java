@@ -47,7 +47,7 @@ public class GDEasyApplyBot extends GlassdoorBot {
             while (i < numOfJobs) {
 
                 boolean atLastCard = (i == jobsCard.size() - 1);
-                boolean atLastPage = (currPageNum == JobPostingData.pageNum);
+                boolean atLastPage = (currPageNum == JobPostingData.pagesToScrape);
                 boolean isEasyApply = (jobsCard.get(i).findElements(By.className("jobLabel")).size() > 0);
 
                 if (isEasyApply) {
