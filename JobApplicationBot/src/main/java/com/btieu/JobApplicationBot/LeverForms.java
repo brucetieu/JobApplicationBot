@@ -16,28 +16,35 @@ public class LeverForms {
     }
 
     public void fillAllBasicInfo(JobApplicationData jobAppData) {
-        _botAction.tryToFindElementAndSendKeys(By.name("name"), "Bruce Tieu");
-        _botAction.tryToFindElementAndSendKeys(By.name("email"), "ucdbrucetieu");
-        _botAction.tryToFindElementAndSendKeys(By.name("phone"), "5");
-        _botAction.tryToFindElementAndSendKeys(By.name("org"), "x"); // current company
-        _botAction.tryToFindElementAndSendKeys(By.name("urls[LinkedIn]"), "x");
-        _botAction.tryToFindElementAndSendKeys(By.name("urls[GitHub]"), "x");
-        _botAction.tryToFindElementAndSendKeys(By.name("urls[Portfolio]"), "x"); // portfolio
+        _botAction.tryToFindElementAndSendKeys(By.name("name"), jobAppData.fullname);
+        _botAction.tryToFindElementAndSendKeys(By.name("email"), jobAppData.email);
+        _botAction.tryToFindElementAndSendKeys(By.name("phone"), jobAppData.phone);
+        _botAction.tryToFindElementAndSendKeys(By.name("org"), jobAppData.currentCompany); // current company
+        _botAction.tryToFindElementAndSendKeys(By.name("urls[LinkedIn]"), jobAppData.linkedin);
+        _botAction.tryToFindElementAndSendKeys(By.name("urls[GitHub]"), jobAppData.github);
+        _botAction.tryToFindElementAndSendKeys(By.name("urls[Portfolio]"), jobAppData.portfolio); // portfolio
     }
 
     public void fillAllWorkAuth(JobApplicationData jobAppData) {
         _botAction.tryToFindElementAndSendKeys(By.xpath("//textarea[@class='card-field-input']"), "No"); // visa
         _botAction.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='Yes']")); // Work auth
+        _botAction.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='No']")); // Visa
+        _botAction.tryToSelectFromDpn(By.tagName("select"), "Yes"); // Work auth
+        _botAction.tryToSelectFromDpn(By.tagName("select"), "No"); // Visa
 
     }
 
-    public void fillAllHowDidYouFindUs(JobApplicationData jobAppData) {
-
+    public void fillAllHowDidYouFindUs() {
+        _botAction.tryToSelectFromDpn(By.tagName("select"), "Glassdoor");
     }
 
-    public void uploadResume(JobApplicationData jobAppData) {
+    public void uploadResume() {
+        try {
         _botAction.getWebDriver().findElement(By.name("resume"))
-                .sendKeys("/Users/bruce/Documents/Resumes/WithObj3_Bruce_Tieu_2020_Resume.pdf");
+                .sendKeys(JobApplicationData.resumePath);
+        } catch (Exception e) {
+            System.out.println("Error uploading resume");
+        }
     }
     
     public void submitApplication() {

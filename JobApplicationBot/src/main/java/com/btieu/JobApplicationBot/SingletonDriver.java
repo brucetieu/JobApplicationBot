@@ -34,6 +34,7 @@ public class SingletonDriver {
     private WebDriverWait _wait;
     private ChromeOptions _chromeOptions;
     private Actions _actions;
+    private JavascriptExecutor _js;
 
     /**
      * This the default constructor which initializes all the required drivers and
@@ -52,6 +53,7 @@ public class SingletonDriver {
         _webDriver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
         _wait = new WebDriverWait(_webDriver, _MAX_WAIT_TIME);
         _actions = new Actions(_webDriver);
+        _js = (JavascriptExecutor) _webDriver;
     }
 
     public static SingletonDriver getInstance() {
@@ -94,6 +96,10 @@ public class SingletonDriver {
      */
     public Actions getActions() {
         return _actions;
+    }
+    
+    public JavascriptExecutor useJS() {
+        return _js;
     }
 
 //    /**

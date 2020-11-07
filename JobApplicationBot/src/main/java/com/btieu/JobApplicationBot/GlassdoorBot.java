@@ -133,14 +133,14 @@ public class GlassdoorBot extends Bot {
      * 
      * @param index The index of the current job in the list of job cards.
      * @return The link of the job.
+     * @throws IOException 
      */
-    public String getJobViewLink(int index) {
+    public String getJobViewLink(int index) throws IOException {
 
         _parentWindow = getWebDriver().getWindowHandle(); // Get the current window.
         WebElement div = jobsCard.get(index).findElement(By.className("d-flex"));
         String href = div.findElement(By.className("jobLink")).getAttribute("href");
         navigateToLinkInNewTab(href); // Open that job in a new tab.
-        System.out.println(href);
         return href;
     }
 

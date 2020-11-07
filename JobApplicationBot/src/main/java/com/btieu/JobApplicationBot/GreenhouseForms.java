@@ -21,36 +21,39 @@ public class GreenhouseForms {
     }
 
     public void fillAllBasicInfo(JobApplicationData jobAppData) {
-        _botAction.tryToFindElementAndSendKeys(By.id("first_name"), "Bruce");
-        _botAction.tryToFindElementAndSendKeys(By.id("last_name"), "Tieu");
-        _botAction.tryToFindElementAndSendKeys(By.id("email"), "ucdbruce");
-        _botAction.tryToFindElementAndSendKeys(By.id("phone"), "phone");
-        _botAction.tryToFindElementAndSendKeys(By.id("job_application_answers_attributes_0_text_value"), "linkin"); // linkedin
+        _botAction.tryToFindElementAndSendKeys(By.id("first_name"), jobAppData.firstname);
+        _botAction.tryToFindElementAndSendKeys(By.id("last_name"), jobAppData.lastname);
+        _botAction.tryToFindElementAndSendKeys(By.id("email"), jobAppData.email);
+        _botAction.tryToFindElementAndSendKeys(By.id("phone"), jobAppData.phone);
+        _botAction.tryToFindElementAndSendKeys(By.id("job_application_answers_attributes_0_text_value"), jobAppData.linkedin); // linkedin
 
-        _botAction.tryToFindElementAndSendKeys(By.id("job_application_location"), "Denver, Colorado"); // city
+        _botAction.tryToFindElementAndSendKeys(By.id("job_application_location"), jobAppData.location); // city
         List<WebElement> cities = _botAction.tryToFindElements(By.className("ui-menu-item"));
 
         try {
             for (WebElement city : cities) {
-                if (city.getText().contains("Denver, Colorado")) {
+                if (city.getText().contains(jobAppData.location)) {
                     city.click();
                 }
             }
         } catch (Exception e) {
-            System.out.print("Could not click on City");
+            System.out.println("Could not click on City");
         }
 
     }
 
     public void fillEducation(JobApplicationData jobAppData) {
         _botAction.waitOnElementAndClick(By.id("s2id_education_school_name_0"));
-        _botAction.tryToFindElementAndSendKeys(By.className("select2-input"), "University of Colorado Denver");
-
-        List<WebElement> schools = _botAction.tryToFindElements(By.className("select2-results-dept-0"));
+        _botAction.tryToFindElement(By.id("select2-drop")).findElement(By.className("select2-search"));
+        _botAction.tryToFindElementAndSendKeys(By.tagName("input"), jobAppData.school);
+        
+        WebElement ul =_botAction.tryToFindElement(By.id("select2List1"));
+        System.out.println(ul.getText());
+        List<WebElement> schools = ul.findElements(By.className("select2-results-dept-0"));
 
         try {
             for (WebElement school : schools) {
-                if (school.getText().contains("University of Colorado, Denver")) {
+                if (school.getText().contains(jobAppData.school)) {
                     school.click();
                 }
             }
@@ -67,9 +70,9 @@ public class GreenhouseForms {
         _botAction.tryToSelectFromDpn(By.id("job_application_answers_attributes_3_boolean_value"), "No");
         _botAction.tryToSelectFromDpn(
                 By.id("job_application_answers_attributes_3_answer_selected_options_attributes_3_question_option_id"),
-                "Acknowledge/Confirm"); // custom form
+                "Acknowledge/Confirm"); // Acknowledge/Confirm
         _botAction.tryToSelectFromDpn(By.id("job_application_answers_attributes_4_boolean_value"), "Yes"); // custom
-                                                                                                           // form
+        _botAction.tryToFindElementAndSendKeys(By.xpath("//input[contains(@autocomplete, 'visa')]"), "No"); //Visa                                                                                                 
     }
 
     public void fillAllHowDidYouFindUs(JobApplicationData jobAppData) {
@@ -82,11 +85,20 @@ public class GreenhouseForms {
         _botAction.tryToSelectFromDpn(By.tagName("select"), "Glassdoor");
 
     }
+    
+    public void approveConsent() {
+        _botAction.waitOnElementAndClick(By.id("job_application_data_compliance_gdpr_consent_given"));
+    }
 
-    public void uploadResume(JobApplicationData jobAppData) throws IOException {
+    public void uploadResume() throws IOException {
         _botAction.waitOnElementAndClick(By.cssSelector("a[data-source='paste']"));
+        
+        try {
         _botAction.tryToFindElement(By.id("resume_text")).sendKeys(ExtractPDFText.extractPDFTextToString(
-                new File("/Users/bruce/Documents/Resumes/WithObj3_Bruce_Tieu_2020_Resume.pdf")));
+                new File(JobApplicationData.resumePath)));
+        } catch (Exception e) {
+            System.out.println("Error uploading resume");
+        }
     }
 
     public void submitApplication() {

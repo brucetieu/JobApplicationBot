@@ -15,23 +15,32 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/**
+ * This class holds Bot actions like navigating, locating, waiting, etc.
+ * @author bruce
+ *
+ */
 public class Bot {
 
     private SingletonDriver _driver;
-//    private WebDriver _driver;
-//    private WebDriverWait _wait;
-//    private Actions _actions;
-    
+
+    /**
+     * Get a single instance of the Chromedriver since we don't want to launch
+     * multiple browsers.
+     */
     public Bot() {
         _driver = SingletonDriver.getInstance();
-//        _wait = new WebDriverWait(_driver, Bot._MAX_WAIT_TIME);
-//        _actions = new Actions(_driver);
     }
-    
+
+    /**
+     * Get the WebDriver object.
+     * 
+     * @return The WebDriver.
+     */
     public WebDriver getWebDriver() {
         return _driver.getWebDriver();
     }
-    
+
     /**
      * This is a getter method.
      * 
@@ -48,33 +57,16 @@ public class Bot {
      */
     public Actions getActions() {
         return _driver.getActions();
-    } 
-    /**
-     * This is a getter method.
-     * 
-     * @return The driver object.
-     */
-//    public WebDriver getDriver() {
-//        return _driver;
-//    }
+    }
 
     /**
-     * This is a getter method.
+     * Get the JavascriptExecutor to write JavaScript.
      * 
-     * @return The wait object.
+     * @return The JavascriptExecutor object.
      */
-//    public WebDriverWait getWait() {
-//        return _wait;
-//    }
-
-    /**
-     * This is a getter method.
-     * 
-     * @return The actions object.
-     */
-//    public Actions getActions() {
-//        return _actions;
-//    }
+    public JavascriptExecutor useJS() {
+        return _driver.useJS();
+    }
 
     /**
      * Quit the browser.
@@ -82,8 +74,7 @@ public class Bot {
     public void quitBrowser() {
         _driver.getWebDriver().quit();
     }
-    
-    
+
     /**
      * This method tries to find a single element on a page.
      * 
@@ -115,7 +106,14 @@ public class Bot {
         }
         return element;
     }
-    
+
+    /**
+     * Try to select an option from a dropdown.
+     * 
+     * @param by        The element to be located.
+     * @param selection The text to be selected.
+     * @return The selected option, if found.
+     */
     public Select tryToSelectFromDpn(By by, String selection) {
         Select dropdown = null;
         try {
@@ -126,7 +124,14 @@ public class Bot {
         }
         return dropdown;
     }
-    
+
+    /**
+     * Try looking for an element and send text to it.
+     * 
+     * @param by  The element to be found.
+     * @param key The text to be sent.
+     * @return The element, if found.
+     */
     public WebElement tryToFindElementAndSendKeys(By by, String key) {
         WebElement element = null;
         try {
@@ -197,7 +202,7 @@ public class Bot {
         }
 
     }
-    
+
     /**
      * Match the job description text to the resume.
      * 
@@ -208,29 +213,23 @@ public class Bot {
 
         String jobDescriptionString = tryToFindElement(by).getText();
         TextDocument jobDescriptionText = new TextDocument(jobDescriptionString);
-        
-        // JobApplicationData.resumePath is the resume uploaded by the user. 
+
+        // JobApplicationData.resumePath is the resume uploaded by the user.
         TextDocument resumeText = new TextDocument(new File(JobApplicationData.resumePath));
         return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
     }
-    
+
     /**
      * Get the text of a parent node but not the text of any of the child nodes.
+     * 
      * @param element The parent element.
      * @return The text.
      */
     public String getTextExcludingChildren(WebElement element) {
-        return (String)((JavascriptExecutor)_driver.getWebDriver()).executeScript(""
-                + "let parent = arguments[0];"
-                + "let child = parent.firstChild;"
-                + "let text = '';"
-                + "while(child) {"
-                + "    if (child.nodeType === Node.TEXT_NODE) {"
-                + "        text += child.textContent;"
-                + "    }"
-                + "    child = child.nextSibling;"
-                + "}"
-                + "return text;", element);
+        return (String) ((JavascriptExecutor) _driver.getWebDriver()).executeScript("" + "let parent = arguments[0];"
+                + "let child = parent.firstChild;" + "let text = '';" + "while(child) {"
+                + "    if (child.nodeType === Node.TEXT_NODE) {" + "        text += child.textContent;" + "    }"
+                + "    child = child.nextSibling;" + "}" + "return text;", element);
     }
 
 }
