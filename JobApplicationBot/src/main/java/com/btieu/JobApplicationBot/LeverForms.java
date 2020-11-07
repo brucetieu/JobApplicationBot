@@ -4,17 +4,30 @@ import org.openqa.selenium.By;
 
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 
+/**
+ * Fill out Lever forms.
+ * 
+ * @author bruce
+ *
+ */
 public class LeverForms {
 
     private Bot _botAction;
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
 
+    /**
+     * Instantiate Bot to access actions.
+     */
     public LeverForms() {
-
         _botAction = new Bot();
     }
 
+    /**
+     * Fill out basic applicant info.
+     * 
+     * @param jobAppData The job application object.
+     */
     public void fillAllBasicInfo(JobApplicationData jobAppData) {
         _botAction.tryToFindElementAndSendKeys(By.name("name"), jobAppData.fullname);
         _botAction.tryToFindElementAndSendKeys(By.name("email"), jobAppData.email);
@@ -25,6 +38,11 @@ public class LeverForms {
         _botAction.tryToFindElementAndSendKeys(By.name("urls[Portfolio]"), jobAppData.portfolio); // portfolio
     }
 
+    /**
+     * Fill out questions regarding work authorization and visa.
+     * 
+     * @param jobAppData The job application object.
+     */
     public void fillAllWorkAuth(JobApplicationData jobAppData) {
         _botAction.tryToFindElementAndSendKeys(By.xpath("//textarea[@class='card-field-input']"), "No"); // visa
         _botAction.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='Yes']")); // Work auth
@@ -34,22 +52,30 @@ public class LeverForms {
 
     }
 
+    /**
+     * Fill out How did you find us?
+     */
     public void fillAllHowDidYouFindUs() {
         _botAction.tryToSelectFromDpn(By.tagName("select"), "Glassdoor");
     }
 
+    /**
+     * Upload resume.
+     */
     public void uploadResume() {
         try {
-        _botAction.getWebDriver().findElement(By.name("resume"))
-                .sendKeys(JobApplicationData.resumePath);
+            _botAction.getWebDriver().findElement(By.name("resume")).sendKeys(JobApplicationData.resumePath);
         } catch (Exception e) {
             System.out.println("Error uploading resume");
         }
     }
-    
+
+    /**
+     * Submit Application.
+     */
     public void submitApplication() {
-      _botAction.waitOnElementAndClick(By.className("template-btn-submit"));
-       
+        _botAction.waitOnElementAndClick(By.className("template-btn-submit"));
+
     }
 
 }

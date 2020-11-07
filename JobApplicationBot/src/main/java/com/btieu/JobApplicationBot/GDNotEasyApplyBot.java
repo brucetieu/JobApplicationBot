@@ -132,7 +132,7 @@ public class GDNotEasyApplyBot extends GlassdoorBot {
 
         _greenhouseForms.fillAllBasicInfo(_jobAppData);
         _greenhouseForms.fillAllWorkAuth(_jobAppData);
-        _greenhouseForms.fillAllHowDidYouFindUs(_jobAppData);
+        _greenhouseForms.fillAllHowDidYouFindUs();
         _greenhouseForms.approveConsent();
         _greenhouseForms.uploadResume();
         _greenhouseForms.submitApplication();
