@@ -111,15 +111,15 @@ public class IndeedBot extends Bot {
     public void saveEZApplyJob(String jobLink, JobApplicationData.ApplicationType appType) {
 
         // Check if job has been applied to.
-        boolean isApplied = hasJobBeenAppliedTo();
+        boolean isApplied = _hasJobBeenAppliedTo();
      
         try {
-            boolean containerHasJob = JobPostingData.jobPostingContainer.contains(getJobInformation(jobLink, appType, isApplied));
+            boolean containerHasJob = JobPostingData.jobPostingContainer.contains(_getJobInformation(jobLink, appType, isApplied));
             
             if (!isApplied) {
                 
                 if (!containerHasJob) {
-                    JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, isApplied)); // Save job.
+                    JobPostingData.jobPostingContainer.add(_getJobInformation(jobLink, appType, isApplied)); // Save job.
                     getWebDriver().close(); // Close that new window (the job that was opened).
                     getWebDriver().switchTo().window(_parentWindow); // Switch back to job lists window
                 }
@@ -141,10 +141,10 @@ public class IndeedBot extends Bot {
     public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) {
 
         try {
-            boolean containerHasJob = JobPostingData.jobPostingContainer.contains(getJobInformation(jobLink, appType, false));
+            boolean containerHasJob = JobPostingData.jobPostingContainer.contains(_getJobInformation(jobLink, appType, false));
             // Add unique JobPostings to container.
             if (!containerHasJob) {
-                JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, false)); // Save job.
+                JobPostingData.jobPostingContainer.add(_getJobInformation(jobLink, appType, false)); // Save job.
                 getWebDriver().close(); // Close that new window (the job that was opened).
                 getWebDriver().switchTo().window(_parentWindow); // Switch back to job listing window.
             }
@@ -178,7 +178,7 @@ public class IndeedBot extends Bot {
      * @return This returns a new JobPostingData object.
      * @throws IOException Catch file errors.
      */
-    private JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
+    private JobPostingData _getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
             boolean applied) throws IOException {
 
         String remote, submitted;
@@ -216,7 +216,7 @@ public class IndeedBot extends Bot {
      * 
      * @return True if applied, false otherwise.
      */
-    private boolean hasJobBeenAppliedTo() {
+    private boolean _hasJobBeenAppliedTo() {
 
         // Check if job has been applied already.
         if (getWebDriver().findElements(By.id("ia_success")).size() > 0) {

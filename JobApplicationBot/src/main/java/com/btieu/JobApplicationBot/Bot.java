@@ -24,7 +24,7 @@ public class Bot {
     private SingletonDriver _driver;
 
     /**
-     * This the default constructor which only initializes the Singleton class
+     * This the default constructor which only initializes the Singleton class.
      */
     public Bot() {
         // Every time we want to use a method from this class, we only want to open the same instance
