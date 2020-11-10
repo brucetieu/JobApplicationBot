@@ -10,8 +10,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 /**
- * An Indeed bot is a type of Bot with different functions for applying to an
- * Indeed job.
+ * An IndeedBot is a type of Bot with different functions for navigating an Indeed site.
  * 
  * @author Bruce Tieu
  */
@@ -20,7 +19,6 @@ public class IndeedBot extends Bot {
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
     private String _parentWindow;
-//    public List<WebElement> jobsCard;
 
     /**
      * This is a class constructor which initializes job application data, job
@@ -34,14 +32,9 @@ public class IndeedBot extends Bot {
         this._appType = _appType;
     }
 
-    public IndeedBot() {
-        // TODO Auto-generated constructor stub
-    }
-
     /**
      * Navigate to the Indeed site.
      */
-//    @Override
     public void navigateToJobPage() {
         getWebDriver().get(this._jobAppData.platformUrl);
     }
@@ -51,7 +44,6 @@ public class IndeedBot extends Bot {
      * 
      * @throws InterruptedException
      */
-//    @Override
     public void login() throws InterruptedException {
 
         // Wait for element to appear before clicking on it.
@@ -75,7 +67,6 @@ public class IndeedBot extends Bot {
      * 
      * @throws InterruptedException Catch errors if element is not found.
      */
-//    @Override
     public void searchJobs() throws InterruptedException {
 
         // Click on the find jobs tab
@@ -98,23 +89,8 @@ public class IndeedBot extends Bot {
         typeLikeAHuman(clearWhere, this._jobAppData.locationOfJob);
         clearWhere.submit();
 
-//        jobsCard = tryToFindElements(By.className("jobsearch-SerpJobCard"));
-//        getActions().moveByOffset(0, 0).click().build().perform();
-//        getWebDriver().switchTo().defaultContent();
-//        return jobsCard;
     }
 
-    /**
-     * Go the the next page.
-     * 
-     * @param pageNum The page number.
-     */
-//    public void goToNextPage(int pageNum) {
-//        String nextPageUrl = "https://www.indeed.com/jobs?q=" + this._jobAppData.whatJob + "&l="
-//                + this._jobAppData.locationOfJob + "&start=" + pageNum * 10;
-//        getWebDriver().get(nextPageUrl);
-//        jobsCard = tryToFindElements(By.className("jobsearch-SerpJobCard"));
-//    }
 
     /**
      * Click on the easy apply button on indeed.
@@ -131,29 +107,29 @@ public class IndeedBot extends Bot {
      * 
      * @param jobLink The application page.
      * @param appType The type of application it was.
-     * @throws InterruptedException Catch any elements that are not found.
-     * @throws IOException          Catch and file writing errors.
      */
-    public void saveEZApplyJob(String jobLink, JobApplicationData.ApplicationType appType)
-            throws InterruptedException, IOException {
+    public void saveEZApplyJob(String jobLink, JobApplicationData.ApplicationType appType) {
 
         // Check if job has been applied to.
         boolean isApplied = hasJobBeenAppliedTo();
-
-        if (!isApplied) {
+     
+        try {
+            boolean containerHasJob = JobPostingData.jobPostingContainer.contains(getJobInformation(jobLink, appType, isApplied));
             
-            if (!(JobPostingData.jobPostingContainer.contains(getJobInformation(jobLink, appType, false)))) {
-            JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, isApplied)); // Save job.
-            getWebDriver().close(); // Close that new window (the job that was opened).
-            getWebDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing window).
+            if (!isApplied) {
+                
+                if (!containerHasJob) {
+                    JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, isApplied)); // Save job.
+                    getWebDriver().close(); // Close that new window (the job that was opened).
+                    getWebDriver().switchTo().window(_parentWindow); // Switch back to job lists window
+                }
             }
-
-        }
-        // Continue searching for jobs if already applied to.
-        else {
-            getWebDriver().close();
-            getWebDriver().switchTo().window(_parentWindow);
-        }
+            // Continue searching for jobs if already applied to.
+            else {
+                getWebDriver().close();
+                getWebDriver().switchTo().window(_parentWindow);
+            }
+        } catch (Exception e) {}
     }
 
     /**
@@ -161,18 +137,19 @@ public class IndeedBot extends Bot {
      * 
      * @param jobLink The application page.
      * @param appType The type of application it was.
-     * @throws InterruptedException Catch any elements that are not found.
-     * @throws IOException          Catch and file writing errors.
      */
-    public void saveJob(String jobLink, JobApplicationData.ApplicationType appType)
-            throws InterruptedException, IOException {
+    public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) {
+
+        try {
+            boolean containerHasJob = JobPostingData.jobPostingContainer.contains(getJobInformation(jobLink, appType, false));
+            // Add unique JobPostings to container.
+            if (!containerHasJob) {
+                JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, false)); // Save job.
+                getWebDriver().close(); // Close that new window (the job that was opened).
+                getWebDriver().switchTo().window(_parentWindow); // Switch back to job listing window.
+            }
+        } catch (Exception e) {}
         
-        // Add unique JobPostings to container.
-        if (!(JobPostingData.jobPostingContainer.contains(getJobInformation(jobLink, appType, false)))) {
-            JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, false)); // Save job.
-            getWebDriver().close(); // Close that new window (the job that was opened).
-            getWebDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing window).
-        }
     }
 
     /**
@@ -183,11 +160,9 @@ public class IndeedBot extends Bot {
      */
     public String getJobViewLink(int index, List<WebElement> jobList) {
         _parentWindow = getWebDriver().getWindowHandle(); // Get the current window.
-        String href = jobList.get(index).findElement(By.className("jobtitle")).getAttribute("href"); // Get the job link.
-
+        String href = jobList.get(index).findElement(By.className("jobtitle")).getAttribute("href"); // Get job link.
         href = href.replace("rc/clk", "viewjob");
         navigateToLinkInNewTab(href); // Open that job in a new tab.
-//        System.out.println(href);
         return href;
     }
 
@@ -239,7 +214,7 @@ public class IndeedBot extends Bot {
     /**
      * Check if a job has been applied to.
      * 
-     * @return False, if it has, true if not.
+     * @return True if applied, false otherwise.
      */
     private boolean hasJobBeenAppliedTo() {
 
@@ -254,12 +229,6 @@ public class IndeedBot extends Bot {
             return false;
         }
     }
-    
-    public String assembleJobLink(int index, List<WebElement> jobList) {
-        String jobLink = getJobViewLink(index, jobList);
-        jobLink = jobLink.replace("viewjob", "rc/clk");
-        jobLink = jobLink.replace("vjs", "assa");
-        return jobLink;
-}
+
 
 }
