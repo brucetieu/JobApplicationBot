@@ -10,7 +10,7 @@ public class JobApplicationData {
     public static String resumePath;
     
     public static enum ApplicationType {
-        EASILY_APPLY, NONE, URGENTLY_HIRING, ALL
+        EASILY_APPLY, NOT_EASY_APPLY, URGENTLY_HIRING, ALL
     }
 
 }
