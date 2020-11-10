@@ -12,13 +12,14 @@ public interface ApplyInterface {
 }
 
 /**
- * An IndeedApplyBot is an IndeedBot. Define methods which will implement this interface with lamda expressions.
+ * An IndeedApplyBot is an IndeedBot. Define methods which will implement this
+ * interface with lamda expressions.
  * 
  * @author Bruce Tieu
  *
  */
 class IndeedApplyBot extends IndeedBot {
-    
+
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
 
@@ -26,7 +27,7 @@ class IndeedApplyBot extends IndeedBot {
      * Parameterized constructor to initialize JobApplicationData.
      * 
      * @param jobAppData The JobApplicationData object.
-     * @param appType The enum holding application types.
+     * @param appType    The enum holding application types.
      */
     public IndeedApplyBot(JobApplicationData jobAppData, ApplicationType appType) {
         super(jobAppData, appType);
@@ -38,7 +39,7 @@ class IndeedApplyBot extends IndeedBot {
     /**
      * Find all the Indeed easy apply jobs on a given page.
      * 
-     * @param index The particular index in the list of jobs.
+     * @param index   The particular index in the list of jobs.
      * @param jobList The list of all jobs.
      */
     public void findEasyApplyJobs(int index, List<WebElement> jobList) {
@@ -51,14 +52,15 @@ class IndeedApplyBot extends IndeedBot {
                 System.out.println(jobLink);
                 clickOnApplyButton();
                 saveEZApplyJob(jobLink, _appType);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
     /**
      * Skip easy apply jobs - ie get the not easy apply jobs.
      * 
-     * @param index The particular index in the list of jobs.
+     * @param index   The particular index in the list of jobs.
      * @param jobList The list of all jobs.
      */
     public void skipEasyApplyJobs(int index, List<WebElement> jobList) {
@@ -72,24 +74,26 @@ class IndeedApplyBot extends IndeedBot {
                 jobLink = jobLink.replace("vjs", "assa");
                 System.out.println(jobLink);
                 saveJob(jobLink, _appType);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
     /**
      * Find both easy apply and not easy apply jobs.
      * 
-     * @param index The particular index in the list of jobs.
+     * @param index   The particular index in the list of jobs.
      * @param jobList The list of all jobs.
      */
     public void findAllJobs(int index, List<WebElement> jobList) {
 
         try {
-        String jobLink = getJobViewLink(index, jobList); 
-        jobLink = jobLink.replace("viewjob", "rc/clk");
-        jobLink = jobLink.replace("vjs", "assa");
-        System.out.println(jobLink);
-        saveJob(jobLink, _appType);
-        } catch (Exception e) {}
+            String jobLink = getJobViewLink(index, jobList);
+            jobLink = jobLink.replace("viewjob", "rc/clk");
+            jobLink = jobLink.replace("vjs", "assa");
+            System.out.println(jobLink);
+            saveJob(jobLink, _appType);
+        } catch (Exception e) {
+        }
     }
 }
