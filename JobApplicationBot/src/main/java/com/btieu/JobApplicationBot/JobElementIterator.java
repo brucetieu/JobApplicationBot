@@ -73,5 +73,5 @@ public class JobElementIterator implements Iterator<WebElement> {
     public void getNext() {
         _currIndex++;
     }
-
+    
 }
