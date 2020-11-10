@@ -7,6 +7,12 @@ import org.openqa.selenium.WebElement;
 
 @FunctionalInterface
 public interface PagingInterface {
+    /**
+     * Abstract method that is implemented by a lamda expression.
+     * 
+     * @param pageNum The page number to search for jobs.
+     * @return A list of jobs of type WebElement.
+     */
     public List<WebElement> myMethod(int pageNum);
 }
 
@@ -38,12 +44,12 @@ class Page {
      * @return An updated list of jobs to be iterated over again.
      */
     public List<WebElement> goToNextIndeedPage(int pageNum) {
-        
-        String nextPageUrl = "https://www.indeed.com/jobs?q=" + _jobAppData.whatJob + "&l="
-                + _jobAppData.locationOfJob + "&start=" + pageNum * 10;
+
+        String nextPageUrl = "https://www.indeed.com/jobs?q=" + _jobAppData.whatJob + "&l=" + _jobAppData.locationOfJob
+                + "&start=" + pageNum * 10;
         System.out.println("Continuing search on next page...");
         _bot.getWebDriver().get(nextPageUrl);
-        
+
         // Click out of potential pop ups.
         _bot.getActions().moveByOffset(0, 0).click().build().perform();
         _bot.getWebDriver().switchTo().defaultContent();
