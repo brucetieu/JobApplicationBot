@@ -1,64 +1,95 @@
 package com.btieu.JobApplicationBot;
 
-import java.io.IOException;
+import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
-
+@FunctionalInterface
 public interface ApplyInterface {
     public void myMethod(int index, List<WebElement> jobList);
 }
 
-class EasyAndNotEasyApply {
+/**
+ * An IndeedApplyBot is an IndeedBot. Define methods which will implement this interface with lamda expressions.
+ * 
+ * @author Bruce Tieu
+ *
+ */
+class IndeedApplyBot extends IndeedBot {
+    
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
-    private IndeedBot _indeedBot;
-    private Bot _bot;
 
-    public EasyAndNotEasyApply(JobApplicationData jobAppData, ApplicationType appType) {
+    /**
+     * Parameterized constructor to initialize JobApplicationData.
+     * 
+     * @param jobAppData The JobApplicationData object.
+     * @param appType The enum holding application types.
+     */
+    public IndeedApplyBot(JobApplicationData jobAppData, ApplicationType appType) {
+        super(jobAppData, appType);
         _jobAppData = jobAppData;
         _appType = appType;
-        _indeedBot = new IndeedBot();
-        _bot = new Bot();
+
     }
 
-    public void findAndSaveEasyApplyJob(int index, List<WebElement> jobList) throws IOException, InterruptedException {
-//
-//        Pattern pattern = Pattern.compile("indeed.com");
-//        String jobLink = _indeedBot.assembleJobLink(index, jobList);
-//        Matcher matcher = pattern.matcher(_bot.getRequestURL(jobLink));
+    /**
+     * Find all the Indeed easy apply jobs on a given page.
+     * 
+     * @param index The particular index in the list of jobs.
+     * @param jobList The list of all jobs.
+     */
+    public void findEasyApplyJobs(int index, List<WebElement> jobList) {
 
         boolean isEasyApply = jobList.get(index).findElements(By.className("iaLabel")).size() > 0;
 
         if (isEasyApply) {
-            String jobLink = _indeedBot.getJobViewLink(index, jobList);
-//            System.out.println(_bot.getRequestURL(jobLink));
-            _indeedBot.clickOnApplyButton();
-            _indeedBot.saveEZApplyJob(_bot.getRequestURL(jobLink), _appType);
+            try {
+                String jobLink = getJobViewLink(index, jobList);
+                System.out.println(jobLink);
+                clickOnApplyButton();
+                saveEZApplyJob(jobLink, _appType);
+            } catch (Exception e) {}
         }
     }
 
-    public void findAndSaveNotEasyApplyJob(int index, List<WebElement> jobList)
-            throws IOException, InterruptedException {
+    /**
+     * Skip easy apply jobs - ie get the not easy apply jobs.
+     * 
+     * @param index The particular index in the list of jobs.
+     * @param jobList The list of all jobs.
+     */
+    public void skipEasyApplyJobs(int index, List<WebElement> jobList) {
 
-        String jobLink = _indeedBot.assembleJobLink(index, jobList);
-        boolean isEasyApply = _bot.getRequestURL(jobLink).contains("indeed.com");
+        boolean isEasyApply = jobList.get(index).findElements(By.className("iaLabel")).size() > 0;
 
         if (!isEasyApply) {
-            _indeedBot.saveJob(_bot.getRequestURL(jobLink), _appType);
+            try {
+                String jobLink = getJobViewLink(index, jobList);
+                jobLink = jobLink.replace("viewjob", "rc/clk");
+                jobLink = jobLink.replace("vjs", "assa");
+                System.out.println(jobLink);
+                saveJob(jobLink, _appType);
+            } catch (Exception e) {}
         }
     }
 
-    public void findAllJobs(int index, List<WebElement> jobList) throws InterruptedException, IOException {
+    /**
+     * Find both easy apply and not easy apply jobs.
+     * 
+     * @param index The particular index in the list of jobs.
+     * @param jobList The list of all jobs.
+     */
+    public void findAllJobs(int index, List<WebElement> jobList) {
 
-        String jobLink = _indeedBot.assembleJobLink(index, jobList);
-
-        _indeedBot.saveJob(_bot.getRequestURL(jobLink), _appType);
-
+        try {
+        String jobLink = getJobViewLink(index, jobList); 
+        jobLink = jobLink.replace("viewjob", "rc/clk");
+        jobLink = jobLink.replace("vjs", "assa");
+        System.out.println(jobLink);
+        saveJob(jobLink, _appType);
+        } catch (Exception e) {}
     }
 }
