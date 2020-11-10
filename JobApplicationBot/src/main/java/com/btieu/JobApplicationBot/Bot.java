@@ -2,15 +2,11 @@ package com.btieu.JobApplicationBot;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -21,44 +17,21 @@ import org.openqa.selenium.WebElement;
 /**
  * This class holds common bot actions like waiting and navigating.
  * 
- * @author bruce
+ * @author Bruce Tieu
  */
 public class Bot {
 
     private SingletonDriver _driver;
-//    private static final String _CHROME_DRIVER_PROPERTY = "webdriver.chrome.driver";
-//    private static final String _CHROME_DRIVER_PATH = "/Applications/chromedriver";
-//    private static final int _MAX_WAIT_TIME = 10;
-//    private WebDriver _driver;
-//    private WebDriverWait _wait;
-//    private ChromeOptions _chromeOptions;
-//    private Actions _actions;
 
     /**
-     * This the default constructor which initializes all the required drivers and
-     * chrome options.
+     * This the default constructor which only initializes the Singleton class
      */
     public Bot() {
+        // Every time we want to use a method from this class, we only want to open the same instance
+        // (don't want to open multiple browsers). 
         _driver = SingletonDriver.getInstance();
-//        System.setProperty(_CHROME_DRIVER_PROPERTY, _CHROME_DRIVER_PATH);
-//        _chromeOptions = new ChromeOptions();
-//        _chromeOptions.addArguments("--disable-blink-features");
-//        _chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
-//        // FIXME: Not applicable on every machine.
-////        _chromeOptions.addArguments("--user-data-dir=/Users/bruce/Library/Application Support/Google/Chrome");
-//        _chromeOptions.addArguments("start-maximized");
-////        _chromeOptions.addArguments("--headless"); // Run chrome in the background.
-//        _driver = new ChromeDriver(_chromeOptions);
-//        _driver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
-//        _wait = new WebDriverWait(_driver, _MAX_WAIT_TIME);
-//        _actions = new Actions(_driver);
     }
 
-    // Abstract methods
-//    abstract public void navigateToJobPage();
-//    abstract public void login() throws InterruptedException;
-//    abstract public void searchJobs() throws InterruptedException;
- 
     /**
      * This is a getter method.
      * 
@@ -201,14 +174,4 @@ public class Bot {
         return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
     }
     
-   
-    
-    public String getRequestURL(String href) throws IOException {
-        URL url = new URL(href);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.getContent();
-        return connection.getURL().toString();
-    }
-
-
 }
