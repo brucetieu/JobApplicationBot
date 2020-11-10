@@ -5,47 +5,76 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 
+/**
+ * Iterator class to iterate through a list of jobs.
+ * 
+ * @author Bruce Tieu
+ *
+ */
 public class JobIterator {
     private Bot _bot;
     private WriteFiles _writeFiles;
-    
+
+    /**
+     * Parameterized constructor which initializes a Bot and WriteFiles object.
+     * 
+     * @param writeFiles
+     */
     public JobIterator(WriteFiles writeFiles) {
         _bot = new Bot();
         _writeFiles = writeFiles;
     }
-    
-    
-    public void loopThroughJob(List<WebElement> genericList, ApplyInterface applyInterface,
-            PagingInterface pagingInterface) throws IOException {
+
+    /**
+     * Loop through the job list which is passed in.
+     * 
+     * @param jobList         The list of jobs on the page.
+     * @param applyInterface  Methods to apply to different types of jobs.
+     * @param pagingInterface Methods for pagination.
+     * @throws IOException Catch file errors.
+     */
+    public void loopThroughJob(List<WebElement> jobList, ApplyInterface applyInterface, PagingInterface pagingInterface)
+            throws IOException {
 
         int currPageNum = 0;
-                List<WebElement> tempList = genericList;
-                int numOfJobs = tempList.size();
+        List<WebElement> tempList = jobList;
+        int numOfJobs = tempList.size();
 
-                // Loop through each of the job divs present on the page.
-                int i = 13;
-                while (i < numOfJobs) {
+        // Loop through each of the job divs present on the page.
+        int i = 0;
 
-                    boolean atLastCard = (i == tempList.size() - 1);
-                    boolean atLastPage = (currPageNum == JobPostingData.pagesToScrape);
+        while (i < numOfJobs) {
+            try {
 
-                    // Call specific method here
-                    applyInterface.myMethod(i, tempList);
-                    // Stop at the last job listing & pagenum specified.
-                    if (atLastCard && atLastPage)
-                        break;
-                    // Go to the next page to continue saving jobs.
-                    if (atLastCard) {
-                        i = -1;
-                        currPageNum += 1;
-                        tempList = pagingInterface.myMethod(currPageNum);
-                    }
-                    i++;
+                boolean atLastCard = (i == tempList.size() - 1);
+                boolean atLastPage = (currPageNum == JobPostingData.pagesToScrape);
+
+                // Call the specific apply method here.
+                applyInterface.myMethod(i, tempList);
+
+                // Stop at the last job listing & pagenum specified.
+                if (atLastCard && atLastPage)
+                    break;
+                // Go to the next page to continue saving jobs.
+                if (atLastCard) {
+                    i = -1;
+                    currPageNum += 1;
+                    
+                    // Update the job list when specific paging function is called.
+                    tempList = pagingInterface.myMethod(currPageNum); 
                 }
-
-                // Write all jobs to excel file.
-                _writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
-                _bot.quitBrowser();
+                i++;
+            } catch (Exception e) {
+                // If error, go to next index.
+                continue;
             }
-    
+        }
+
+        // Write all jobs to excel file.
+        _writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
+        System.out.println("Finished export");
+        _bot.quitBrowser();
+
+    }
+
 }
