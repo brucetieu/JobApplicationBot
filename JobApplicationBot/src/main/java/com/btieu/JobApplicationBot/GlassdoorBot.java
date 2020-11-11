@@ -24,7 +24,6 @@ public class GlassdoorBot extends Bot {
     /**
      * Navigate to the Indeed site.
      */
-    @Override
     public void navigateToJobPage() {
         getDriver().get(this._jobAppData.platformUrl);
     }
@@ -35,7 +34,6 @@ public class GlassdoorBot extends Bot {
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
-    @Override
     public void login() throws InterruptedException {
 
         // Wait for element to appear before clicking on it.
@@ -60,7 +58,6 @@ public class GlassdoorBot extends Bot {
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
-    @Override
     public void searchJobs() throws InterruptedException {
         WebElement searchKey = tryToFindElement(By.id("sc.keyword"));
         WebElement searchLoc = tryToFindElement(By.id("sc.location"));
@@ -80,7 +77,6 @@ public class GlassdoorBot extends Bot {
     }
     
     // TODO: implement abstract method.
-    @Override
     public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
             boolean isApplied) throws IOException {
         return new JobPostingData();

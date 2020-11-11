@@ -38,7 +38,6 @@ public class IndeedBot extends Bot {
     /**
      * Navigate to the Indeed site.
      */
-    @Override
     public void navigateToJobPage() {
         getDriver().get(this._jobAppData.platformUrl);
     }
@@ -49,7 +48,6 @@ public class IndeedBot extends Bot {
      * 
      * @throws InterruptedException
      */
-    @Override
     public void login() throws InterruptedException {
 
         // Wait for element to appear before clicking on it.
@@ -73,7 +71,6 @@ public class IndeedBot extends Bot {
      * 
      * @throws InterruptedException Catch errors if element is not found.
      */
-    @Override
     public void searchJobs() throws InterruptedException {
 
         // Click on the find jobs tab
@@ -200,7 +197,6 @@ public class IndeedBot extends Bot {
      * @return This returns a new JobPostingData object.
      * @throws IOException Catch file errors.
      */
-    @Override
     public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
             throws IOException {
 

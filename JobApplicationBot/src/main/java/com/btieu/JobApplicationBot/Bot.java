@@ -21,7 +21,7 @@ import org.openqa.selenium.WebElement;
  * 
  * @author bruce
  */
-public abstract class Bot {
+public class Bot {
 
     private static final String _CHROME_DRIVER_PROPERTY = "webdriver.chrome.driver";
     private static final String _CHROME_DRIVER_PATH = "/Applications/chromedriver";
@@ -50,12 +50,12 @@ public abstract class Bot {
     }
 
     // Abstract methods
-    abstract public void navigateToJobPage();
-    abstract public void login() throws InterruptedException;
-    abstract public void searchJobs() throws InterruptedException;
-    abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
-            boolean isApplied) throws IOException;
-    abstract public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) throws InterruptedException, IOException;
+//    abstract public void navigateToJobPage();
+//    abstract public void login() throws InterruptedException;
+//    abstract public void searchJobs() throws InterruptedException;
+//    abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
+//            boolean isApplied) throws IOException;
+//    abstract public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) throws InterruptedException, IOException;
 
     
     /**
