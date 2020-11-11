@@ -33,8 +33,8 @@ public class JobIterator {
      * @param pagingInterface Methods for pagination.
      * @throws IOException Catch file errors.
      */
-    public void loopThroughJob(List<WebElement> jobList, ApplyInterface applyInterface, PagingInterface pagingInterface)
-            throws IOException {
+    public void loopThroughJob(List<WebElement> jobList, ApplyInterface applicationHandler,
+            PagingInterface paginationHandler) throws IOException {
 
         int currPageNum = 0;
         List<WebElement> tempList = jobList;
@@ -50,7 +50,7 @@ public class JobIterator {
                 boolean atLastPage = (currPageNum == JobPostingData.pagesToScrape);
 
                 // Call the specific apply method here.
-                applyInterface.myMethod(i, tempList);
+                applicationHandler.handleJob(i, tempList);
 
                 // Stop at the last job listing & pagenum specified.
                 if (atLastCard && atLastPage)
@@ -59,9 +59,9 @@ public class JobIterator {
                 if (atLastCard) {
                     i = -1;
                     currPageNum += 1;
-                    
+
                     // Update the job list when specific paging function is called.
-                    tempList = pagingInterface.myMethod(currPageNum); 
+                    tempList = paginationHandler.handlePage(currPageNum);
                 }
                 i++;
             } catch (Exception e) {
