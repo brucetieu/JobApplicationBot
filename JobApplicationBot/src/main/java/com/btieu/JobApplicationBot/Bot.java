@@ -185,11 +185,12 @@ public class Bot {
     public String getRequestURL(String href) {
         HttpURLConnection connection = null;
         try {
-        URL url = new URL(href);
-        connection = (HttpURLConnection) url.openConnection();
-        connection.getContent();
-        
-        } catch (IOException e) { e.getMessage(); }
+            URL url = new URL(href);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.getContent();
+        } catch (IOException e) { 
+            e.getMessage(); 
+        }
         return connection.getURL().toString();
     }
     
@@ -211,7 +212,4 @@ public class Bot {
                 + "}" 
                 + "return text;", element);
     }
-
-
-    
 }
