@@ -1,6 +1,7 @@
 package com.btieu.JobApplicationBot;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -15,6 +16,7 @@ import org.openqa.selenium.WebElement;
 public class GlassdoorBot extends Bot {
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
+    private String _parentWindow;
 
     public GlassdoorBot(JobApplicationData _jobAppData, JobApplicationData.ApplicationType _appType) {
         this._jobAppData = _jobAppData;
@@ -75,6 +77,24 @@ public class GlassdoorBot extends Bot {
         typeLikeAHuman(searchLoc, this._jobAppData.locationOfJob);
         searchLoc.submit();
     }
+    
+    /**
+     * Get the page to view the job description.
+     * 
+     * @param index The index of the current job in the list of job cards.
+     * @return The link of the job.
+     * @throws IOException 
+     */
+    public String getJobViewLink(int index, List<WebElement> jobList) throws IOException {
+
+        _parentWindow = getWebDriver().getWindowHandle(); // Get the current window.
+        WebElement div = jobList.get(index).findElement(By.className("d-flex"));
+        String href = div.findElement(By.className("jobLink")).getAttribute("href");
+        navigateToLinkInNewTab(href); // Open that job in a new tab.
+        return href;
+    }
+
+
     
 
 }
