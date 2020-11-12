@@ -1,6 +1,5 @@
 package com.btieu.JobApplicationBot;
 
-
 /**
  * Copyright 2020 Bruce Tieu
  * 
@@ -64,6 +63,29 @@ public class ExtractPDFText {
     }
 
     /**
+     * Extract text from PDF to a string.
+     * 
+     * @param resumePath The path of the resume.
+     * @return The strings of all text in the resume.
+     * @throws IOException Catch any file errors.
+     */
+    public static String extractPDFTextToString(File resumePath) throws IOException {
+
+        try (PDDocument document = PDDocument.load(resumePath)) {
+            AccessPermission ap = document.getCurrentAccessPermission();
+            if (!ap.canExtractContent()) {
+                throw new IOException("You do not have permission to extract text");
+            }
+
+            PDFTextStripper stripper = new PDFTextStripper();
+            stripper.setSortByPosition(true);
+
+            return stripper.getText(document);
+        }
+
+    }
+
+    /**
      * This method extracts the words from text.
      * 
      * @param text The text (most likely the job description on the job site).
@@ -92,6 +114,5 @@ public class ExtractPDFText {
         }
         return finalWordList;
     }
-
 
 }
