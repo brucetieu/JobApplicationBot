@@ -2,6 +2,8 @@ package com.btieu.JobApplicationBot;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -173,5 +175,20 @@ public class Bot {
         TextDocument resumeText = new TextDocument(new File(JobApplicationData.resumePath));
         return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
     }
+    
+    /**
+     * Assemble a request and get the url of it.
+     * 
+     * @param href The url.
+     * @return The request url.
+     * @throws IOException Catch any errors.
+     */
+    public String getRequestURL(String href) throws IOException {
+        URL url = new URL(href);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.getContent();
+        return connection.getURL().toString();
+    }
+
     
 }
