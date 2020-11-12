@@ -154,8 +154,4 @@ public class GlassdoorBot extends Bot {
                 jobLocationString, remote, formatter.format(date), appType.name(), jobLink, submitted, "");
     }
 
-
-
-    
-
 }
