@@ -181,12 +181,15 @@ public class Bot {
      * 
      * @param href The url.
      * @return The request url.
-     * @throws IOException Catch any errors.
      */
-    public String getRequestURL(String href) throws IOException {
+    public String getRequestURL(String href) {
+        HttpURLConnection connection = null;
+        try {
         URL url = new URL(href);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection = (HttpURLConnection) url.openConnection();
         connection.getContent();
+        
+        } catch (IOException e) {}
         return connection.getURL().toString();
     }
     
