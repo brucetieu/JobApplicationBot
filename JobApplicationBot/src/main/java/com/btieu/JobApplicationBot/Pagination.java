@@ -48,9 +48,10 @@ class Pagination {
     }
     
     /**
-     * Click on the next page.
+     * Click on the next page on Glassdoor.
      * 
      * @param pageNum The page number to go to.
+     * @return An updated list of jobs to be iterated over again.
      */
     public List<WebElement> goToNextGlassdoorPage(int pageNum) {
         String pageUrl = null;
