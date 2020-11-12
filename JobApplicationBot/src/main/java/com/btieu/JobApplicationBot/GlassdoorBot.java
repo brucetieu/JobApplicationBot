@@ -79,15 +79,15 @@ public class GlassdoorBot extends Bot {
         typeLikeAHuman(searchLoc, this._jobAppData.locationOfJob);
         searchLoc.submit();
     }
-    
+
     /**
      * Get the page to view the job description.
      * 
      * @param index The index of the current job in the list of job cards.
      * @return The link of the job.
-     * @throws IOException 
+     * @throws IOException
      */
-    public String getJobViewLink(int index, List<WebElement> jobList) throws IOException {
+    public String getJobViewLink(int index, List<WebElement> jobList) {
 
         _parentWindow = getWebDriver().getWindowHandle(); // Get the current window.
         WebElement div = jobList.get(index).findElement(By.className("d-flex"));
@@ -95,7 +95,7 @@ public class GlassdoorBot extends Bot {
         navigateToLinkInNewTab(href); // Open that job in a new tab.
         return href;
     }
-    
+
     /**
      * Save each job to a container.
      * 
@@ -104,15 +104,20 @@ public class GlassdoorBot extends Bot {
      * @throws InterruptedException Catch any elements that are not found.
      * @throws IOException          Catch and file writing errors.
      */
-    public void saveJob(String jobLink, JobApplicationData.ApplicationType appType)
-            throws InterruptedException, IOException {
-        
-        boolean hasJobInContainer = JobPostingData.jobPostingContainer.contains(getJobInformation(jobLink, appType, false));
+    public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) {
 
-        if (!hasJobInContainer) {
-            JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, false)); // Save job.
-            getWebDriver().close(); // Close that new window (the job that was opened).
-            getWebDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing window).
+        try {
+            boolean hasJobInContainer = JobPostingData.jobPostingContainer
+                    .contains(getJobInformation(jobLink, appType, false));
+
+            if (!hasJobInContainer) {
+                JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, false)); // Save job.
+                getWebDriver().close(); // Close that new window (the job that was opened).
+                getWebDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing
+                                                                 // window).
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
     }
 
