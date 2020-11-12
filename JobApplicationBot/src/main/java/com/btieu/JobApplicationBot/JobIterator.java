@@ -3,6 +3,7 @@ package com.btieu.JobApplicationBot;
 import java.io.IOException;
 import java.util.List;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -14,15 +15,17 @@ import org.openqa.selenium.WebElement;
 public class JobIterator {
     private Bot _bot;
     private WriteFiles _writeFiles;
+    private JobApplicationData.ApplicationType _appType;
 
     /**
      * Parameterized constructor which initializes a Bot and WriteFiles object.
      * 
      * @param writeFiles
      */
-    public JobIterator(WriteFiles writeFiles) {
+    public JobIterator(WriteFiles writeFiles, JobApplicationData.ApplicationType appType) {
         _bot = new Bot();
         _writeFiles = writeFiles;
+        _appType = appType;
     }
 
     /**
@@ -64,16 +67,19 @@ public class JobIterator {
                     tempList = paginationHandler.handlePage(currPageNum);
                 }
                 i++;
-            } catch (Exception e) {
+            } catch (NoSuchElementException e) {
                 // If error, go to next index.
+                System.out.println(e.getMessage());
                 continue;
             }
         }
 
         // Write all jobs to excel file.
+        if (_appType != JobApplicationData.ApplicationType.LEVER_GREENHOUSE) {
         _writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
         System.out.println("Finished export");
         _bot.quitBrowser();
+        }
 
     }
 
