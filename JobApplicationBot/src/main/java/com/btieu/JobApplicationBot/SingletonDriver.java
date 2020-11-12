@@ -36,8 +36,16 @@ public class SingletonDriver {
         _chromeOptions = new ChromeOptions();
         _chromeOptions.addArguments("--disable-blink-features");
         _chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
-        _chromeOptions.addArguments("--headless"); // Run browser in the background.
-        _chromeOptions.addArguments("start-maximized");
+        _chromeOptions.addArguments("--window-size=1920,1080");
+        _chromeOptions.addArguments("--disable-extensions");
+        _chromeOptions.addArguments("--proxy-server='direct://'");
+        _chromeOptions.addArguments("--proxy-bypass-list=*");
+        _chromeOptions.addArguments("--start-maximized");
+        _chromeOptions.addArguments("--headless");
+        _chromeOptions.addArguments("--disable-gpu");
+        _chromeOptions.addArguments("--disable-dev-shm-usage");
+        _chromeOptions.addArguments("--no-sandbox");
+        _chromeOptions.addArguments("--ignore-certificate-errors");
         _webDriver = new ChromeDriver(_chromeOptions);
         _webDriver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
         _wait = new WebDriverWait(_webDriver, _MAX_WAIT_TIME);

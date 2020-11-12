@@ -1,5 +1,6 @@
 package com.btieu.JobApplicationBot;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -45,5 +46,22 @@ class Pagination {
 
         return _bot.tryToFindElements(By.className("jobsearch-SerpJobCard"));
     }
-}
 
+    /**
+     * Click on the next page on Glassdoor.
+     * 
+     * @param pageNum The page number to go to.
+     * @return An updated list of jobs to be iterated over again.
+     */
+    public List<WebElement> goToNextGlassdoorPage(int pageNum) {
+
+        String pageUrl = _bot.getRequestURL(_bot.getWebDriver().getCurrentUrl());
+        String newPageNum = "_IP" + Integer.toString(pageNum) + ".htm";
+        String newPageUrl = pageUrl.replace(".htm", newPageNum);
+        System.out.println("Continuing search on next page...");
+        _bot.getWebDriver().get(newPageUrl);
+        return _bot.tryToFindElements(By.className("react-job-listing"));
+
+    }
+
+}
