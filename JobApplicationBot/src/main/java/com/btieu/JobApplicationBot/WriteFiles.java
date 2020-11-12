@@ -19,7 +19,7 @@ import java.nio.file.Files;
 /**
  * Class which writes information to files.
  * 
- * @author bruce
+ * @author Bruce Tieu
  *
  */
 public class WriteFiles {
@@ -29,20 +29,27 @@ public class WriteFiles {
     private String _filename = "";
 
 
+    /**
+     * Initialize file name, file, and writer objects.
+     * @param filename The name of csv file.
+     * @throws IOException Catch any file IO errors.
+     */
     public WriteFiles(String filename) throws IOException {
         _filename = filename;
         _file = new File(_filename);
         _writer = new FileWriter(_file);
     }
+ 
     /**
-     * This method writes the job posting information to a CSV so the applicant can
-     * keep track of easy apply jobs.
-     * @throws IOException 
+     * This method writes a job post to a csv file.
      * 
+     * @param jobPosts A set of JobPostingData.
+     * @return A string of the file contents.
+     * @throws IOException Catch any file writing errors.
      */
     public String writeJobPostToCSV(List<JobPostingData> jobPosts) throws IOException {
         ICsvBeanWriter beanWriter = null;
-        final String[] header = {"jobMatch", "jobTitle", "companyName", "companyLoc", "remote", "dateApplied", "appType",
+        final String[] header = {"jobMatchScore", "jobTitle", "companyName", "companyLoc", "remote", "dateApplied", "appType",
                 "jobLink", "submitted", "jobStatus" };
 
         try {
@@ -78,7 +85,7 @@ public class WriteFiles {
      * @return The cell processors.
      */
     private static CellProcessor[] getProcessors() {
-        final CellProcessor[] processors = new CellProcessor[] { new NotNull(), // jobMatch
+        final CellProcessor[] processors = new CellProcessor[] { new NotNull(), // jobMatchScore
                 new NotNull(), // jobTitle
                 new NotNull(), // companyName
                 new NotNull(), // companyLocation

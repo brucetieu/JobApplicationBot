@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -19,52 +17,28 @@ import org.openqa.selenium.WebElement;
 /**
  * This class holds common bot actions like waiting and navigating.
  * 
- * @author bruce
+ * @author Bruce Tieu
  */
-public abstract class Bot {
+public class Bot {
 
-    private static final String _CHROME_DRIVER_PROPERTY = "webdriver.chrome.driver";
-    private static final String _CHROME_DRIVER_PATH = "/Applications/chromedriver";
-    private static final int _MAX_WAIT_TIME = 10;
-    private WebDriver _driver;
-    private WebDriverWait _wait;
-    private ChromeOptions _chromeOptions;
-    private Actions _actions;
+    private SingletonDriver _driver;
 
     /**
-     * This the default constructor which initializes all the required drivers and
-     * chrome options.
+     * This the default constructor which only initializes the Singleton class.
      */
     public Bot() {
-        System.setProperty(_CHROME_DRIVER_PROPERTY, _CHROME_DRIVER_PATH);
-        _chromeOptions = new ChromeOptions();
-        _chromeOptions.addArguments("--disable-blink-features");
-        _chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
-        // FIXME: Not applicable on every machine.
-        _chromeOptions.addArguments("--user-data-dir=/Users/bruce/Library/Application Support/Google/Chrome");
-        _chromeOptions.addArguments("start-maximized");
-        _driver = new ChromeDriver(_chromeOptions);
-        _driver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
-        _wait = new WebDriverWait(_driver, _MAX_WAIT_TIME);
-        _actions = new Actions(_driver);
+        // Every time we want to use a method from this class, we only want to open the same instance
+        // (don't want to open multiple browsers). 
+        _driver = SingletonDriver.getInstance();
     }
 
-    // Abstract methods
-    abstract public void navigateToJobPage();
-    abstract public void login() throws InterruptedException;
-    abstract public void searchJobs() throws InterruptedException;
-    abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
-            boolean isApplied) throws IOException;
-    abstract public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) throws InterruptedException, IOException;
-
-    
     /**
      * This is a getter method.
      * 
      * @return The driver object.
      */
-    public WebDriver getDriver() {
-        return _driver;
+    public WebDriver getWebDriver() {
+        return _driver.getWebDriver();
     }
 
     /**
@@ -73,7 +47,7 @@ public abstract class Bot {
      * @return The wait object.
      */
     public WebDriverWait getWait() {
-        return _wait;
+        return _driver.getWait();
     }
 
     /**
@@ -82,14 +56,14 @@ public abstract class Bot {
      * @return The actions object.
      */
     public Actions getActions() {
-        return _actions;
+        return _driver.getActions();
     }
 
     /**
      * Quit the browser.
      */
     public void quitBrowser() {
-        this._driver.quit();
+        _driver.getWebDriver().quit();
     }
 
     /**
@@ -101,7 +75,7 @@ public abstract class Bot {
     public WebElement tryToFindElement(By by) {
         WebElement element = null;
         try {
-            element = _wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+            element = getWait().until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (Exception e) {
             System.out.println("Could not find element: " + by);
         }
@@ -117,7 +91,7 @@ public abstract class Bot {
     public List<WebElement> tryToFindElements(By by) {
         List<WebElement> element = null;
         try {
-            element = _wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
+            element = getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
         } catch (Exception e) {
             System.out.println("Could not find element: " + by);
         }
@@ -131,7 +105,7 @@ public abstract class Bot {
      */
     public void waitOnElementAndClick(By by) {
         try {
-            _wait.until(ExpectedConditions.visibilityOf(_driver.findElement(by))).click();
+            getWait().until(ExpectedConditions.visibilityOf(getWebDriver().findElement(by))).click();
         } catch (Exception e) {
             System.out.println("Could not locate element to click: " + by);
         }
@@ -145,13 +119,13 @@ public abstract class Bot {
      */
     public void navigateToLinkInNewTab(String link) {
         // Use JavaScript to open a new tab instead of "control + t".
-        ((JavascriptExecutor) _driver).executeScript("window.open()");
+        ((JavascriptExecutor) _driver.getWebDriver()).executeScript("window.open()");
         // Store the available windows in a list.
-        ArrayList<String> tabs = new ArrayList<String>(_driver.getWindowHandles());
+        ArrayList<String> tabs = new ArrayList<String>(getWebDriver().getWindowHandles());
         // Switch to the newly opened tab.
-        _driver.switchTo().window(tabs.get(tabs.size() - 1));
+        getWebDriver().switchTo().window(tabs.get(tabs.size() - 1));
         // Navigate to the job link in that newly opened tab.
-        _driver.get(link);
+        getWebDriver().get(link);
     }
 
     /**
@@ -160,8 +134,8 @@ public abstract class Bot {
      * @param by This is the specific iframe element to switch to.
      */
     public void switchIframes(By by) {
-        _wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-        _driver.switchTo().frame(_driver.findElement(by));
+        getWait().until(ExpectedConditions.visibilityOfElementLocated(by));
+        getWebDriver().switchTo().frame(getWebDriver().findElement(by));
 
     }
 
@@ -199,5 +173,5 @@ public abstract class Bot {
         TextDocument resumeText = new TextDocument(new File(JobApplicationData.resumePath));
         return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
     }
-
+    
 }
