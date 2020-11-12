@@ -41,7 +41,7 @@ public class SingletonDriver {
         _chromeOptions.addArguments("--proxy-server='direct://'");
         _chromeOptions.addArguments("--proxy-bypass-list=*");
         _chromeOptions.addArguments("--start-maximized");
-        _chromeOptions.addArguments("--headless");
+//        _chromeOptions.addArguments("--headless");
         _chromeOptions.addArguments("--disable-gpu");
         _chromeOptions.addArguments("--disable-dev-shm-usage");
         _chromeOptions.addArguments("--no-sandbox");
