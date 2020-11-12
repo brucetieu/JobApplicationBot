@@ -46,7 +46,7 @@ class Pagination {
 
         return _bot.tryToFindElements(By.className("jobsearch-SerpJobCard"));
     }
-    
+
     /**
      * Click on the next page on Glassdoor.
      * 
@@ -54,20 +54,14 @@ class Pagination {
      * @return An updated list of jobs to be iterated over again.
      */
     public List<WebElement> goToNextGlassdoorPage(int pageNum) {
-        String pageUrl = null;
-        List<WebElement> jobsCard = null;
-        try {
-            pageUrl = _bot.getRequestURL(_bot.getWebDriver().getCurrentUrl());
-            String newPageNum = "_IP" + Integer.toString(pageNum) + ".htm";
-            String newPageUrl = pageUrl.replace(".htm", newPageNum);
-            _bot.getWebDriver().get(newPageUrl);
-            jobsCard = _bot.tryToFindElements(By.className("react-job-listing"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            _bot.quitBrowser();
-        }
-        return jobsCard;
+
+        String pageUrl = _bot.getRequestURL(_bot.getWebDriver().getCurrentUrl());
+        String newPageNum = "_IP" + Integer.toString(pageNum) + ".htm";
+        String newPageUrl = pageUrl.replace(".htm", newPageNum);
+        System.out.println("Continuing search on next page...");
+        _bot.getWebDriver().get(newPageUrl);
+        return _bot.tryToFindElements(By.className("react-job-listing"));
+
     }
 
 }
-
