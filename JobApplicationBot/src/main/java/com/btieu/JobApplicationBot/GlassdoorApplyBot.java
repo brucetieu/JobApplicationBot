@@ -18,30 +18,39 @@ public class GlassdoorApplyBot extends GlassdoorBot {
         _jobAppData = jobAppData;
         _appType = appType;
     }
-    
+
     /**
      * Find all the Glassdoor easy apply jobs on a given page.
      * 
      * @param index   The particular index in the list of jobs.
      * @param jobList The list of all jobs.
+     * @throws IOException
+     * @throws InterruptedException
      */
     public void saveEasyApplyJobs(int index, List<WebElement> jobList) {
 
         boolean isEasyApply = jobList.get(index).findElements(By.className("jobLabel")).size() > 0;
 
         if (isEasyApply) {
-            String jobLink = null;
-            try {
-                jobLink = getJobViewLink(index, jobList);
-                saveJob(jobLink, _appType);
-                System.out.println(jobLink);
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
-
+            String jobLink = getJobViewLink(index, jobList);
+            saveJob(jobLink, _appType);
+            System.out.println(jobLink);
         }
+    }
+
+    /**
+     * Find both easy apply and not easy apply jobs.
+     * 
+     * @param index   The particular index in the list of jobs.
+     * @param jobList The list of all jobs.
+     */
+    public void saveAllJobs(int index, List<WebElement> jobList) {
+
+        String jobLink = getJobViewLink(index, jobList);
+        jobLink = jobLink.replaceAll("GD_JOB_AD", "GD_JOB_VIEW");
+        saveJob(getRequestURL(jobLink), _appType);
+        System.out.println(jobLink);
+
     }
 
 }
