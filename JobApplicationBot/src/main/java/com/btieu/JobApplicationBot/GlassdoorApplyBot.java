@@ -8,11 +8,24 @@ import org.openqa.selenium.WebElement;
 
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 
+/**
+ * A GlassdoorApplyBot is a GlassdoorBot. Define methods which will implement the
+ * interface with lambda expressions.
+ * 
+ * @author Bruce Tieu
+ *
+ */
 public class GlassdoorApplyBot extends GlassdoorBot {
 
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
 
+    /**
+     * Parameterized constructor to initialize JobApplicationData.
+     * 
+     * @param jobAppData The JobApplicationData object.
+     * @param appType    The enum holding application types.
+     */
     public GlassdoorApplyBot(JobApplicationData jobAppData, ApplicationType appType) {
         super(jobAppData, appType);
         _jobAppData = jobAppData;
