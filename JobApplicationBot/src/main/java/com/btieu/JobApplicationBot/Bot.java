@@ -189,6 +189,26 @@ public class Bot {
         connection.getContent();
         return connection.getURL().toString();
     }
+    
+    /**
+     * Get the text of a parent node but not the text of any of the child nodes.
+     * 
+     * @param element The parent element.
+     * @return The text.
+     */
+    public String getTextExcludingChildren(WebElement element) {
+        return (String) ((JavascriptExecutor) _driver.getWebDriver()).executeScript(
+                "let parent = arguments[0];"
+                + "let child = parent.firstChild;" 
+                + "let text = '';" 
+                + "while(child) {"
+                + "    if (child.nodeType === Node.TEXT_NODE) {" 
+                + "        text += child.textContent;" + "    }"
+                + "    child = child.nextSibling;" 
+                + "}" 
+                + "return text;", element);
+    }
+
 
     
 }
