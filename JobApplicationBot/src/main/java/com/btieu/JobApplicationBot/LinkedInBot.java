@@ -11,11 +11,11 @@ import org.openqa.selenium.WebElement;
 public class LinkedInBot extends Bot {
 
     private JobApplicationData _jobAppData;
-    private List<String> _peopleContainer;
+    private List<LinkedInPerson> _peopleContainer;
 
     public LinkedInBot(JobApplicationData jobAppData) {
         _jobAppData = jobAppData;
-        _peopleContainer = new ArrayList<String>();
+        _peopleContainer = new ArrayList<LinkedInPerson>();
 
     }
 
@@ -47,7 +47,7 @@ public class LinkedInBot extends Bot {
     }
 
     public void search() throws InterruptedException {
-        String peoplePage = "https://www.linkedin.com/search/results/people/?keywords=" + "Software engineer";
+        String peoplePage = "https://www.linkedin.com/search/results/people/?keywords=" + "computer science student";
         getDriver().get(peoplePage);
     }
 
@@ -62,7 +62,7 @@ public class LinkedInBot extends Bot {
             i++;
             System.out.println(i);
 
-            WebElement html = getDriver().findElement(By.tagName("html"));
+            WebElement html = tryToFindElement(By.tagName("html"));
             html.sendKeys(Keys.END);
 
             WebElement ul = tryToFindElement(By.className("search-results__list"));
@@ -70,8 +70,9 @@ public class LinkedInBot extends Bot {
 
             for (WebElement people : peopleList) {
                 String profileID = people.findElement(By.tagName("a")).getAttribute("href");
-                _peopleContainer.add(profileID);
-                System.out.println(profileID);
+                String name = people.findElement(By.className("actor-name")).getText();
+                _peopleContainer.add(new LinkedInPerson(_splitFullname(name), profileID));
+                System.out.println(name + ": " + profileID);
             }
 
             String peoplePage = "https://www.linkedin.com/search/results/people/?keywords=" + "computer science student"
@@ -82,14 +83,14 @@ public class LinkedInBot extends Bot {
     }
 
     public void connect() {
-        for (String person : _peopleContainer) {
+        for (LinkedInPerson person : _peopleContainer) {
             try {
-                getDriver().get(person);
+                getDriver().get(person.getProfilelink());
                 waitOnElementAndClick(By.className("pv-s-profile-actions--connect")); // click on Connect
                 waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
                 WebElement textarea = tryToFindElement(By.id("custom-message"));
-                textarea.sendKeys(
-                        "Hello, I came across your profile and wanted to connect with people who I aspire to be and share common career interests with - a Software Engineer! Kindly, accept my invitation. Thanks!");
+                String msg = "Hello " + person.getFirstname() + ", I came across your profile and wanted to connect with people who I aspire to be and share common career interests with. Kindly, accept my invitation. Thanks!";
+                textarea.sendKeys(msg);
                 waitOnElementAndClick(By.className("ml1")); // Click on Send"
                 System.out.println("Sent invitation!");
             } catch (Exception e) {
@@ -97,6 +98,14 @@ public class LinkedInBot extends Bot {
             }
 
         }
+    }
+    
+    private String _splitFullname(String name) {
+        int index = name.lastIndexOf(' ');
+        if (index == -1)
+            throw new IllegalArgumentException("Only a single name: " + name);
+        String firstName = name.substring(0, index);
+        return firstName;
     }
 
 }
