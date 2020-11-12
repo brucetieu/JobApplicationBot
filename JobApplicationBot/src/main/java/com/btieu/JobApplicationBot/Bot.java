@@ -189,7 +189,7 @@ public class Bot {
         connection = (HttpURLConnection) url.openConnection();
         connection.getContent();
         
-        } catch (IOException e) {}
+        } catch (IOException e) { e.getMessage(); }
         return connection.getURL().toString();
     }
     
