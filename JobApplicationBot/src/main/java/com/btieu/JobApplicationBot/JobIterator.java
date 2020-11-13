@@ -74,7 +74,7 @@ public class JobIterator {
             }
         }
 
-        // Write all jobs to excel file.
+        // Write all jobs to excel file, except for the lever/greenhouse ones.
         if (_appType != JobApplicationData.ApplicationType.LEVER_GREENHOUSE) {
         _writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
         System.out.println("Finished export");
