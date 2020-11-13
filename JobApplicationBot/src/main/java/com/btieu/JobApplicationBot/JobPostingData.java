@@ -10,13 +10,53 @@ import java.util.List;
  *
  */
 public class JobPostingData {
-    
+
     public double jobMatchScore;
     public String jobTitle, companyName, companyLoc, remote, dateApplied, appType, jobLink, submitted, jobStatus;
 
-    public JobPostingData(double jobMatchScore, String jobTitle, String companyName, String companyLoc, String remote, String dateApplied,
-            String appType, String jobLink, String submitted, String jobStatus) {
+    /**
+     * Initialize job information strings.
+     * 
+     * @param jobMatchScore The cosine similarity of two documents.
+     * @param jobTitle      The job title.
+     * @param companyName   The company name.
+     * @param companyLoc    The company location.
+     * @param remote        If the job is remote.
+     * @param dateApplied   The date the job was applied to.
+     * @param appType       The application type.
+     * @param jobLink       The link of the job.
+     * @param submitted     If the job was submitted or not.
+     * @param jobStatus     The job status.
+     */
+    public JobPostingData(double jobMatchScore, String jobTitle, String companyName, String companyLoc, String remote,
+            String dateApplied, String appType, String jobLink, String submitted, String jobStatus) {
         this.jobMatchScore = jobMatchScore;
+        this.jobTitle = jobTitle;
+        this.companyName = companyName;
+        this.companyLoc = companyLoc;
+        this.remote = remote;
+        this.dateApplied = dateApplied;
+        this.appType = appType;
+        this.jobLink = jobLink;
+        this.submitted = submitted;
+        this.jobStatus = jobStatus;
+    }
+
+    /**
+     * Initialize job information strings.
+     * 
+     * @param jobTitle    The job title.
+     * @param companyName The company name.
+     * @param companyLoc  The company location.
+     * @param remote      If the job is remote.
+     * @param dateApplied The date the job was applied to.
+     * @param appType     The application type.
+     * @param jobLink     The link of the job.
+     * @param submitted   If the job was submitted or not.
+     * @param jobStatus   The job status.
+     */
+    public JobPostingData(String jobTitle, String companyName, String companyLoc, String remote, String dateApplied,
+            String appType, String jobLink, String submitted, String jobStatus) {
         this.jobTitle = jobTitle;
         this.companyName = companyName;
         this.companyLoc = companyLoc;
@@ -33,7 +73,7 @@ public class JobPostingData {
     public static List<JobPostingData> jobPostingContainer = new ArrayList<JobPostingData>();
 
     public JobPostingData() {
-        
+
     }
 
     @Override
@@ -66,18 +106,22 @@ public class JobPostingData {
         return builder.toString();
     }
 
-    // Needed these getters so that the JobPostingData object correct writes to CSV via BeanWriter.
-    
+    // Needed these getters so that the JobPostingData object correct writes to CSV
+    // via BeanWriter.
+
     /**
-     * Get the cosine similarity value ie. how well the resume matches the job description.
-     * @return The cosine similarity. 
+     * Get the cosine similarity value ie. how well the resume matches the job
+     * description.
+     * 
+     * @return The cosine similarity.
      */
     public double getjobMatchScore() {
         return this.jobMatchScore;
     }
-    
+
     /**
      * Get the title of the job e.g Software Engineer.
+     * 
      * @return a job title of type string.
      */
     public String getJobTitle() {
@@ -86,6 +130,7 @@ public class JobPostingData {
 
     /**
      * Get the company name of the job.
+     * 
      * @return The company name of type string.
      */
     public String getCompanyName() {
@@ -94,6 +139,7 @@ public class JobPostingData {
 
     /**
      * Get the location of the job.
+     * 
      * @return The company name of type string.
      */
     public String getCompanyLoc() {
@@ -102,6 +148,7 @@ public class JobPostingData {
 
     /**
      * Get information about the job being remote or not.
+     * 
      * @return A string that is either "yes" or "no".
      */
     public String getRemote() {
@@ -110,14 +157,16 @@ public class JobPostingData {
 
     /**
      * Get the date the job was applied to.
+     * 
      * @return The date formatted as a string.
      */
     public String getDateApplied() {
         return this.dateApplied;
     }
-    
+
     /**
      * Get the application type e.g easily apply
+     * 
      * @return The application type as a string.
      */
     public String getAppType() {
@@ -126,14 +175,17 @@ public class JobPostingData {
 
     /**
      * Get the link to the job application.
+     * 
      * @return A job link which is a string.
      */
     public String getJobLink() {
         return this.jobLink;
     }
-    
+
     /**
-     * Get information about whether or not the application had already been submitted.
+     * Get information about whether or not the application had already been
+     * submitted.
+     * 
      * @return A string of either "yes" or "no".
      */
     public String getSubmitted() {
@@ -142,6 +194,7 @@ public class JobPostingData {
 
     /**
      * Get the status of the application.
+     * 
      * @return An empty string.
      */
     public String getJobStatus() {
