@@ -41,6 +41,7 @@ public class LeverForms {
      * @param jobAppData The job application object.
      */
     public void fillAllWorkAuth(JobApplicationData jobAppData) {
+        _bot.tryToFindElementAndSendKeys(By.xpath("//textarea[@class='card-field-input']"), "Yes"); // work auth
         _bot.tryToFindElementAndSendKeys(By.xpath("//textarea[@class='card-field-input']"), "No"); // visa
         _bot.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='Yes']")); // Work auth
         _bot.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='No']")); // Visa
