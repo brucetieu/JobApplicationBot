@@ -9,8 +9,8 @@ import org.openqa.selenium.WebElement;
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 
 /**
- * A lot of the not easy apply jobs are Greenhouse or Lever links, so this class
- * will apply to those jobs.
+ * A lot of the not easy apply jobs on Glassdoor are Greenhouse or Lever links,
+ * so this class will apply to those jobs.
  * 
  * @author Bruce Tieu
  *
@@ -23,6 +23,14 @@ public class LeverGreenhouseBot extends GlassdoorBot {
     private LeverForms _leverForms;
     private GreenhouseForms _greenhouseForms;
 
+    /**
+     * Parameterized constructor which initializes JobApplicationData, WriteFiles,
+     * and Form objects.
+     * 
+     * @param jobAppData The JobApplicationData object.
+     * @param appType    The job application type enum.
+     * @param writeFiles The writing files object.
+     */
     public LeverGreenhouseBot(JobApplicationData jobAppData, ApplicationType appType, WriteFiles writeFiles) {
         super(jobAppData, appType);
         _appType = appType;
@@ -45,25 +53,25 @@ public class LeverGreenhouseBot extends GlassdoorBot {
      */
     public void apply() {
 
-        for (int i = 0; i < JobPostingData.jobPostingContainer.size(); i++) {
+        for (JobPostingData jobPost : JobPostingData.jobPostingContainer) {
 
-            boolean isLever = JobPostingData.jobPostingContainer.get(i).jobLink.contains("lever");
-            boolean isGreenhouse = JobPostingData.jobPostingContainer.get(i).jobLink.contains("greenhouse");
-            String joblink = JobPostingData.jobPostingContainer.get(i).jobLink;
+            boolean isLever = jobPost.jobLink.contains("lever");
+            boolean isGreenhouse = jobPost.jobLink.contains("greenhouse");
+            String joblink = jobPost.jobLink;
 
             if (isLever) {
                 System.out.println("Applying to lever job...");
                 applyToLeverJobs(joblink);
                 if (elementExists(By.xpath("//h3[@data-qa='msg-submit-success']"))) {
                     System.out.println("Successfully applied");
-                    JobPostingData.jobPostingContainer.get(i).submitted = "Yes";
+                    jobPost.submitted = "Yes";
                 }
             } else if (isGreenhouse) {
                 System.out.println("Applying to greenhouse job...");
                 applyToGreenhouseJobs(joblink);
                 if (elementExists(By.id("application_confirmation"))) {
                     System.out.println("Successfully applied");
-                    JobPostingData.jobPostingContainer.get(i).submitted = "Yes";
+                    jobPost.submitted = "Yes";
                 }
             }
         }
