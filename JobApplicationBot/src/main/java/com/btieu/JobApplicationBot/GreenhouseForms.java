@@ -122,13 +122,13 @@ public class GreenhouseForms {
      * 
      * @throws IOException Catch any file errors.
      */
-    public void uploadResume() throws IOException {
+    public void uploadResume() {
         _botAction.waitOnElementAndClick(By.cssSelector("a[data-source='paste']"));
 
         try {
             _botAction.tryToFindElement(By.id("resume_text"))
                     .sendKeys(ExtractPDFText.extractPDFTextToString(new File(JobApplicationData.resumePath)));
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Error uploading resume");
         }
     }
