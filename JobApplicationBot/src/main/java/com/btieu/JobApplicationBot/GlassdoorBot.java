@@ -113,8 +113,7 @@ public class GlassdoorBot extends Bot {
             if (!hasJobInContainer) {
                 JobPostingData.jobPostingContainer.add(getJobInformation(jobLink, appType, false)); // Save job.
                 getWebDriver().close(); // Close that new window (the job that was opened).
-                getWebDriver().switchTo().window(_parentWindow); // Switch back to the parent window (job listing
-                                                                 // window).
+                getWebDriver().switchTo().window(_parentWindow); // Switch back to job listing window.
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -122,8 +121,25 @@ public class GlassdoorBot extends Bot {
     }
 
     /**
+     * Overloaded savejob function to accept an additional parameter.
+     * 
+     * @param appType The application type.
+     * @param jobList The job list.
+     * @param index   The specfic index in the job list.
+     */
+    public void saveJob(JobApplicationData.ApplicationType appType, List<WebElement> jobList, int index) {
+        JobPostingData.jobPostingContainer.add(getJobInfoOnCard(jobList, index, appType, false));
+    }
+
+    /**
      * Scrape the job view page for the company name, job title, location, if it was
      * applied to, and the job status.
+     * 
+     * @param jobLink The job link.
+     * @param appType The application type.
+     * @param applied If the job was applied to.
+     * @return A JobPostingData object.
+     * @throws IOException
      */
     public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType, boolean applied)
             throws IOException {
@@ -157,6 +173,49 @@ public class GlassdoorBot extends Bot {
         // Return a new JobPostingData object.
         return new JobPostingData(jobMatchScore(By.id("JobDescriptionContainer")), jobTitleString, companyNameString,
                 jobLocationString, remote, formatter.format(date), appType.name(), jobLink, submitted, "");
+    }
+
+    /**
+     * Get the info on the job card, skip job matching.
+     * 
+     * @param jobList The job list.
+     * @param index   The index in the list.
+     * @param appType The application type.
+     * @param applied If the job was applied to or not.
+     * @return A JobPostingContainer object.
+     */
+    public JobPostingData getJobInfoOnCard(List<WebElement> jobList, int index,
+            JobApplicationData.ApplicationType appType, boolean applied) {
+
+        String remote, submitted;
+
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy HH:mm");
+
+        String companyNameString = jobList.get(index).findElement(By.className("pl-sm"))
+                .findElement(By.className("jobLink")).getText();
+        String jobTitleString = jobList.get(index).findElement(By.className("pl-sm"))
+                .findElement(By.className("jobInfoItem")).getText();
+        String jobLocationString = jobList.get(index).findElement(By.className("pl-sm"))
+                .findElement(By.className("loc")).getText();
+        String jobLink = jobList.get(index).findElement(By.className("pl-sm")).findElement(By.className("jobLink"))
+                .getAttribute("href");
+        jobLink = jobLink.replaceAll("GD_JOB_AD", "GD_JOB_VIEW");
+
+        if (jobLocationString.toLowerCase().contains("remote"))
+            remote = "yes";
+        else
+            remote = "no";
+
+        if (applied)
+            submitted = "yes";
+        else
+            submitted = "no";
+
+        System.out.println(getRequestURL(jobLink));
+        return new JobPostingData(jobTitleString, companyNameString, jobLocationString, remote, formatter.format(date),
+                appType.name(), getRequestURL(jobLink), submitted, "");
+
     }
 
 }
