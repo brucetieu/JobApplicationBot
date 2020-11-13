@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -249,4 +250,19 @@ public class Bot {
                 + "}" 
                 + "return text;", element);
     }
+    
+    /**
+     * Check if an element exists.
+     * @param by The element.
+     * @return True, if it exists and false otherwise.
+     */
+    public boolean elementExists(By by) {
+        try {
+            getWebDriver().findElement(by);
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+
 }
