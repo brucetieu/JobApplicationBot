@@ -39,7 +39,7 @@ public class LeverGreenhouseBot extends GlassdoorBot {
     }
 
     /**
-     * Just save the job quickly so it can be applied to.
+     * Save the lever and greenhouse jobs without assigning a job match score.
      */
     public void saveLGJobs(int index, List<WebElement> jobList) {
         saveJob(_appType, jobList, index);
