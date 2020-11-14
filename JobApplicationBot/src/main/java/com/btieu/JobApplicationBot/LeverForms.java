@@ -39,40 +39,6 @@ public class LeverForms {
     }
 
     /**
-     * Fill out questions regarding work authorization and visa.
-     * 
-     * @param jobAppData The job application object.
-     */
-    public void fillAllWorkAuth(JobApplicationData jobAppData) {
-        List<WebElement> customQs = _bot.tryToFindElements(By.className("custom-question"));
-        
-        String workAuth = customQs.get(0).findElement(By.className("text")).getText();
-        System.out.println(workAuth);
-        if (workAuth.contains("US employers?")) {
-//            _bot.waitOnElementAndClick(By.className("application-label"));
-//            customQs.get(0).findElement(By.xpath("//input[@type='radio' and @value='Yes']")).click();
-//          _bot.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='Yes']")); // Work auth
-
-        }
-        
-
-        String visa = customQs.get(customQs.size()-1).findElement(By.className("text")).getText();
-        customQs.get(1).findElement(By.xpath("//input[@type='radio' and @value='No']")).click();
-        System.out.println(visa);
-        if (visa.contains("sponsorship")) {
-//            customQs.get(customQs.size()-1).findElement(By.xpath("//input[@type='radio' and @value='No']")).click();
-//            _bot.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='No']")); // Visa
-        }
-//        _bot.tryToFindElementAndSendKeys(By.xpath("//textarea[@class='card-field-input']"), "Yes"); // work auth
-//        _bot.tryToFindElementAndSendKeys(By.xpath("//textarea[@class='card-field-input']"), "No"); // visa
-//        _bot.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='Yes']")); // Work auth
-//        _bot.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='No']")); // Visa
-        _bot.tryToSelectFromDpn(By.tagName("select"), "Yes"); // Work auth
-        _bot.tryToSelectFromDpn(By.tagName("select"), "No"); // Visa
-
-    }
-
-    /**
      * Fill out How did you find us?
      */
     public void fillAllHowDidYouFindUs() {
