@@ -11,7 +11,9 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -96,6 +98,42 @@ public class Bot {
             element = getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
         } catch (Exception e) {
             System.out.println("Could not find element: " + by);
+        }
+        return element;
+    }
+    
+    /**
+     * Try to select an option from a dropdown.
+     * 
+     * @param by        The element to be located.
+     * @param selection The text to be selected.
+     * @return The selected option, if found.
+     */
+    public Select tryToSelectFromDpn(By by, String selection) {
+        Select dropdown = null;
+        try {
+            dropdown = new Select(tryToFindElement(by));
+            dropdown.selectByVisibleText(selection);
+        } catch (Exception e) {
+            System.out.println("Could not find element to select: " + by);
+        }
+        return dropdown;
+    }
+    
+    /**
+     * Try looking for an element and send text to it.
+     * 
+     * @param by  The element to be found.
+     * @param key The text to be sent.
+     * @return The element, if found.
+     */
+    public WebElement tryToFindElementAndSendKeys(By by, String key) {
+        WebElement element = null;
+        try {
+            element = _driver.getWait().until(ExpectedConditions.visibilityOf(_driver.getWebDriver().findElement(by)));
+            typeLikeAHuman(element, key);
+        } catch (Exception e) {
+            System.out.println("Could not send keys to: " + by);
         }
         return element;
     }
@@ -212,4 +250,19 @@ public class Bot {
                 + "}" 
                 + "return text;", element);
     }
+    
+    /**
+     * Check if an element exists.
+     * @param by The element.
+     * @return True, if it exists and false otherwise.
+     */
+    public boolean elementExists(By by) {
+        try {
+            getWebDriver().findElement(by);
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+
 }

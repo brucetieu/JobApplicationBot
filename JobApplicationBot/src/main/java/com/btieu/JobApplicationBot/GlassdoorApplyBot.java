@@ -50,6 +50,24 @@ public class GlassdoorApplyBot extends GlassdoorBot {
             System.out.println(jobLink);
         }
     }
+    
+    /**
+     * Find all glassdoor non easy jobs and save them.
+     * 
+     * @param index   The particular index in the list of jobs.
+     * @param jobList The list of jobs.
+     */
+    public void saveNonEasyApplyJobs(int index, List<WebElement> jobList) {
+        boolean isEasyApply = (jobList.get(index).findElements(By.className("jobLabel")).size() > 0);
+
+        if (!isEasyApply) {
+            String jobLink = getJobViewLink(index, jobList);
+            jobLink = jobLink.replaceAll("GD_JOB_AD", "GD_JOB_VIEW");
+            System.out.println(getRequestURL(jobLink));
+            saveJob(getRequestURL(jobLink), _appType);
+        }
+
+    }
 
     /**
      * Find both easy apply and not easy apply jobs.
