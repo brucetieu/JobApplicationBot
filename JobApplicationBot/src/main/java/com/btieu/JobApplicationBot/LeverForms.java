@@ -1,7 +1,10 @@
 package com.btieu.JobApplicationBot;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
 /**
  * Class to handle questions on lever forms.
@@ -33,21 +36,6 @@ public class LeverForms {
         _bot.tryToFindElementAndSendKeys(By.name("urls[LinkedIn]"), jobAppData.linkedin);
         _bot.tryToFindElementAndSendKeys(By.name("urls[GitHub]"), jobAppData.github);
         _bot.tryToFindElementAndSendKeys(By.name("urls[Portfolio]"), jobAppData.portfolio); // portfolio
-    }
-
-    /**
-     * Fill out questions regarding work authorization and visa.
-     * 
-     * @param jobAppData The job application object.
-     */
-    public void fillAllWorkAuth(JobApplicationData jobAppData) {
-        _bot.tryToFindElementAndSendKeys(By.xpath("//textarea[@class='card-field-input']"), "Yes"); // work auth
-        _bot.tryToFindElementAndSendKeys(By.xpath("//textarea[@class='card-field-input']"), "No"); // visa
-        _bot.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='Yes']")); // Work auth
-        _bot.waitOnElementAndClick(By.xpath("//input[@type='radio' and @value='No']")); // Visa
-        _bot.tryToSelectFromDpn(By.tagName("select"), "Yes"); // Work auth
-        _bot.tryToSelectFromDpn(By.tagName("select"), "No"); // Visa
-
     }
 
     /**
