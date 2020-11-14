@@ -21,6 +21,7 @@ public class LeverGreenhouseBot extends GlassdoorBot {
     private JobApplicationData _jobAppData;
     private WriteFiles _writeFiles;
     private LeverForms _leverForms;
+    private GreenhouseForms _greenhouseForms;
 
     /**
      * Parameterized constructor which initializes JobApplicationData, WriteFiles,
@@ -36,6 +37,7 @@ public class LeverGreenhouseBot extends GlassdoorBot {
         _jobAppData = jobAppData;
         _writeFiles = writeFiles;
         _leverForms = new LeverForms();
+        _greenhouseForms = new GreenhouseForms();
     }
 
     /**
@@ -51,19 +53,34 @@ public class LeverGreenhouseBot extends GlassdoorBot {
      */
     public void apply() {
 
+        System.out.println(JobPostingData.jobPostingContainer.size());
+
         for (JobPostingData jobPost : JobPostingData.jobPostingContainer) {
 
             boolean isLever = jobPost.jobLink.contains("lever");
-            String joblink = jobPost.jobLink;
+            boolean isGreenhouse = jobPost.jobLink.contains("greenhouse");
 
-            if (isLever) {
-                System.out.println("Applying to lever job...");
-                applyToLeverJobs(joblink);
-                if (elementExists(By.xpath("//h3[@data-qa='msg-submit-success']"))) {
-                    System.out.println("Successfully applied");
-                    jobPost.submitted = "Yes";
+            try {
+                if (isLever) {
+                    System.out.println("Applying to lever job...");
+                    applyToLeverJobs(jobPost.jobLink);
+                    if (elementExists(By.xpath("//h3[@data-qa='msg-submit-success']"))) {
+                        System.out.println("Successfully applied");
+                        jobPost.submitted = "Yes";
+                    }
+                } 
+                else if (isGreenhouse) {
+                    System.out.println("Applying to greenhouse job...");
+                    applyToGreenhouseJobs(jobPost.jobLink);
+                    if (elementExists(By.id("application_confirmation"))) {
+                        System.out.println("Successfully applied");
+                        jobPost.submitted = "Yes";
+                    }
                 }
-            } 
+
+            } catch (Exception e) {
+                continue;
+            }
         }
         try {
             _writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
@@ -82,11 +99,27 @@ public class LeverGreenhouseBot extends GlassdoorBot {
         waitOnElementAndClick(By.className("template-btn-submit"));
 
         _leverForms.fillAllBasicInfo(_jobAppData);
-        _leverForms.fillAllWorkAuth(_jobAppData);
         _leverForms.fillAllHowDidYouFindUs();
         _leverForms.uploadResume();
         _leverForms.submitApplication();
 
     }
 
+    /**
+     * Apply to Greenhouse jobs.
+     * 
+     * @param greenhouseLink The link to the Greenhouse application.
+     */
+    public void applyToGreenhouseJobs(String greenhouseLink) {
+        getWebDriver().get(greenhouseLink);
+        waitOnElementAndClick(By.className("template-btn-submit"));
+
+        _greenhouseForms.fillAllBasicInfo(_jobAppData);
+        _greenhouseForms.fillAllWorkAuth();
+        _greenhouseForms.fillAllHowDidYouFindUs();
+        _greenhouseForms.approveConsent();
+        _greenhouseForms.uploadResume();
+        _greenhouseForms.submitApplication();
+
+    }
 }
