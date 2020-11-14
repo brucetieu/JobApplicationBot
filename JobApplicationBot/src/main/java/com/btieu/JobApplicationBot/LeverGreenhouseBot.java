@@ -68,7 +68,7 @@ public class LeverGreenhouseBot extends GlassdoorBot {
         try {
             _writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
         } catch (IOException e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
         }
     }
 
