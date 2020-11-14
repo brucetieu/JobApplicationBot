@@ -42,32 +42,6 @@ public class JobPostingData {
         this.jobStatus = jobStatus;
     }
 
-    /**
-     * Initialize job information strings.
-     * 
-     * @param jobTitle    The job title.
-     * @param companyName The company name.
-     * @param companyLoc  The company location.
-     * @param remote      If the job is remote.
-     * @param dateApplied The date the job was applied to.
-     * @param appType     The application type.
-     * @param jobLink     The link of the job.
-     * @param submitted   If the job was submitted or not.
-     * @param jobStatus   The job status.
-     */
-    public JobPostingData(String jobTitle, String companyName, String companyLoc, String remote, String dateApplied,
-            String appType, String jobLink, String submitted, String jobStatus) {
-        this.jobTitle = jobTitle;
-        this.companyName = companyName;
-        this.companyLoc = companyLoc;
-        this.remote = remote;
-        this.dateApplied = dateApplied;
-        this.appType = appType;
-        this.jobLink = jobLink;
-        this.submitted = submitted;
-        this.jobStatus = jobStatus;
-    }
-
     // Static variables.
     public static int pagesToScrape;
     public static List<JobPostingData> jobPostingContainer = new ArrayList<JobPostingData>();
