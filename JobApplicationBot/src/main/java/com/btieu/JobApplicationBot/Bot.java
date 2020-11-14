@@ -264,5 +264,15 @@ public class Bot {
         }
         return true;
     }
+    
+    public boolean isClicked(By by) {
+        try {
+            waitOnElementAndClick(by);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        
+    }
 
 }
