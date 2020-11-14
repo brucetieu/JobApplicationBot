@@ -209,7 +209,7 @@ public class GlassdoorBot extends Bot {
             submitted = "no";
 
         System.out.println(getRequestURL(jobLink));
-        return new JobPostingData(jobTitleString, companyNameString, jobLocationString, remote, formatter.format(date),
+        return new JobPostingData(0, jobTitleString, companyNameString, jobLocationString, remote, formatter.format(date),
                 appType.name(), getRequestURL(jobLink), submitted, "");
 
     }
