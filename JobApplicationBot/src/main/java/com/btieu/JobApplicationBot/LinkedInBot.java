@@ -72,6 +72,22 @@ public class LinkedInBot extends Bot {
             }
         }
     }
+    
+    private void _getPeopleYouMayKnow() {
+        WebElement pymkContainer = tryToFindElement(By.className("pv-profile-pymk__container"));
+        List<WebElement> pymkList = pymkContainer.findElements(By.className("pv-pymk-section__member-container"));
+
+        for (WebElement people : pymkList) {
+            String profileLink = people.findElement(By.tagName("a")).getAttribute("href");
+            String name = people.findElement(By.className("name")).getText();
+            String occupation = people.findElement(By.className("pv-pymk-section__member-headline")).getText();
+            if (!_profilesToBeVisited.stream().anyMatch(l -> l.profileLink.equals(profileLink))
+                    && !_visitedProfiles.contains(profileLink)) {
+                _profilesToBeVisited.add(new LinkedInPerson(_splitFullname(name), profileLink, occupation,
+                        _assembleMessage(_splitFullname(name))));
+            }
+        }
+    }
 
 
     private String _splitFullname(String name) {
