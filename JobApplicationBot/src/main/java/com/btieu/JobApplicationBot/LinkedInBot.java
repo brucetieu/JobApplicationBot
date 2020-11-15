@@ -94,18 +94,23 @@ public class LinkedInBot extends Bot {
                     aggregatePeopleProfiles();
 
                     // Send connection request.
-                    waitOnElementAndClick(By.className("pv-s-profile-actions--connect")); // click on Connect
-                    waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
-                    WebElement textarea = tryToFindElement(By.id("custom-message"));
-                    textarea.sendKeys(queuedProfile.message);
-
-                    if (isClicked(By.className("ml1"))) {
-                        connections += 1;
-                        System.out.println("Sent invitation!");
+                    try {
+                        _easyConnectRequest(queuedProfile.message);
+                    } catch (Exception e) {
+                        _hardConnectRequest(queuedProfile.message);
                     }
+//                    waitOnElementAndClick(By.className("pv-s-profile-actions--connect")); // click on Connect
+//                    waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
+//                    WebElement textarea = tryToFindElement(By.id("custom-message"));
+//                    textarea.sendKeys(queuedProfile.message);
 
-                    if (connections == LinkedInPerson.MAX_CONNECTIONS)
-                        break;
+//                    if (isClicked(By.className("ml1"))) {
+//                        connections += 1;
+//                        System.out.println("Sent invitation!");
+//                    }
+//
+//                    if (connections == LinkedInPerson.MAX_CONNECTIONS)
+//                        break;
                 }
             } catch (Exception e) {
                 
@@ -179,6 +184,22 @@ public class LinkedInBot extends Bot {
             }
         }
         return false;
+    }
+    
+    private void _easyConnectRequest(String message) {
+        getWebDriver().findElement(By.className("pv-s-profile-actions--connect")).click(); // click on Connect
+        getWebDriver().findElement(By.className("artdeco-button--secondary")).click(); // Click on "Add a note"
+        WebElement textarea = tryToFindElement(By.id("custom-message"));
+        textarea.sendKeys(message);
+    }
+    
+    private void _hardConnectRequest(String message) {
+        WebElement more = getWebDriver().findElement(By.className("pv-s-profile-actions__overflow"));
+        more.click();
+        more.findElement(By.className("pv-s-profile-actions--connect")).click();
+        waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
+        WebElement textarea = tryToFindElement(By.id("custom-message"));
+        textarea.sendKeys(message);
     }
     
     
