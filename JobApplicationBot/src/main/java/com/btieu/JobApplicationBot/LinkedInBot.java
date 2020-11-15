@@ -57,6 +57,13 @@ public class LinkedInBot extends Bot {
         getWebDriver().get(_jobAppData.linkedin);
     }
     
+    public void aggregatePeopleProfiles() {
+        _getPeopleYouMayKnow();
+        _getPeopleViewed();
+
+    }
+
+    
     private void _getPeopleViewed() {
         WebElement pvContainer = tryToFindElement(By.className("pv-browsemap-section"));
         List<WebElement> pvList = pvContainer.findElements(By.className("pv-browsemap-section__member-container"));
