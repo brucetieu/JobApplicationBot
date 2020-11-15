@@ -18,7 +18,6 @@ public class LinkedInBot extends Bot {
     private List<String> _visitedProfiles;
     private Queue<LinkedInPerson> _profilesToBeVisited;
 
-
     public LinkedInBot(JobApplicationData jobAppData, LinkedInPerson linkedInPerson) {
         _jobAppData = jobAppData;
         _linkedInPerson = linkedInPerson;
@@ -56,14 +55,53 @@ public class LinkedInBot extends Bot {
     public void goToProfile() {
         getWebDriver().get(_jobAppData.linkedin);
     }
-    
+
     public void aggregatePeopleProfiles() {
         _getPeopleYouMayKnow();
         _getPeopleViewed();
 
     }
 
-    
+    public void connect() {
+        int connections = 0;
+        // While the list of profiles to be visited is not empty
+        while (_profilesToBeVisited != null && !_profilesToBeVisited.isEmpty()) {
+            LinkedInPerson queuedProfile = _profilesToBeVisited.poll();
+            try {
+                
+
+                if (_containsKeywords(queuedProfile.occupation.toLowerCase())) {
+
+                    _visitedProfiles.add(queuedProfile.profileLink);
+
+                    getWebDriver().get(queuedProfile.profileLink);
+
+                    System.out.println(queuedProfile.occupation);
+                    
+                    // Keep updating the list of profiles to visit.
+                    aggregatePeopleProfiles();
+
+                    waitOnElementAndClick(By.className("pv-s-profile-actions--connect")); // click on Connect
+                    waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
+                    WebElement textarea = tryToFindElement(By.id("custom-message"));
+
+                    textarea.sendKeys(queuedProfile.message);
+
+//                    if (isClicked(By.className("ml1"))) {
+//                        connections += 1;
+//                        System.out.println("Sent invitation!");
+//                    }
+//
+//                    if (connections == LinkedInPerson.MAX_CONNECTIONS)
+//                        break;
+                }
+            } catch (Exception e) {
+                continue;
+            }
+        }
+
+    }
+
     private void _getPeopleViewed() {
         WebElement pvContainer = tryToFindElement(By.className("pv-browsemap-section"));
         List<WebElement> pvList = pvContainer.findElements(By.className("pv-browsemap-section__member-container"));
@@ -79,7 +117,7 @@ public class LinkedInBot extends Bot {
             }
         }
     }
-    
+
     private void _getPeopleYouMayKnow() {
         WebElement pymkContainer = tryToFindElement(By.className("pv-profile-pymk__container"));
         List<WebElement> pymkList = pymkContainer.findElements(By.className("pv-pymk-section__member-container"));
@@ -96,14 +134,13 @@ public class LinkedInBot extends Bot {
         }
     }
 
-
     private String _splitFullname(String name) {
         String[] splitted = name.toLowerCase().split("\\s+");
         String firstName = Character.toUpperCase(splitted[0].charAt(0)) + splitted[0].substring(1);
         return firstName;
-        
+
     }
-    
+
     private String _assembleMessage(String name) {
         String message = "Hi " + name + ", your profile appeared in my search of software engineers. "
                 + "I am currently pursuing a career in software engineering and "
@@ -113,8 +150,16 @@ public class LinkedInBot extends Bot {
         return message;
     }
 
+    private boolean _containsKeywords(String description) {
 
+        String[] splittedKeywords = _linkedInPerson.keywords.split(",");
 
-  
+        for (int i = 0; i < splittedKeywords.length; i++) {
+            if (description.contains(splittedKeywords[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
