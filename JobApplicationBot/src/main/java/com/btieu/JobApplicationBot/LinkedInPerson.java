@@ -1,12 +1,13 @@
 package com.btieu.JobApplicationBot;
 
 public class LinkedInPerson {
-    public String firstname, profilelink, occupation, message;
+    public String firstname, profileLink, occupation, message, keywords;
     public static int MAX_CONNECTIONS;
     
-    public LinkedInPerson(String firstname, String profilelink, String message) {
+    public LinkedInPerson(String firstname, String profileLink, String occupation, String message) {
         this.firstname = firstname;
-        this.profilelink = profilelink;
+        this.profileLink = profileLink;
+        this.occupation = occupation;
         this.message = message;
     }
     
