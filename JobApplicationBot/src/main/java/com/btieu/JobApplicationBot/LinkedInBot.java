@@ -52,51 +52,63 @@ public class LinkedInBot extends Bot {
         waitOnElementAndClick(By.className("btn__primary--large"));
     }
 
+    /**
+     * Go to your Linkedin profile, need to access the "People Also Viewed" and "People You May Know" sections.
+     */
     public void goToProfile() {
         getWebDriver().get(_jobAppData.linkedin);
     }
 
+    /**
+     * Get all the profiles links from the "People Also Viewed" and "People You May Know" sections.
+     */
     public void aggregatePeopleProfiles() {
         _getPeopleYouMayKnow();
         _getPeopleViewed();
 
     }
 
+    /**
+     * Connect with profiles you have visited. 
+     */
     public void connect() {
+        
+        // Connection requests counter.
         int connections = 0;
-        // While the list of profiles to be visited is not empty
+        
+        // While the list of profiles to be visited is not empty...
         while (_profilesToBeVisited != null && !_profilesToBeVisited.isEmpty()) {
+            
+            // Get the first profile in the queue.
             LinkedInPerson queuedProfile = _profilesToBeVisited.poll();
             try {
                 
-
+                // If the person you're wanting to connect with has a desired keyword, then connect.
                 if (_containsKeywords(queuedProfile.occupation.toLowerCase())) {
-
+                    
+                    // Add the profile to the visited list.
                     _visitedProfiles.add(queuedProfile.profileLink);
-
                     getWebDriver().get(queuedProfile.profileLink);
-
-                    System.out.println(queuedProfile.occupation);
                     
                     // Keep updating the list of profiles to visit.
                     aggregatePeopleProfiles();
 
+                    // Send connection request.
                     waitOnElementAndClick(By.className("pv-s-profile-actions--connect")); // click on Connect
                     waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
                     WebElement textarea = tryToFindElement(By.id("custom-message"));
-
                     textarea.sendKeys(queuedProfile.message);
 
-//                    if (isClicked(By.className("ml1"))) {
-//                        connections += 1;
-//                        System.out.println("Sent invitation!");
-//                    }
-//
-//                    if (connections == LinkedInPerson.MAX_CONNECTIONS)
-//                        break;
+                    if (isClicked(By.className("ml1"))) {
+                        connections += 1;
+                        System.out.println("Sent invitation!");
+                    }
+
+                    if (connections == LinkedInPerson.MAX_CONNECTIONS)
+                        break;
                 }
             } catch (Exception e) {
-                continue;
+                
             }
         }
 
@@ -116,6 +128,10 @@ public class LinkedInBot extends Bot {
                         _assembleMessage(_splitFullname(name))));
             }
         }
+        
+        for (LinkedInPerson p : _profilesToBeVisited) {
+            System.out.println(p.firstname + ", " + p.profileLink + ", " + p.occupation + ", " + p.message);
+        }
     }
 
     private void _getPeopleYouMayKnow() {
@@ -132,6 +148,7 @@ public class LinkedInBot extends Bot {
                         _assembleMessage(_splitFullname(name))));
             }
         }
+        
     }
 
     private String _splitFullname(String name) {
@@ -152,8 +169,10 @@ public class LinkedInBot extends Bot {
 
     private boolean _containsKeywords(String description) {
 
-        String[] splittedKeywords = _linkedInPerson.keywords.split(",");
+        String[] splittedKeywords = _linkedInPerson.keywords.toLowerCase().split("\\s*,\\s*");
 
+        for (String x : splittedKeywords) System.out.println(x);
+        
         for (int i = 0; i < splittedKeywords.length; i++) {
             if (description.contains(splittedKeywords[i])) {
                 return true;
@@ -161,5 +180,8 @@ public class LinkedInBot extends Bot {
         }
         return false;
     }
+    
+    
+    
 
 }
