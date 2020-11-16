@@ -167,6 +167,9 @@ public class LinkedInBot extends Bot {
             String profileLink = people.findElement(By.tagName("a")).getAttribute("href");
             String name = people.findElement(By.className("name")).getText();
             String occupation = people.findElement(by).getText();
+
+            // Only add to profilesToBeVisited if it the profile isn't already in the list
+            // and it hasn't been visited.
             if (!_profilesToBeVisited.stream().anyMatch(l -> l.profileLink.equals(profileLink))
                     && !_visitedProfiles.contains(profileLink)) {
                 _profilesToBeVisited.add(new LinkedInPerson(_splitFullname(name), profileLink, occupation,
