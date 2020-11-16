@@ -8,6 +8,7 @@ import java.util.Queue;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 public class LinkedInBot extends Bot {
@@ -53,14 +54,16 @@ public class LinkedInBot extends Bot {
     }
 
     /**
-     * Go to your Linkedin profile, need to access the "People Also Viewed" and "People You May Know" sections.
+     * Go to your Linkedin profile, need to access the "People Also Viewed" and
+     * "People You May Know" sections.
      */
     public void goToProfile() {
         getWebDriver().get(_jobAppData.linkedin);
     }
 
     /**
-     * Get all the profiles links from the "People Also Viewed" and "People You May Know" sections.
+     * Get all the profiles links from the "People Also Viewed" and "People You May
+     * Know" sections.
      */
     public void aggregatePeopleProfiles() {
         _getPeopleYouMayKnow();
@@ -69,29 +72,86 @@ public class LinkedInBot extends Bot {
     }
 
     /**
-     * Connect with profiles you have visited. 
+     * Connect with profiles you have visited.
      */
     public void connect() {
-        
+
         // Connection requests counter.
         int connections = 0;
-        
+
+//        _profilesToBeVisited.stream().forEach(o -> {
+//            if (_profilesToBeVisited.stream()
+//                    .anyMatch(l -> l.occupation.equals(_linkedInPerson.keywords.toLowerCase()))) {
+//                getWebDriver().get(o.profileLink);
+//                _visitedProfiles.add(o.profileLink);
+//                _profilesToBeVisited.remove(o);
+//
+//                if (elementExists(By.className("pv-s-profile-actions--connect")))
+//                    _easyConnectRequest(o.message);
+//                else if (elementExists(By.className("pv-s-profile-actions__overflow"))) {
+//                    _hardConnectRequest(o.message);
+//                }
+//            } 
+//            else 
+//            {
+//                getWebDriver().get(o.profileLink);
+//                _visitedProfiles.add(o.profileLink);
+//                if (elementExists(By.className("pv-profile-pymk__container"))
+//                    && elementExists(By.className("pv-browsemap-section"))) {
+//                aggregatePeopleProfiles();
+//            }
+//            }
+//        });
+//        while (_profilesToBeVisited != null && !_profilesToBeVisited.isEmpty()) {
+//            if (_profilesToBeVisited.stream().anyMatch(o -> o.occupation.equals(_linkedInPerson.keywords.toLowerCase())))  {
+//                getWebDriver().get(o.profileLink);
+//              _visitedProfiles.add(o.profileLink);
+//              _profilesToBeVisited.remove(o);
+//              
+//              if (elementExists(By.className("pv-s-profile-actions--connect")))
+//                _easyConnectRequest(o.message);
+//            else if (elementExists(By.className("pv-s-profile-actions__overflow"))) {
+//                _hardConnectRequest(o.message);
+//            }
+//            }
+//        }
+
+//        _profilesToBeVisited.stream().filter(o -> o.occupation.equals(_linkedInPerson.keywords.toLowerCase())).forEach(
+//                o -> {
+//                    getWebDriver().get(o.profileLink);
+//                    _visitedProfiles.add(o.profileLink);
+//                    _profilesToBeVisited.remove(o);
+//                    
+//                    if (elementExists(By.className("pv-s-profile-actions--connect")))
+//                      _easyConnectRequest(o.message);
+//                  else if (elementExists(By.className("pv-s-profile-actions__overflow"))) {
+//                      _hardConnectRequest(o.message);
+//                  }
+//              
+//                }
+//                
+//               
+//           );
         // While the list of profiles to be visited is not empty...
         while (_profilesToBeVisited != null && !_profilesToBeVisited.isEmpty()) {
-            
+
             // Get the first profile in the queue.
             LinkedInPerson queuedProfile = _profilesToBeVisited.poll();
+
             try {
-                
-                // If the person you're wanting to connect with has a desired keyword, then connect.
+                // If the person you're wanting to connect with has a desired keyword, then
+                // connect.
                 if (_containsKeywords(queuedProfile.occupation.toLowerCase())) {
-                    
+
                     // Add the profile to the visited list.
-                    _visitedProfiles.add(queuedProfile.profileLink);
                     getWebDriver().get(queuedProfile.profileLink);
-                    
+                    _visitedProfiles.add(queuedProfile.profileLink);
+
                     // Keep updating the list of profiles to visit.
-                    aggregatePeopleProfiles();
+                    if (elementExists(By.className("pv-profile-pymk__container"))
+                            && elementExists(By.className("pv-browsemap-section"))) {
+                        aggregatePeopleProfiles();
+                    }
 
                     // Send connection request.
                     try {
@@ -99,11 +159,21 @@ public class LinkedInBot extends Bot {
                     } catch (Exception e) {
                         _hardConnectRequest(queuedProfile.message);
                     }
+
+//                    if (elementExists(By.className("pv-s-profile-actions__overflow"))) {
+//                        System.out.println("There's a More button");
+//                        _hardConnectRequest(queuedProfile.message);
+//                    }
+//                    else if (elementExists(By.className("pv-s-profile-actions--connect"))) {
+//                        System.out.println("There's a connect button");
+//                        _easyConnectRequest(queuedProfile.message);
+//                    } 
+
 //                    waitOnElementAndClick(By.className("pv-s-profile-actions--connect")); // click on Connect
 //                    waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
 //                    WebElement textarea = tryToFindElement(By.id("custom-message"));
 //                    textarea.sendKeys(queuedProfile.message);
-
+//
 //                    if (isClicked(By.className("ml1"))) {
 //                        connections += 1;
 //                        System.out.println("Sent invitation!");
@@ -112,14 +182,27 @@ public class LinkedInBot extends Bot {
 //                    if (connections == LinkedInPerson.MAX_CONNECTIONS)
 //                        break;
                 }
+//                else {
+//                    // Add the profile to the visited list.
+//                    getWebDriver().get(queuedProfile.profileLink);
+//                    _visitedProfiles.add(queuedProfile.profileLink);
+//
+//                    // Keep updating the list of profiles to visit.
+//                    if (elementExists(By.className("pv-profile-pymk__container"))
+//                            && elementExists(By.className("pv-browsemap-section"))) {
+//                        aggregatePeopleProfiles();
+//                    }
+//                }
             } catch (Exception e) {
                 
             }
+
         }
 
     }
 
     private void _getPeopleViewed() {
+//        try {
         WebElement pvContainer = tryToFindElement(By.className("pv-browsemap-section"));
         List<WebElement> pvList = pvContainer.findElements(By.className("pv-browsemap-section__member-container"));
 
@@ -133,10 +216,13 @@ public class LinkedInBot extends Bot {
                         _assembleMessage(_splitFullname(name))));
             }
         }
-        
+
         for (LinkedInPerson p : _profilesToBeVisited) {
             System.out.println(p.firstname + ", " + p.profileLink + ", " + p.occupation + ", " + p.message);
         }
+//        } catch (Exception e) {
+//            System.out.println("Error caught. Continuing execution");
+//        }
     }
 
     private void _getPeopleYouMayKnow() {
@@ -153,7 +239,7 @@ public class LinkedInBot extends Bot {
                         _assembleMessage(_splitFullname(name))));
             }
         }
-        
+
     }
 
     private String _splitFullname(String name) {
@@ -176,8 +262,9 @@ public class LinkedInBot extends Bot {
 
         String[] splittedKeywords = _linkedInPerson.keywords.toLowerCase().split("\\s*,\\s*");
 
-        for (String x : splittedKeywords) System.out.println(x);
-        
+        for (String x : splittedKeywords)
+            System.out.println(x);
+
         for (int i = 0; i < splittedKeywords.length; i++) {
             if (description.contains(splittedKeywords[i])) {
                 return true;
@@ -185,7 +272,20 @@ public class LinkedInBot extends Bot {
         }
         return false;
     }
-    
+
+//    private void _easyConnectRequest(String message) {
+//        waitOnElementAndClick(By.className("pv-s-profile-actions--connect")); // click on Connect
+//        waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
+//        tryToFindElementAndSendKeysFast(By.id("custom-message"), message);
+//    }
+//
+//    private void _hardConnectRequest(String message) {
+//        WebElement more = tryToFindElement(By.className("pv-s-profile-actions__overflow"));
+//        more.click();
+//        more.findElement(By.className("pv-s-profile-actions--connect")).click();
+//        waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
+//        tryToFindElementAndSendKeysFast(By.id("custom-message"), message);
+//    }
     private void _easyConnectRequest(String message) {
         getWebDriver().findElement(By.className("pv-s-profile-actions--connect")).click(); // click on Connect
         getWebDriver().findElement(By.className("artdeco-button--secondary")).click(); // Click on "Add a note"
@@ -201,8 +301,6 @@ public class LinkedInBot extends Bot {
         WebElement textarea = tryToFindElement(By.id("custom-message"));
         textarea.sendKeys(message);
     }
-    
-    
-    
+
 
 }
