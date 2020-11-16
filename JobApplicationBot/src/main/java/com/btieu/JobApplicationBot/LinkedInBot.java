@@ -8,6 +8,12 @@ import java.util.Queue;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+/**
+ * Linkedin connections bot.
+ * 
+ * @author Bruce Tieu
+ *
+ */
 public class LinkedInBot extends Bot {
 
     private JobApplicationData _jobAppData;
@@ -83,7 +89,7 @@ public class LinkedInBot extends Bot {
             LinkedInPerson queuedProfile = _profilesToBeVisited.poll();
 
             try {
-              
+
                 // Connect with people with the keywords you're looking for.
                 if (_containsKeywords(queuedProfile.occupation.toLowerCase())) {
 
@@ -131,16 +137,7 @@ public class LinkedInBot extends Bot {
         WebElement pvContainer = tryToFindElement(By.className("pv-browsemap-section"));
         List<WebElement> pvList = pvContainer.findElements(By.className("pv-browsemap-section__member-container"));
 
-        for (WebElement people : pvList) {
-            String profileLink = people.findElement(By.tagName("a")).getAttribute("href");
-            String name = people.findElement(By.className("name")).getText();
-            String occupation = people.findElement(By.className("pv-browsemap-section__member-headline")).getText();
-            if (!_profilesToBeVisited.stream().anyMatch(l -> l.profileLink.equals(profileLink))
-                    && !_visitedProfiles.contains(profileLink)) {
-                _profilesToBeVisited.add(new LinkedInPerson(_splitFullname(name), profileLink, occupation,
-                        _assembleMessage(_splitFullname(name))));
-            }
-        }
+        _addToProfilesToBeVisited(By.className("pv-browsemap-section__member-headline"), pvList);
 
         for (LinkedInPerson p : _profilesToBeVisited) {
             System.out.println(p.firstname + ", " + p.profileLink + ", " + p.occupation + ", " + p.message);
@@ -154,21 +151,33 @@ public class LinkedInBot extends Bot {
         WebElement pymkContainer = tryToFindElement(By.className("pv-profile-pymk__container"));
         List<WebElement> pymkList = pymkContainer.findElements(By.className("pv-pymk-section__member-container"));
 
-        for (WebElement people : pymkList) {
+        _addToProfilesToBeVisited(By.className("pv-pymk-section__member-headline"), pymkList);
+
+    }
+
+    /**
+     * Fill the profiles to be visited.
+     * 
+     * @param by         The element which contains the people occupations.
+     * @param peopleList The list of people from a specific section.
+     */
+    private void _addToProfilesToBeVisited(By by, List<WebElement> peopleList) {
+
+        for (WebElement people : peopleList) {
             String profileLink = people.findElement(By.tagName("a")).getAttribute("href");
             String name = people.findElement(By.className("name")).getText();
-            String occupation = people.findElement(By.className("pv-pymk-section__member-headline")).getText();
+            String occupation = people.findElement(by).getText();
             if (!_profilesToBeVisited.stream().anyMatch(l -> l.profileLink.equals(profileLink))
                     && !_visitedProfiles.contains(profileLink)) {
                 _profilesToBeVisited.add(new LinkedInPerson(_splitFullname(name), profileLink, occupation,
                         _assembleMessage(_splitFullname(name))));
             }
         }
-
     }
 
     /**
      * Get first name and capitalize it.
+     * 
      * @param name A person's full name.
      * @return The first name.
      */
@@ -181,6 +190,7 @@ public class LinkedInBot extends Bot {
 
     /**
      * Assemble personalized message.
+     * 
      * @param name The first name of the person.
      * @return The message.
      */
@@ -195,6 +205,7 @@ public class LinkedInBot extends Bot {
 
     /**
      * Check if their occupation contains the keywords.
+     * 
      * @param description Their header description.
      * @return True, if there's a match, false otherwise.
      */
@@ -212,6 +223,7 @@ public class LinkedInBot extends Bot {
 
     /**
      * Handle cases where there's a "Connect" button.
+     * 
      * @param message The connect message.
      */
     private void _easyConnectRequest(String message) {
@@ -220,9 +232,10 @@ public class LinkedInBot extends Bot {
         WebElement textarea = tryToFindElement(By.id("custom-message"));
         textarea.sendKeys(message);
     }
-    
+
     /**
      * Handle cases where you have to do more work to connect.
+     * 
      * @param message The connect message.
      */
     private void _hardConnectRequest(String message) {
@@ -233,6 +246,5 @@ public class LinkedInBot extends Bot {
         WebElement textarea = tryToFindElement(By.id("custom-message"));
         textarea.sendKeys(message);
     }
-
 
 }
