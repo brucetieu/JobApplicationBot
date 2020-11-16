@@ -83,8 +83,8 @@ public class LinkedInBot extends Bot {
             LinkedInPerson queuedProfile = _profilesToBeVisited.poll();
 
             try {
-                // If the person you're wanting to connect with has a desired keyword, then
-                // connect.
+              
+                // Connect with people with the keywords you're looking for.
                 if (_containsKeywords(queuedProfile.occupation.toLowerCase())) {
 
                     // Add the profile to the visited list.
@@ -97,18 +97,20 @@ public class LinkedInBot extends Bot {
                         aggregatePeopleProfiles();
                     }
 
-                    // Send connection request.
+                    // Write connection message.
                     try {
                         _easyConnectRequest(queuedProfile.message);
                     } catch (Exception e) {
                         _hardConnectRequest(queuedProfile.message);
                     }
 
+                    // Send message.
                     if (isClicked(By.className("ml1"))) {
                         connections += 1;
                         System.out.println("Sent invitation!");
                     }
 
+                    // Stop after connecting with x number of people.
                     if (connections == LinkedInPerson.MAX_CONNECTIONS)
                         break;
                 }
@@ -121,6 +123,9 @@ public class LinkedInBot extends Bot {
 
     }
 
+    /**
+     * Get the list of people under "People Also Viewed Section"
+     */
     private void _getPeopleViewed() {
 
         WebElement pvContainer = tryToFindElement(By.className("pv-browsemap-section"));
@@ -142,6 +147,9 @@ public class LinkedInBot extends Bot {
         }
     }
 
+    /**
+     * Get list of people under "People Who You May Know".
+     */
     private void _getPeopleYouMayKnow() {
         WebElement pymkContainer = tryToFindElement(By.className("pv-profile-pymk__container"));
         List<WebElement> pymkList = pymkContainer.findElements(By.className("pv-pymk-section__member-container"));
@@ -159,6 +167,11 @@ public class LinkedInBot extends Bot {
 
     }
 
+    /**
+     * Get first name and capitalize it.
+     * @param name A person's full name.
+     * @return The first name.
+     */
     private String _splitFullname(String name) {
         String[] splitted = name.toLowerCase().split("\\s+");
         String firstName = Character.toUpperCase(splitted[0].charAt(0)) + splitted[0].substring(1);
@@ -166,6 +179,11 @@ public class LinkedInBot extends Bot {
 
     }
 
+    /**
+     * Assemble personalized message.
+     * @param name The first name of the person.
+     * @return The message.
+     */
     private String _assembleMessage(String name) {
         String message = "Hi " + name + ", your profile appeared in my search of software engineers. "
                 + "I am currently pursuing a career in software engineering and "
@@ -175,12 +193,14 @@ public class LinkedInBot extends Bot {
         return message;
     }
 
+    /**
+     * Check if their occupation contains the keywords.
+     * @param description Their header description.
+     * @return True, if there's a match, false otherwise.
+     */
     private boolean _containsKeywords(String description) {
 
         String[] splittedKeywords = _linkedInPerson.keywords.toLowerCase().split("\\s*,\\s*");
-
-        for (String x : splittedKeywords)
-            System.out.println(x);
 
         for (int i = 0; i < splittedKeywords.length; i++) {
             if (description.contains(splittedKeywords[i])) {
@@ -190,6 +210,10 @@ public class LinkedInBot extends Bot {
         return false;
     }
 
+    /**
+     * Handle cases where there's a "Connect" button.
+     * @param message The connect message.
+     */
     private void _easyConnectRequest(String message) {
         getWebDriver().findElement(By.className("pv-s-profile-actions--connect")).click(); // click on Connect
         getWebDriver().findElement(By.className("artdeco-button--secondary")).click(); // Click on "Add a note"
@@ -197,6 +221,10 @@ public class LinkedInBot extends Bot {
         textarea.sendKeys(message);
     }
     
+    /**
+     * Handle cases where you have to do more work to connect.
+     * @param message The connect message.
+     */
     private void _hardConnectRequest(String message) {
         WebElement more = getWebDriver().findElement(By.className("pv-s-profile-actions__overflow"));
         more.click();
