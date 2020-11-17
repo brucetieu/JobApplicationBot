@@ -35,6 +35,7 @@ public class IndeedPanel extends CreateGUIComponents {
     private JTextField _whatJob;
     private JTextField _jobLoc;
     private JTextField _pageNum;
+    private JTextField _csvOutputName;
     private JComboBox<ApplicationType> _appBox;
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
@@ -53,17 +54,17 @@ public class IndeedPanel extends CreateGUIComponents {
      */
     public void createIndeedPanel(JPanel _contentPane) {
 
-        createTab("Indeed", _contentPane, _tabbedPane, 0, 0, 650, 650);
-        addApplicantFields(); // Applicant info fields.
-        addJobPreferenceFields(); // Job preferences fields.
-        addUploadResume(191, 295, 300, 16);
+        createTab("Indeed", _contentPane, _tabbedPane, 0, 0, 0, 0);
+        _addApplicantFields(); // Applicant info fields.
+        _addJobPreferenceFields(); // Job preferences fields.
+        addUploadResume(285, 275, 200, 29);
     }
 
     /**
      * This method launches the browser and grabs all information from filled out fields.
      */
     public void launchApp() {
-        JButton launchButton = addButton("Launch", 250, 437, 117, 29);
+        JButton launchButton = addButton("Launch", 280, 525, 117, 29);
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JobApplicationData jobAppData = new JobApplicationData();
@@ -88,7 +89,7 @@ public class IndeedPanel extends CreateGUIComponents {
                 jobAppData.password = String.valueOf(_password.getPassword());
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
-                JobPostingData.pageNum =  Integer.parseInt(_pageNumBox.getSelectedItem().toString());
+                JobPostingData.pagesToScrape =  Integer.parseInt(_pageNumBox.getSelectedItem().toString());
                 ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
 
                 // TODO: If-elses for each type of bot to run according to the app type.
@@ -100,7 +101,7 @@ public class IndeedPanel extends CreateGUIComponents {
     /**
      * Add applicant information fields.
      */
-    private void addApplicantFields() {
+    private void _addApplicantFields() {
         createGoodiesTitle("Indeed Login Info", 20, 32, 231, 16);
         addLabels("First name", 20, 65, 100, 16);
         addLabels("Last name", 20, 97, 100, 16);
@@ -121,16 +122,18 @@ public class IndeedPanel extends CreateGUIComponents {
     /**
      * Add Job preferences fields. 
      */
-    private void addJobPreferenceFields() {
+    private void _addJobPreferenceFields() {
         createGoodiesTitle("Job Preferences", 391, 32, 122, 16);
         addLabels("What job", 285, 65, 61, 16);
         addLabels("Location of job", 285, 97, 100, 16);
         addLabels("Application type", 285, 128, 150, 16);
-        addLabels("Page num", 285, 156, 100, 16);
+        addLabels("Pages to scrape", 285, 156, 100, 16);
+        addLabels("CSV output name", 285, 194, 150, 16);
     
         _whatJob = addTextField(401, 60, 130, 26, 10);
         _jobLoc = addTextField(401, 92, 130, 26, 10);
         _appBox = addAppTypeDropdown(401, 124, 150, 27);
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(), 401, 156, 150, 27);
+        _csvOutputName = addTextField(401, 192, 180, 26, 10);
     }
 }
