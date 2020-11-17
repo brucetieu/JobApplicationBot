@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Linkedin connections bot. Connect with the people based off the "People You
  * May Know" or "People Who Also Viewed" sections in LinkedIn. Send a custom
- * message to each person to connect.
+ * message to each person to connect. Can connect on specific keywords.
  * 
  * @author Bruce Tieu
  *
