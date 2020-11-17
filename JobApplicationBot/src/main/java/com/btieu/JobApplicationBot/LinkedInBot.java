@@ -68,10 +68,8 @@ public class LinkedInBot extends Bot {
         getWebDriver().findElement(By.id("password")).clear();
 
         // Populate the fields with an email and a password
-        WebElement email = getWebDriver().findElement(By.id("username"));
-        WebElement password = getWebDriver().findElement(By.id("password"));
-        typeLikeAHuman(email, this._jobAppData.email);
-        typeLikeAHuman(password, this._jobAppData.password);
+        tryToFindElementAndSendKeys(By.id("username"), _jobAppData.email);
+        tryToFindElementAndSendKeys(By.id("password"), _jobAppData.password);
 
         waitOnElementAndClick(By.className("btn__primary--large"));
     }
