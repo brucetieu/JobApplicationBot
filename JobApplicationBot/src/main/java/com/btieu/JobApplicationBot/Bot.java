@@ -137,6 +137,17 @@ public class Bot {
         }
         return element;
     }
+    
+    public WebElement tryToFindElementAndSendKeysFast(By by, String key) {
+        WebElement element = null;
+        try {
+            element = _driver.getWait().until(ExpectedConditions.visibilityOf(_driver.getWebDriver().findElement(by)));
+            element.sendKeys(key);
+        } catch (Exception e) {
+            System.out.println("Could not send keys to: " + by);
+        }
+        return element;
+    }
 
     /**
      * This method waits for a specific element to appear before clicking.
@@ -263,6 +274,21 @@ public class Bot {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * Check if an element has been clicked.
+     * @param by The element to be clicked.
+     * @return True, if able to be clicked and false otherwise.
+     */
+    public boolean isClicked(By by) {
+        try {
+            waitOnElementAndClick(by);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        
     }
 
 }
