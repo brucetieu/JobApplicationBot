@@ -2,16 +2,18 @@ package com.btieu.JobApplicationBot;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,52 +21,28 @@ import org.openqa.selenium.WebElement;
 /**
  * This class holds common bot actions like waiting and navigating.
  * 
- * @author bruce
+ * @author Bruce Tieu
  */
-public abstract class Bot {
+public class Bot {
 
-    private static final String _CHROME_DRIVER_PROPERTY = "webdriver.chrome.driver";
-    private static final String _CHROME_DRIVER_PATH = "/Applications/chromedriver";
-    private static final int _MAX_WAIT_TIME = 10;
-    private WebDriver _driver;
-    private WebDriverWait _wait;
-    private ChromeOptions _chromeOptions;
-    private Actions _actions;
+    private SingletonDriver _driver;
 
     /**
-     * This the default constructor which initializes all the required drivers and
-     * chrome options.
+     * This the default constructor which only initializes the Singleton class.
      */
     public Bot() {
-        System.setProperty(_CHROME_DRIVER_PROPERTY, _CHROME_DRIVER_PATH);
-        _chromeOptions = new ChromeOptions();
-        _chromeOptions.addArguments("--disable-blink-features");
-        _chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
-        // FIXME: Not applicable on every machine.
-        _chromeOptions.addArguments("--user-data-dir=/Users/bruce/Library/Application Support/Google/Chrome");
-        _chromeOptions.addArguments("start-maximized");
-        _driver = new ChromeDriver(_chromeOptions);
-        _driver.manage().timeouts().implicitlyWait(_MAX_WAIT_TIME, TimeUnit.SECONDS);
-        _wait = new WebDriverWait(_driver, _MAX_WAIT_TIME);
-        _actions = new Actions(_driver);
+        // Every time we want to use a method from this class, we only want to open the same instance
+        // (don't want to open multiple browsers). 
+        _driver = SingletonDriver.getInstance();
     }
 
-    // Abstract methods
-    abstract public void navigateToJobPage();
-    abstract public void login() throws InterruptedException;
-    abstract public void searchJobs() throws InterruptedException;
-    abstract public JobPostingData getJobInformation(String jobLink, JobApplicationData.ApplicationType appType,
-            boolean isApplied) throws IOException;
-    abstract public void saveJob(String jobLink, JobApplicationData.ApplicationType appType) throws InterruptedException, IOException;
-
-    
     /**
      * This is a getter method.
      * 
      * @return The driver object.
      */
-    public WebDriver getDriver() {
-        return _driver;
+    public WebDriver getWebDriver() {
+        return _driver.getWebDriver();
     }
 
     /**
@@ -73,7 +51,7 @@ public abstract class Bot {
      * @return The wait object.
      */
     public WebDriverWait getWait() {
-        return _wait;
+        return _driver.getWait();
     }
 
     /**
@@ -82,14 +60,14 @@ public abstract class Bot {
      * @return The actions object.
      */
     public Actions getActions() {
-        return _actions;
+        return _driver.getActions();
     }
 
     /**
      * Quit the browser.
      */
     public void quitBrowser() {
-        this._driver.quit();
+        _driver.getWebDriver().quit();
     }
 
     /**
@@ -101,7 +79,7 @@ public abstract class Bot {
     public WebElement tryToFindElement(By by) {
         WebElement element = null;
         try {
-            element = _wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+            element = getWait().until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (Exception e) {
             System.out.println("Could not find element: " + by);
         }
@@ -117,9 +95,56 @@ public abstract class Bot {
     public List<WebElement> tryToFindElements(By by) {
         List<WebElement> element = null;
         try {
-            element = _wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
+            element = getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
         } catch (Exception e) {
             System.out.println("Could not find element: " + by);
+        }
+        return element;
+    }
+    
+    /**
+     * Try to select an option from a dropdown.
+     * 
+     * @param by        The element to be located.
+     * @param selection The text to be selected.
+     * @return The selected option, if found.
+     */
+    public Select tryToSelectFromDpn(By by, String selection) {
+        Select dropdown = null;
+        try {
+            dropdown = new Select(tryToFindElement(by));
+            dropdown.selectByVisibleText(selection);
+        } catch (Exception e) {
+            System.out.println("Could not find element to select: " + by);
+        }
+        return dropdown;
+    }
+    
+    /**
+     * Try looking for an element and send text to it.
+     * 
+     * @param by  The element to be found.
+     * @param key The text to be sent.
+     * @return The element, if found.
+     */
+    public WebElement tryToFindElementAndSendKeys(By by, String key) {
+        WebElement element = null;
+        try {
+            element = _driver.getWait().until(ExpectedConditions.visibilityOf(_driver.getWebDriver().findElement(by)));
+            typeLikeAHuman(element, key);
+        } catch (Exception e) {
+            System.out.println("Could not send keys to: " + by);
+        }
+        return element;
+    }
+    
+    public WebElement tryToFindElementAndSendKeysFast(By by, String key) {
+        WebElement element = null;
+        try {
+            element = _driver.getWait().until(ExpectedConditions.visibilityOf(_driver.getWebDriver().findElement(by)));
+            element.sendKeys(key);
+        } catch (Exception e) {
+            System.out.println("Could not send keys to: " + by);
         }
         return element;
     }
@@ -131,7 +156,7 @@ public abstract class Bot {
      */
     public void waitOnElementAndClick(By by) {
         try {
-            _wait.until(ExpectedConditions.visibilityOf(_driver.findElement(by))).click();
+            getWait().until(ExpectedConditions.visibilityOf(getWebDriver().findElement(by))).click();
         } catch (Exception e) {
             System.out.println("Could not locate element to click: " + by);
         }
@@ -145,13 +170,13 @@ public abstract class Bot {
      */
     public void navigateToLinkInNewTab(String link) {
         // Use JavaScript to open a new tab instead of "control + t".
-        ((JavascriptExecutor) _driver).executeScript("window.open()");
+        ((JavascriptExecutor) _driver.getWebDriver()).executeScript("window.open()");
         // Store the available windows in a list.
-        ArrayList<String> tabs = new ArrayList<String>(_driver.getWindowHandles());
+        ArrayList<String> tabs = new ArrayList<String>(getWebDriver().getWindowHandles());
         // Switch to the newly opened tab.
-        _driver.switchTo().window(tabs.get(tabs.size() - 1));
+        getWebDriver().switchTo().window(tabs.get(tabs.size() - 1));
         // Navigate to the job link in that newly opened tab.
-        _driver.get(link);
+        getWebDriver().get(link);
     }
 
     /**
@@ -160,8 +185,8 @@ public abstract class Bot {
      * @param by This is the specific iframe element to switch to.
      */
     public void switchIframes(By by) {
-        _wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-        _driver.switchTo().frame(_driver.findElement(by));
+        getWait().until(ExpectedConditions.visibilityOfElementLocated(by));
+        getWebDriver().switchTo().frame(getWebDriver().findElement(by));
 
     }
 
@@ -198,6 +223,72 @@ public abstract class Bot {
         // JobApplicationData.resumePath is the resume uploaded by the user. 
         TextDocument resumeText = new TextDocument(new File(JobApplicationData.resumePath));
         return CosineSimilarity.cosineSimilarity(jobDescriptionText, resumeText);
+    }
+    
+    /**
+     * Assemble a request and get the url of it.
+     * 
+     * @param href The url.
+     * @return The request url.
+     */
+    public String getRequestURL(String href) {
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(href);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.getContent();
+        } catch (IOException e) { 
+            e.getMessage(); 
+        }
+        return connection.getURL().toString();
+    }
+    
+    /**
+     * Get the text of a parent node but not the text of any of the child nodes.
+     * 
+     * @param element The parent element.
+     * @return The text.
+     */
+    public String getTextExcludingChildren(WebElement element) {
+        return (String) ((JavascriptExecutor) _driver.getWebDriver()).executeScript(
+                "let parent = arguments[0];"
+                + "let child = parent.firstChild;" 
+                + "let text = '';" 
+                + "while(child) {"
+                + "    if (child.nodeType === Node.TEXT_NODE) {" 
+                + "        text += child.textContent;" + "    }"
+                + "    child = child.nextSibling;" 
+                + "}" 
+                + "return text;", element);
+    }
+    
+    /**
+     * Check if an element exists.
+     * @param by The element.
+     * @return True, if it exists and false otherwise.
+     */
+    public boolean elementExists(By by) {
+        try {
+            getWebDriver().findElement(by);
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Check if an element has been clicked.
+     * @param by The element to be clicked.
+     * @return True, if able to be clicked and false otherwise.
+     */
+    public boolean isClicked(By by) {
+        try {
+            waitOnElementAndClick(by);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+        
     }
 
 }

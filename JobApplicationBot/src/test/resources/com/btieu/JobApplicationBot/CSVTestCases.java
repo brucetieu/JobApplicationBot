@@ -28,11 +28,11 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  *
  */
 public class CSVTestCases {
-    public static final String[] HEADER = new String[] { "jobMatch", "jobTitle", "companyName", "companyLoc", "remote",
+    public static final String[] HEADER = new String[] { "jobMatchScore", "jobTitle", "companyName", "companyLoc", "remote",
             "dateApplied", "appType", "jobLink", "submitted", "jobStatus" };
-    public static final String HEADER_CSV = "jobMatch,jobTitle,companyName,companyLoc,remote,dateApplied,appType,jobLink,submitted,jobStatus";
+    public static final String HEADER_CSV = "jobMatchScore,jobTitle,companyName,companyLoc,remote,dateApplied,appType,jobLink,submitted,jobStatus";
 
-    public static final CellProcessor[] WRITE_PROCESSORS = new CellProcessor[] { new NotNull(), // jobMatch
+    public static final CellProcessor[] WRITE_PROCESSORS = new CellProcessor[] { new NotNull(), // jobMatchScore
             new NotNull(), // jobTitle
             new NotNull(), // companyName
             new NotNull(), // companyLocation
