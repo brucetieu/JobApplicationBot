@@ -9,7 +9,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 /**
- * Linkedin connections bot.
+ * Linkedin connections bot. Connect with the people based off the "People You
+ * May Know" or "People Who Also Viewed" sections in LinkedIn. Send a custom
+ * message to each person to connect.
  * 
  * @author Bruce Tieu
  *
@@ -21,7 +23,25 @@ public class LinkedInBot extends Bot {
 
     private List<String> _visitedProfiles;
     private Queue<LinkedInPerson> _profilesToBeVisited;
+    
+    private static final String _CLASS_PYMK_SECTION = "pv-profile-pymk__container";
+    private static final String _CLASS_PV_SECTION = "pv-browsemap-section";
+    private static final String _CLASS_PYMK_MEMBERS = "pv-pymk-section__member-container";
+    private static final String _CLASS_PV_MEMBERS = "pv-browsemap-section__member-container";
+    private static final String _CLASS_PYMK_HEADLINE = "pv-pymk-section__member-headline";
+    private static final String _CLASS_PV_HEADLINE = "pv-browsemap-section__member-headline";
+    private static final String _CLASS_CONNECT_BTN = "pv-s-profile-actions--connect";
+    private static final String _CLASS_ADD_NOTE_BTN = "artdeco-button--secondary";
+    private static final String _ID_CUSTOM_MSG = "custom-message";
+    private static final String _CLASS_MORE_BTN = "pv-s-profile-actions__overflow";
 
+    /**
+     * Parameterized constructor to initialize the job application data and
+     * LinkedInPerson objects.
+     * 
+     * @param jobAppData     The job application data object.
+     * @param linkedInPerson The LinkedInPerson object.
+     */
     public LinkedInBot(JobApplicationData jobAppData, LinkedInPerson linkedInPerson) {
         _jobAppData = jobAppData;
         _linkedInPerson = linkedInPerson;
@@ -98,8 +118,8 @@ public class LinkedInBot extends Bot {
                     _visitedProfiles.add(queuedProfile.profileLink);
 
                     // Keep updating the list of profiles to visit.
-                    if (elementExists(By.className("pv-profile-pymk__container"))
-                            && elementExists(By.className("pv-browsemap-section"))) {
+                    if (elementExists(By.className(_CLASS_PYMK_SECTION))
+                            && elementExists(By.className(_CLASS_PV_SECTION))) {
                         aggregatePeopleProfiles();
                     }
 
@@ -134,10 +154,10 @@ public class LinkedInBot extends Bot {
      */
     private void _getPeopleViewed() {
 
-        WebElement pvContainer = tryToFindElement(By.className("pv-browsemap-section"));
-        List<WebElement> pvList = pvContainer.findElements(By.className("pv-browsemap-section__member-container"));
+        WebElement pvContainer = tryToFindElement(By.className(_CLASS_PV_SECTION));
+        List<WebElement> pvList = pvContainer.findElements(By.className(_CLASS_PV_MEMBERS));
 
-        _addToProfilesToBeVisited(By.className("pv-browsemap-section__member-headline"), pvList);
+        _addToProfilesToBeVisited(By.className(_CLASS_PV_HEADLINE), pvList);
 
         for (LinkedInPerson p : _profilesToBeVisited) {
             System.out.println(p.firstname + ", " + p.profileLink + ", " + p.occupation + ", " + p.message);
@@ -148,10 +168,10 @@ public class LinkedInBot extends Bot {
      * Get list of people under "People Who You May Know".
      */
     private void _getPeopleYouMayKnow() {
-        WebElement pymkContainer = tryToFindElement(By.className("pv-profile-pymk__container"));
-        List<WebElement> pymkList = pymkContainer.findElements(By.className("pv-pymk-section__member-container"));
+        WebElement pymkContainer = tryToFindElement(By.className(_CLASS_PYMK_SECTION));
+        List<WebElement> pymkList = pymkContainer.findElements(By.className(_CLASS_PYMK_MEMBERS));
 
-        _addToProfilesToBeVisited(By.className("pv-pymk-section__member-headline"), pymkList);
+        _addToProfilesToBeVisited(By.className(_CLASS_PYMK_HEADLINE), pymkList);
 
     }
 
@@ -230,9 +250,9 @@ public class LinkedInBot extends Bot {
      * @param message The connect message.
      */
     private void _easyConnectRequest(String message) {
-        getWebDriver().findElement(By.className("pv-s-profile-actions--connect")).click(); // click on Connect
-        getWebDriver().findElement(By.className("artdeco-button--secondary")).click(); // Click on "Add a note"
-        WebElement textarea = tryToFindElement(By.id("custom-message"));
+        getWebDriver().findElement(By.className(LinkedInBot._CLASS_CONNECT_BTN)).click(); // click on Connect
+        getWebDriver().findElement(By.className(LinkedInBot._CLASS_ADD_NOTE_BTN)).click(); // Click on "Add a note"
+        WebElement textarea = tryToFindElement(By.id(LinkedInBot._ID_CUSTOM_MSG));
         textarea.sendKeys(message);
     }
 
@@ -242,11 +262,11 @@ public class LinkedInBot extends Bot {
      * @param message The connect message.
      */
     private void _hardConnectRequest(String message) {
-        WebElement more = getWebDriver().findElement(By.className("pv-s-profile-actions__overflow"));
+        WebElement more = getWebDriver().findElement(By.className(LinkedInBot._CLASS_MORE_BTN));
         more.click();
-        more.findElement(By.className("pv-s-profile-actions--connect")).click();
-        waitOnElementAndClick(By.className("artdeco-button--secondary")); // Click on "Add a note"
-        WebElement textarea = tryToFindElement(By.id("custom-message"));
+        more.findElement(By.className(LinkedInBot._CLASS_CONNECT_BTN)).click();
+        waitOnElementAndClick(By.className(LinkedInBot._CLASS_ADD_NOTE_BTN)); // Click on "Add a note"
+        WebElement textarea = tryToFindElement(By.id(LinkedInBot._ID_CUSTOM_MSG));
         textarea.sendKeys(message);
     }
 
