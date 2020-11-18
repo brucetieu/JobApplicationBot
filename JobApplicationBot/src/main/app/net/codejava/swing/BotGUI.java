@@ -40,7 +40,9 @@ public class BotGUI extends JFrame {
 
     /**
      * Create the Desktop app.
-     * @param indeedPanel object which creates the indeed panel.
+     * 
+     * @param indeedPanel    Object which creates the indeed panel.
+     * @param glassdoorPanel Object which creates the Glassdoor panel.
      */
     public BotGUI(IndeedPanel indeedPanel, GlassdoorPanel glassdoorPanel) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,7 +55,7 @@ public class BotGUI extends JFrame {
         this._indeedPanel = indeedPanel;
         this._indeedPanel.createIndeedPanel(this._contentPane);
         this._indeedPanel.launchApp();
-        
+
         this._glassdoorPanel = glassdoorPanel;
         this._glassdoorPanel.createGlassdoorPanel(this._contentPane);
 
