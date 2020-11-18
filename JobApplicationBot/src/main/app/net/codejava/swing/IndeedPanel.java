@@ -99,6 +99,7 @@ public class IndeedPanel extends CreateGUIComponents {
                 JobIterator jobIterator = new JobIterator(writeFiles, appType);
                 Pagination page = new Pagination(jobAppData);
                 
+                // Run the IndeedBot.
                 new RunIndeedBot(appType, jobAppData, jobIterator, page);
 
             }
