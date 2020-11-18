@@ -14,7 +14,7 @@ import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
  * @author Bruce Tieu
  *
  */
-class IndeedApplyBot extends IndeedBot {
+public class IndeedApplyBot extends IndeedBot {
 
     private JobApplicationData _jobAppData;
     private JobApplicationData.ApplicationType _appType;
