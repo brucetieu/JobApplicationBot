@@ -39,7 +39,7 @@ public class JobIterator {
      * @throws IOException Catch file errors.
      */
     public void loopThroughJob(List<WebElement> jobList, ApplyInterface applicationHandler,
-            PagingInterface paginationHandler) throws IOException {
+            PagingInterface paginationHandler) {
 
         int currPageNum = 0;
         List<WebElement> tempList = jobList;
@@ -78,8 +78,12 @@ public class JobIterator {
 
         // Write all jobs to excel file.
         if (_appType != JobApplicationData.ApplicationType.LEVER_GREENHOUSE) {
-            _writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
-            System.out.println("Finished export");
+            try {
+                _writeFiles.writeJobPostToCSV(JobPostingData.jobPostingContainer);
+                System.out.println("Finished export");
+            } catch (IOException e) {
+                System.out.println("Could not write to csv file");
+            }
             _bot.quitBrowser();
         }
 
