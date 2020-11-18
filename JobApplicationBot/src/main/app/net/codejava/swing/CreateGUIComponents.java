@@ -1,5 +1,7 @@
 package net.codejava.swing;
 
+import com.btieu.JobApplicationBot.JobApplicationData;
+import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -141,6 +143,24 @@ public class CreateGUIComponents extends JFrame {
         _lblNewJgoodiesTitle.setBounds(x, y, width, height);
         _panel.add(_lblNewJgoodiesTitle);
     }
+    
+    /**
+     * This method creates a drop down menu of application types.
+     * 
+     * @param applicationTypes  An array of names which represents options in the dropdown.
+     * @param x      The new x-coordinate of the component.
+     * @param y      The new y-coordinate of the component.
+     * @param width  The new width of the component.
+     * @param height The new height of the component.
+     * @return The ApplicationType combo box. 
+     */
+    public JComboBox<ApplicationType> addAppTypeDropdown(int x, int y, int width, int height) {
+        JComboBox<ApplicationType> comboBox = new JComboBox<ApplicationType>(JobApplicationData.ApplicationType.values());
+        comboBox.setBounds(x, y, width, height);
+        _panel.add(comboBox);
+        return comboBox;
+    }
+
 
     /**
      * This method creates a drop down menu of numbers.
