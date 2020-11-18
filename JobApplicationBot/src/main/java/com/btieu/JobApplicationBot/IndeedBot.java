@@ -44,7 +44,7 @@ public class IndeedBot extends Bot {
      * 
      * @throws InterruptedException
      */
-    public void login() throws InterruptedException {
+    public void login() {
 
         // Wait for element to appear before clicking on it.
         waitOnElementAndClick(By.className("gnav-LoggedOutAccountLink-text"));
@@ -54,10 +54,8 @@ public class IndeedBot extends Bot {
         getWebDriver().findElement(By.id("login-password-input")).clear();
 
         // Populate the fields with an email and a password
-        WebElement email = getWebDriver().findElement(By.id("login-email-input"));
-        WebElement password = getWebDriver().findElement(By.id("login-password-input"));
-        typeLikeAHuman(email, this._jobAppData.email);
-        typeLikeAHuman(password, this._jobAppData.password);
+        tryToFindElementAndSendKeys(By.id("login-email-input"), this._jobAppData.email);
+        tryToFindElementAndSendKeys(By.id("login-password-input"), this._jobAppData.password);
 
         waitOnElementAndClick(By.id("login-submit-button"));
     }

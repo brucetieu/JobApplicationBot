@@ -33,6 +33,7 @@ public class RunIndeedBot {
         if (appType == JobApplicationData.ApplicationType.EASILY_APPLY) {
             IndeedApplyBot easyApp = new IndeedApplyBot(jobAppData, appType);
             easyApp.navigateToJobPage();
+            easyApp.login();
             easyApp.searchJobs();
             jobIterator.loopThroughJob(easyApp.tryToFindElements(By.className("jobsearch-SerpJobCard")),
                     (int index, List<WebElement> jobList) -> {
