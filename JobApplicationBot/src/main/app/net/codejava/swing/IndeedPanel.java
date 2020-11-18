@@ -83,7 +83,7 @@ public class IndeedPanel extends CreateGUIComponents {
                 jobAppData.lastname = _lastName.getText();
                 jobAppData.fullname = _fullName.getText();
                 jobAppData.email = _email.getText();
-                jobAppData.email = null;
+                jobAppData.phone = null;
                 try {
                     jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
                 } catch (ParseException e1) {
