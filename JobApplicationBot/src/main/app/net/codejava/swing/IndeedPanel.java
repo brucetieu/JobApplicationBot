@@ -29,11 +29,7 @@ import javax.swing.JTextField;
 public class IndeedPanel extends CreateGUIComponents {
 
     private static final long serialVersionUID = 1L;
-//    private JTextField _firstName;
-//    private JTextField _lastName;
-//    private JTextField _fullName;
     private JTextField _email;
-//    private JTextField _phoneNumber;
     private JPasswordField _password;
     private JTextField _whatJob;
     private JTextField _jobLoc;
@@ -109,7 +105,6 @@ public class IndeedPanel extends CreateGUIComponents {
 
         _email = addTextField(125, 60, 130, 26, 10);
         _password = addPasswordField(125, 92, 130, 26, 10);
-
 
     }
 
