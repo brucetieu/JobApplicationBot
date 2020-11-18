@@ -68,6 +68,7 @@ public class IndeedPanel extends CreateGUIComponents {
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 280, 525, 117, 29);
+    
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JobApplicationData jobAppData = new JobApplicationData();
@@ -106,7 +107,6 @@ public class IndeedPanel extends CreateGUIComponents {
 
     }
 
-    
     /**
      * Add applicant information fields.
      */
