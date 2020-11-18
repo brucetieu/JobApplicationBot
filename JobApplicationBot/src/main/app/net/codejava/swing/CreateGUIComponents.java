@@ -143,19 +143,22 @@ public class CreateGUIComponents extends JFrame {
     }
 
     /**
-     * This method creates a drop down menu.
+     * This method creates a drop down menu of numbers.
      * 
      * @param names  An array of names which represents options in the dropdown.
      * @param x      The new x-coordinate of the component.
      * @param y      The new y-coordinate of the component.
      * @param width  The new width of the component.
      * @param height The new height of the component.
+     * @return The Integer combo box.
      */
-    public void addDropDown(String[] names, int x, int y, int width, int height) {
-        JComboBox<String> comboBox = new JComboBox<String>(names);
+    public JComboBox<Integer> addDropdown(Integer[] nums, int x, int y, int width, int height) {
+        JComboBox<Integer> comboBox = new JComboBox<Integer>(nums);
         comboBox.setBounds(x, y, width, height);
         _panel.add(comboBox);
+        return comboBox;
     }
+
 
     /**
      * This method adds a JButton.
@@ -184,7 +187,7 @@ public class CreateGUIComponents extends JFrame {
      */
     public void addUploadResume(int x, int y, int width, int height) {
 
-        JButton openFileBtn = addButton("Upload resume (PDF only)", 20, 290, 200, 29);
+        JButton openFileBtn = addButton("Upload resume (PDF only)", 280, 250, 200, 29);
         openFileBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int returnValue = _openFileChooser.showOpenDialog(_contentPane);
