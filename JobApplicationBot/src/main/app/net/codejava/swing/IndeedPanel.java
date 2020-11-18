@@ -1,5 +1,12 @@
 package net.codejava.swing;
 
+import com.btieu.JobApplicationBot.JobApplicationData;
+import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
+import com.btieu.JobApplicationBot.JobIterator;
+import com.btieu.JobApplicationBot.JobPostingData;
+import com.btieu.JobApplicationBot.Pagination;
+import com.btieu.JobApplicationBot.WriteFiles;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -12,10 +19,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-import com.btieu.JobApplicationBot.JobApplicationData;
-import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
-import com.btieu.JobApplicationBot.JobPostingData;
-import com.btieu.JobApplicationBot.WriteFiles;
 
 /**
  * This class creates the Indeed panel.
@@ -39,8 +42,7 @@ public class IndeedPanel extends CreateGUIComponents {
     private JComboBox<ApplicationType> _appBox;
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
- 
-    
+
     /**
      * Default constructor.
      */
@@ -61,7 +63,8 @@ public class IndeedPanel extends CreateGUIComponents {
     }
 
     /**
-     * This method launches the browser and grabs all information from filled out fields.
+     * This method launches the browser and grabs all information from filled out
+     * fields.
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 280, 525, 117, 29);
@@ -69,11 +72,13 @@ public class IndeedPanel extends CreateGUIComponents {
             public void actionPerformed(ActionEvent e) {
                 JobApplicationData jobAppData = new JobApplicationData();
                 WriteFiles writeFiles = null;
+                ;
                 try {
-                    writeFiles = new WriteFiles("jobPostingOutput.csv");
+                    writeFiles = new WriteFiles(_csvOutputName.getText());
                 } catch (IOException e2) {
-                    e2.printStackTrace();
+                    System.out.println(e2.toString());
                 }
+
                 jobAppData.firstname = _firstName.getText();
                 jobAppData.lastname = _lastName.getText();
                 jobAppData.fullname = _fullName.getText();
@@ -82,17 +87,20 @@ public class IndeedPanel extends CreateGUIComponents {
                 try {
                     jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
                 } catch (ParseException e1) {
-                    e1.printStackTrace();
+                    System.out.println(e1.toString());
                 }
                 JobApplicationData.resumePath = getResumeFile().toString();
                 jobAppData.platformUrl = "https://www.indeed.com/?from=gnav-util-homepage";
                 jobAppData.password = String.valueOf(_password.getPassword());
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
-                JobPostingData.pagesToScrape =  Integer.parseInt(_pageNumBox.getSelectedItem().toString());
+                JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
                 ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
+                JobIterator jobIterator = new JobIterator(writeFiles, appType);
+                Pagination page = new Pagination(jobAppData);
+                
+                new RunIndeedBot(appType, jobAppData, jobIterator, page);
 
-                // TODO: If-elses for each type of bot to run according to the app type.
             }
         });
 
@@ -120,7 +128,7 @@ public class IndeedPanel extends CreateGUIComponents {
     }
 
     /**
-     * Add Job preferences fields. 
+     * Add Job preferences fields.
      */
     private void _addJobPreferenceFields() {
         createGoodiesTitle("Job Preferences", 391, 32, 122, 16);
@@ -129,7 +137,7 @@ public class IndeedPanel extends CreateGUIComponents {
         addLabels("Application type", 285, 128, 150, 16);
         addLabels("Pages to scrape", 285, 156, 100, 16);
         addLabels("CSV output name", 285, 194, 150, 16);
-    
+
         _whatJob = addTextField(401, 60, 130, 26, 10);
         _jobLoc = addTextField(401, 92, 130, 26, 10);
         _appBox = addAppTypeDropdown(401, 124, 150, 27);
