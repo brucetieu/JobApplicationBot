@@ -17,6 +17,7 @@ import com.btieu.JobApplicationBot.JobApplicationData;
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 import com.btieu.JobApplicationBot.JobIterator;
 import com.btieu.JobApplicationBot.JobPostingData;
+import com.btieu.JobApplicationBot.Pagination;
 import com.btieu.JobApplicationBot.WriteFiles;
 
 
