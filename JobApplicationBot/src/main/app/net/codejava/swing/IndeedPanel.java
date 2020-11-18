@@ -3,6 +3,8 @@ package net.codejava.swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -11,7 +13,11 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import com.btieu.JobApplicationBot.JobApplicationData;
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
+import com.btieu.JobApplicationBot.JobIterator;
+import com.btieu.JobApplicationBot.JobPostingData;
+import com.btieu.JobApplicationBot.WriteFiles;
 
 
 /**
@@ -57,20 +63,48 @@ public class IndeedPanel extends CreateGUIComponents {
     }
 
     /**
-     * This method launches the browser.
+     * This method launches the browser and grabs all information from filled out
+     * fields.
      */
     public void launchApp() {
-        JButton launchButton = addButton("Launch", 250, 437, 117, 29);
+        JButton launchButton = addButton("Launch", 280, 525, 117, 29);
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-             // TODO: Get the values of the text fields and open browser.
-                // E.g for resume file: 
-                // JobApplicationData.resumePath = getFile.toString();
-             
+                JobApplicationData jobAppData = new JobApplicationData();
+                WriteFiles writeFiles = null;
+                
+                try {
+                    writeFiles = new WriteFiles(_csvOutputName.getText());
+                } catch (IOException e2) {
+                    System.out.println(e2.toString());
+                }
+
+                jobAppData.firstname = _firstName.getText();
+                jobAppData.lastname = _lastName.getText();
+                jobAppData.fullname = _fullName.getText();
+                jobAppData.email = _email.getText();
+                jobAppData.email = null;
+                try {
+                    jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
+                } catch (ParseException e1) {
+                    System.out.println(e1.toString());
+                }
+                JobApplicationData.resumePath = getResumeFile().toString();
+                jobAppData.platformUrl = "https://www.indeed.com/?from=gnav-util-homepage";
+                jobAppData.password = String.valueOf(_password.getPassword());
+                jobAppData.whatJob = _whatJob.getText();
+                jobAppData.locationOfJob = _jobLoc.getText();
+                JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
+                ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
+                JobIterator jobIterator = new JobIterator(writeFiles, appType);
+                Pagination page = new Pagination(jobAppData);
+                
+
             }
         });
 
     }
+
     
     /**
      * Add applicant information fields.
