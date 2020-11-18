@@ -29,11 +29,11 @@ import javax.swing.JTextField;
 public class IndeedPanel extends CreateGUIComponents {
 
     private static final long serialVersionUID = 1L;
-    private JTextField _firstName;
-    private JTextField _lastName;
-    private JTextField _fullName;
+//    private JTextField _firstName;
+//    private JTextField _lastName;
+//    private JTextField _fullName;
     private JTextField _email;
-    private JTextField _phoneNumber;
+//    private JTextField _phoneNumber;
     private JPasswordField _password;
     private JTextField _whatJob;
     private JTextField _jobLoc;
@@ -78,20 +78,12 @@ public class IndeedPanel extends CreateGUIComponents {
                 } catch (IOException e2) {
                     System.out.println(e2.toString());
                 }
-
-                jobAppData.firstname = _firstName.getText();
-                jobAppData.lastname = _lastName.getText();
-                jobAppData.fullname = _fullName.getText();
+                
                 jobAppData.email = _email.getText();
-                jobAppData.email = null;
-                try {
-                    jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
-                } catch (ParseException e1) {
-                    System.out.println(e1.toString());
-                }
+                jobAppData.password = String.valueOf(_password.getPassword());
+                
                 JobApplicationData.resumePath = getResumeFile().toString();
                 jobAppData.platformUrl = "https://www.indeed.com/?from=gnav-util-homepage";
-                jobAppData.password = String.valueOf(_password.getPassword());
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
                 JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
@@ -112,19 +104,12 @@ public class IndeedPanel extends CreateGUIComponents {
      */
     private void _addApplicantFields() {
         createGoodiesTitle("Indeed Login Info", 20, 32, 231, 16);
-        addLabels("First name", 20, 65, 100, 16);
-        addLabels("Last name", 20, 97, 100, 16);
-        addLabels("Full name", 20, 128, 100, 16);
-        addLabels("Email", 20, 166, 61, 16);
-        addLabels("Password", 20, 206, 61, 16);
-        addLabels("Phone number", 20, 244, 91, 16);
+        addLabels("Email", 20, 65, 100, 16);
+        addLabels("Password", 20, 97, 100, 16);
 
-        _firstName = addTextField(125, 60, 130, 26, 10);
-        _lastName = addTextField(125, 92, 130, 26, 10);
-        _fullName = addTextField(125, 123, 130, 26, 10);
-        _email = addTextField(125, 161, 130, 26, 10);
-        _password = addPasswordField(125, 201, 130, 26, 10);
-        _phoneNumber = addTextField(125, 239, 130, 26, 10);
+        _email = addTextField(125, 60, 130, 26, 10);
+        _password = addPasswordField(125, 92, 130, 26, 10);
+
 
     }
 
