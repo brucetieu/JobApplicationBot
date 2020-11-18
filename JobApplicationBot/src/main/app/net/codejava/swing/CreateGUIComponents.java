@@ -34,12 +34,14 @@ public class CreateGUIComponents extends JFrame {
     private JButton _button;
     private JTextField _field;
     private JPasswordField _password;
+    private SingletonTab _singletonTab;
 
     /**
      * Initialize a new JPanel and file chooser object.
      */
     public CreateGUIComponents() {
         _panel = new JPanel();
+        _singletonTab = SingletonTab.getInstance();
         _openFileChooser = new JFileChooser();
         this._openFileChooser.setCurrentDirectory(new File("./"));
 
@@ -117,7 +119,7 @@ public class CreateGUIComponents extends JFrame {
      */
     public void createTab(String name, JPanel contentPane, JTabbedPane tabbedPane, int x, int y, int width,
             int height) {
-        tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPane = _singletonTab.getTabbedPane();
         tabbedPane.setBounds(x, y, width, height);
         contentPane.add(tabbedPane);
         tabbedPane.addTab(name, null, _panel, null);
