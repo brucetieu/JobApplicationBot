@@ -5,10 +5,13 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+
+import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 
 
 /**
@@ -28,8 +31,11 @@ public class IndeedPanel extends CreateGUIComponents {
     private JPasswordField _password;
     private JTextField _whatJob;
     private JTextField _jobLoc;
+    private JTextField _pageNum;
+    private JTextField _csvOutputName;
+    private JComboBox<ApplicationType> _appBox;
+    private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
-    private static final String[] _options = new String[] { "Easily Apply" };
 
     /**
      * Default constructor.
@@ -113,5 +119,24 @@ public class IndeedPanel extends CreateGUIComponents {
         _phoneNumber = addTextField(125, 239, 130, 26, 10);
 
     }
+    
+    /**
+     * Add Job preferences fields.
+     */
+    private void _addJobPreferenceFields() {
+        createGoodiesTitle("Job Preferences", 391, 32, 122, 16);
+        addLabels("What job", 285, 65, 61, 16);
+        addLabels("Location of job", 285, 97, 100, 16);
+        addLabels("Application type", 285, 128, 150, 16);
+        addLabels("Pages to scrape", 285, 156, 100, 16);
+        addLabels("CSV output name", 285, 194, 150, 16);
+
+        _whatJob = addTextField(401, 60, 130, 26, 10);
+        _jobLoc = addTextField(401, 92, 130, 26, 10);
+        _appBox = addAppTypeDropdown(401, 124, 150, 27);
+        _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(), 401, 156, 150, 27);
+        _csvOutputName = addTextField(401, 192, 180, 26, 10);
+    }
+
 
 }
