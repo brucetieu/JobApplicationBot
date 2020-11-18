@@ -67,27 +67,21 @@ public class IndeedBot extends Bot {
      * 
      * @throws InterruptedException Catch errors if element is not found.
      */
-    public void searchJobs() throws InterruptedException {
+    public void searchJobs() {
 
         // Click on the find jobs tab
         waitOnElementAndClick(By.className("gnav-PageLink-text"));
 
         // Locate the "What" and "Where" input fields.
-        WebElement clearWhat = tryToFindElement(By.id("text-input-what"));
-        WebElement clearWhere = tryToFindElement(By.id("text-input-where"));
-
-        clearWhat.clear();
-
-        // Delay typing.
-        typeLikeAHuman(clearWhat, this._jobAppData.whatJob);
+        tryToFindElement(By.id("text-input-what")).clear();
+        tryToFindElementAndSendKeys(By.id("text-input-what"), this._jobAppData.whatJob);
 
         // Clear the "Where" field and send in the location of the job.
         getActions().sendKeys(Keys.TAB);
         getActions().sendKeys(Keys.DELETE);
         getActions().build().perform();
 
-        typeLikeAHuman(clearWhere, this._jobAppData.locationOfJob);
-        clearWhere.submit();
+        tryToFindElementAndSendKeys(By.id("text-input-where"),this._jobAppData.locationOfJob).submit();
 
     }
 
