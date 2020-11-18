@@ -27,6 +27,7 @@ public class BotGUI extends JFrame {
                 try {
                     IndeedPanel indeedPanel = new IndeedPanel();
                     BotGUI frame = new BotGUI(indeedPanel);
+                    frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
