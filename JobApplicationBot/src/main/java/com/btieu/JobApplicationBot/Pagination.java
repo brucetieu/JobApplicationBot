@@ -13,7 +13,7 @@ import org.openqa.selenium.WebElement;
  * @author Bruce Tieu
  *
  */
-class Pagination {
+public class Pagination {
     private JobApplicationData _jobAppData;
     private Bot _bot;
 
