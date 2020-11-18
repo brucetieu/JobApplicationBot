@@ -81,7 +81,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 jobAppData.lastname = _lastName.getText();
                 jobAppData.fullname = _fullName.getText();
                 jobAppData.email = _email.getText();
-                jobAppData.email = null;
+                jobAppData.phone = null;
                 try {
                     jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
                 } catch (ParseException e1) {
@@ -105,32 +105,36 @@ public class GlassdoorPanel extends CreateGUIComponents {
      * Add applicant information fields.
      */
     private void _addApplicantFields() {
-        createGoodiesTitle("Glassdoor Login Info", 20, 32, 231, 16);
+        
+        createGoodiesTitle("Fill below for LEVER_GREENHOUSE", 10, 33, 250, 16);
         addLabels("First name", 20, 65, 100, 16);
         addLabels("Last name", 20, 97, 100, 16);
         addLabels("Full name", 20, 128, 100, 16);
-        addLabels("Email", 20, 166, 61, 16);
-        addLabels("Password", 20, 206, 61, 16);
-        addLabels("Phone number", 20, 244, 91, 16);
-        addLabels("School", 20, 282, 91, 16);
-        addLabels("Location", 20, 320, 91, 16);
-        addLabels("Company", 20, 358, 91, 16);
-        addLabels("LinkedIn", 20, 396, 91, 16);
-        addLabels("GitHub", 20, 434, 91, 16);
-        addLabels("Portfolio", 20, 472, 91, 16);
+        addLabels("Phone number", 20, 161, 100, 16);
+        addLabels("School", 20, 193, 100, 16);
+        addLabels("Location", 20, 225, 91, 16);
+        addLabels("Company", 20, 257, 91, 16);
+        addLabels("LinkedIn", 20, 289, 91, 16);
+        addLabels("GitHub", 20, 321, 91, 16);
+        addLabels("Portfolio", 20, 353, 91, 16);
+        
+        createGoodiesTitle("Glassdoor Login Info", 10, 405, 175, 16);
+        addLabels("Email", 20, 437, 61, 16);
+        addLabels("Password", 20, 469, 61, 16);
 
         _firstName = addTextField(125, 60, 130, 26, 10);
         _lastName = addTextField(125, 92, 130, 26, 10);
         _fullName = addTextField(125, 123, 130, 26, 10);
-        _email = addTextField(125, 161, 130, 26, 10);
-        _password = addPasswordField(125, 201, 130, 26, 10);
-        _phoneNumber = addTextField(125, 239, 130, 26, 10);
-        _school = addTextField(125, 277, 130, 26, 10);
-        _location = addTextField(125, 315, 130, 26, 10);
-        _company = addTextField(125, 353, 130, 26, 10);
-        _linkedIn = addTextField(125, 391, 130, 26, 10);
-        _github = addTextField(125, 429, 130, 26, 10);
-        _portfolio = addTextField(125, 467, 130, 26, 10);
+        _phoneNumber = addTextField(125, 156, 130, 26, 10);
+        _school = addTextField(125, 188, 130, 26, 10);
+        _location = addTextField(125, 220, 130, 26, 10);
+        _company = addTextField(125, 252, 130, 26, 10);
+        _linkedIn = addTextField(125, 284, 130, 26, 10);
+        _github = addTextField(125, 316, 130, 26, 10);
+        _portfolio = addTextField(125, 348, 130, 26, 10);
+        
+        _email = addTextField(125, 432, 130, 26, 10);
+        _password = addPasswordField(125, 464, 130, 26, 10);
 
     }
 
