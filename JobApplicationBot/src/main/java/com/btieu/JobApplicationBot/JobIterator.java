@@ -84,7 +84,6 @@ public class JobIterator {
             } catch (IOException e) {
                 System.out.println("Could not write to csv file");
             }
-            _bot.quitBrowser();
         }
 
     }
