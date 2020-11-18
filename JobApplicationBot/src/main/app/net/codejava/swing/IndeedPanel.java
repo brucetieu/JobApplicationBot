@@ -38,7 +38,6 @@ public class IndeedPanel extends CreateGUIComponents {
     private JPasswordField _password;
     private JTextField _whatJob;
     private JTextField _jobLoc;
-    private JTextField _pageNum;
     private JTextField _csvOutputName;
     private JComboBox<ApplicationType> _appBox;
     private JComboBox<Integer> _pageNumBox;
@@ -100,7 +99,8 @@ public class IndeedPanel extends CreateGUIComponents {
                 JobIterator jobIterator = new JobIterator(writeFiles, appType);
                 Pagination page = new Pagination(jobAppData);
                 
-
+                // Run the IndeedBot.
+                new RunIndeedBot(appType, jobAppData, jobIterator, page);
             }
         });
 
