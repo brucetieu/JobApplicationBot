@@ -17,6 +17,7 @@ public class BotGUI extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel _contentPane;
     private IndeedPanel _indeedPanel;
+    private GlassdoorPanel _glassdoorPanel;
 
     /**
      * Launch the application.
@@ -26,7 +27,8 @@ public class BotGUI extends JFrame {
             public void run() {
                 try {
                     IndeedPanel indeedPanel = new IndeedPanel();
-                    BotGUI frame = new BotGUI(indeedPanel);
+                    GlassdoorPanel glassdoorPanel = new GlassdoorPanel();
+                    BotGUI frame = new BotGUI(indeedPanel, glassdoorPanel);
                     frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
                 } catch (Exception e) {
@@ -40,7 +42,7 @@ public class BotGUI extends JFrame {
      * Create the Desktop app.
      * @param indeedPanel object which creates the indeed panel.
      */
-    public BotGUI(IndeedPanel indeedPanel) {
+    public BotGUI(IndeedPanel indeedPanel, GlassdoorPanel glassdoorPanel) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(500, 100, 650, 650);
         this._contentPane = new JPanel();
@@ -51,6 +53,9 @@ public class BotGUI extends JFrame {
         this._indeedPanel = indeedPanel;
         this._indeedPanel.createIndeedPanel(this._contentPane);
         this._indeedPanel.launchApp();
+        
+        this._glassdoorPanel = glassdoorPanel;
+        this._glassdoorPanel.createGlassdoorPanel(this._contentPane);
 
     }
 
