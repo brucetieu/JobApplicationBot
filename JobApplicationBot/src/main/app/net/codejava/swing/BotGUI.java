@@ -18,6 +18,7 @@ public class BotGUI extends JFrame {
     private JPanel _contentPane;
     private IndeedPanel _indeedPanel;
     private GlassdoorPanel _glassdoorPanel;
+    private LinkedInPanel _linkedInPanel;
 
     /**
      * Launch the application.
@@ -28,7 +29,8 @@ public class BotGUI extends JFrame {
                 try {
                     IndeedPanel indeedPanel = new IndeedPanel();
                     GlassdoorPanel glassdoorPanel = new GlassdoorPanel();
-                    BotGUI frame = new BotGUI(indeedPanel, glassdoorPanel);
+                    LinkedInPanel linkedInPanel = new LinkedInPanel();
+                    BotGUI frame = new BotGUI(indeedPanel, glassdoorPanel, linkedInPanel);
                     frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
                 } catch (Exception e) {
@@ -42,7 +44,7 @@ public class BotGUI extends JFrame {
      * Create the Desktop app.
      * @param indeedPanel object which creates the indeed panel.
      */
-    public BotGUI(IndeedPanel indeedPanel, GlassdoorPanel glassdoorPanel) {
+    public BotGUI(IndeedPanel indeedPanel, GlassdoorPanel glassdoorPanel, LinkedInPanel linkedInPanel) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(0, 0, 720, 720);
         this._contentPane = new JPanel();
@@ -58,7 +60,9 @@ public class BotGUI extends JFrame {
         this._glassdoorPanel.createGlassdoorPanel(this._contentPane);
         this._glassdoorPanel.launchApp();
         
-        
+        this._linkedInPanel = linkedInPanel;
+        this._linkedInPanel.createLinkedInPanel(this._contentPane);
+        this._linkedInPanel.launchApp();
 
     }
 
