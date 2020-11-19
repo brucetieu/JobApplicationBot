@@ -21,9 +21,6 @@ import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 
 public class GlassdoorPanel extends CreateGUIComponents {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
     
     private JTextField _firstName;
