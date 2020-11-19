@@ -13,7 +13,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import com.btieu.JobApplicationBot.JobApplicationData;
+import com.btieu.JobApplicationBot.JobIterator;
 import com.btieu.JobApplicationBot.JobPostingData;
+import com.btieu.JobApplicationBot.Pagination;
 import com.btieu.JobApplicationBot.WriteFiles;
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 
@@ -73,7 +75,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 JobApplicationData jobAppData = new JobApplicationData();
                 WriteFiles writeFiles = null;
                 try {
-                    writeFiles = new WriteFiles("jobPostingOutput.csv");
+                    writeFiles = new WriteFiles(_csvOutputName.getText());
                 } catch (IOException e2) {
                     e2.printStackTrace();
                 }
@@ -81,6 +83,14 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 jobAppData.lastname = _lastName.getText();
                 jobAppData.fullname = _fullName.getText();
                 jobAppData.email = _email.getText();
+                jobAppData.password = String.valueOf(_password.getPassword());
+                jobAppData.school = _school.getText();
+                jobAppData.location = _location.getText();
+                jobAppData.currentCompany = _company.getText();
+                jobAppData.linkedin = _linkedIn.getText();
+                jobAppData.github = _github.getText();
+                jobAppData.portfolio = _portfolio.getText();
+                
                 jobAppData.phone = null;
                 try {
                     jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
@@ -88,14 +98,17 @@ public class GlassdoorPanel extends CreateGUIComponents {
                     e1.printStackTrace();
                 }
                 JobApplicationData.resumePath = getResumeFile().toString();
-                jobAppData.platformUrl = "https://www.indeed.com/?from=gnav-util-homepage";
-                jobAppData.password = String.valueOf(_password.getPassword());
+                jobAppData.platformUrl = "https://www.glassdoor.com/index.htm";
+              
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
                 JobPostingData.pagesToScrape =  Integer.parseInt(_pageNumBox.getSelectedItem().toString());
                 ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
+                JobIterator jobIterator = new JobIterator(writeFiles, appType);
+                Pagination page = new Pagination(jobAppData);
 
-                // TODO: If-elses for each type of bot to run according to the app type.
+                // Run the GlassdoorBot
+                new RunGlassdoorBot(appType, jobAppData, jobIterator, page, writeFiles);
             }
         });
 
@@ -152,7 +165,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
         _whatJob = addTextField(401, 60, 130, 26, 10);
         _jobLoc = addTextField(401, 92, 130, 26, 10);
         _appBox = addAppTypeDropdown(401, 124, 150, 27);
-        _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(), 401, 156, 150, 27);
+        _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(1), 401, 156, 150, 27);
         _csvOutputName = addTextField(401, 192, 180, 26, 10);
     }
 
