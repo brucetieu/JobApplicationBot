@@ -11,7 +11,7 @@ import com.btieu.JobApplicationBot.JobIterator;
 import com.btieu.JobApplicationBot.Pagination;
 
 /**
- * Run the IndeedBot
+ * Run the IndeedBot.
  * 
  * @author Bruce Tieu
  *
@@ -46,6 +46,7 @@ public class RunIndeedBot {
         } else if (appType == JobApplicationData.ApplicationType.ALL) {
             IndeedApplyBot greedy = new IndeedApplyBot(jobAppData, appType);
             greedy.navigateToJobPage();
+            greedy.login();
             greedy.searchJobs();
             jobIterator.loopThroughJob(greedy.tryToFindElements(By.className("jobsearch-SerpJobCard")),
                     (int index, List<WebElement> jobList) -> {
@@ -57,6 +58,7 @@ public class RunIndeedBot {
         } else if (appType == JobApplicationData.ApplicationType.NOT_EASY_APPLY) {
             IndeedApplyBot notEa = new IndeedApplyBot(jobAppData, appType);
             notEa.navigateToJobPage();
+            notEa.login();
             notEa.searchJobs();
             jobIterator.loopThroughJob(notEa.tryToFindElements(By.className("jobsearch-SerpJobCard")),
                     (int index, List<WebElement> jobList) -> {
