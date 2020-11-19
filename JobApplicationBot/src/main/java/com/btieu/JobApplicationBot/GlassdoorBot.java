@@ -38,7 +38,7 @@ public class GlassdoorBot extends Bot {
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
-    public void login() throws InterruptedException {
+    public void login() {
 
         // Wait for element to appear before clicking on it.
         waitOnElementAndClick(By.className("locked-home-sign-in"));
@@ -62,22 +62,21 @@ public class GlassdoorBot extends Bot {
      * @throws InterruptedException If the thread executing the method is
      *                              interrupted, stop the method and return early.
      */
-    public void searchJobs() throws InterruptedException {
-        WebElement searchKey = tryToFindElement(By.id("sc.keyword"));
-        WebElement searchLoc = tryToFindElement(By.id("sc.location"));
-        searchKey.clear();
-        searchLoc.clear();
+    public void searchJobs() {
+        
+        tryToFindElement(By.id("sc.keyword")).clear();
+        tryToFindElement(By.id("sc.location")).clear();
 
-        typeLikeAHuman(searchKey, this._jobAppData.whatJob);
-
+        tryToFindElementAndSendKeys(By.id("sc.keyword"), this._jobAppData.whatJob);
+        
         // Clear the "Where" field and send in the location of the job
         getActions().sendKeys(Keys.TAB);
         getActions().sendKeys(Keys.TAB);
         getActions().sendKeys(Keys.DELETE);
         getActions().build().perform();
 
-        typeLikeAHuman(searchLoc, this._jobAppData.locationOfJob);
-        searchLoc.submit();
+        tryToFindElementAndSendKeys(By.id("sc.location"), this._jobAppData.locationOfJob).submit();;
+
     }
 
     /**
