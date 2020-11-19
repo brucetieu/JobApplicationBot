@@ -216,10 +216,7 @@ public class LinkedInBot extends Bot {
      * @return The message.
      */
     private String _assembleMessage(String name) {
-        String message = "Hi " + name + ", your profile appeared in my search of software engineers. "
-                + "I am currently pursuing a career in software engineering and "
-                + "it would be great to hear about your journey and experience in the field. "
-                + "Kindly, accept my invitation. You would be a big help! Sincerely, " + _jobAppData.fullname + ".";
+        String message = "Hi " + name + ", " + _linkedInPerson.message + _jobAppData.fullname + ".";
 
         return message;
     }
