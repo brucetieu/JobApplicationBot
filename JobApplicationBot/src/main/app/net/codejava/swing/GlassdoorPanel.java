@@ -157,7 +157,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
         addLabels("Location of job", 285, 97, 100, 16);
         addLabels("Application type", 285, 128, 150, 16);
         addLabels("Pages to scrape", 285, 156, 100, 16);
-        addLabels("CSV output name", 285, 194, 150, 16);
+        addLabels("CSV output path", 285, 194, 150, 16);
     
         _whatJob = addTextField(401, 60, 130, 26, 10);
         _jobLoc = addTextField(401, 92, 130, 26, 10);
