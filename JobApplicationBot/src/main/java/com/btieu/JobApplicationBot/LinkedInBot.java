@@ -248,9 +248,9 @@ public class LinkedInBot extends Bot {
      * @param message The connect message.
      */
     private void _easyConnectRequest(String message) {
-        getWebDriver().findElement(By.className(LinkedInBot._CLASS_CONNECT_BTN)).click(); // click on Connect
-        getWebDriver().findElement(By.className(LinkedInBot._CLASS_ADD_NOTE_BTN)).click(); // Click on "Add a note"
-        WebElement textarea = tryToFindElement(By.id(LinkedInBot._ID_CUSTOM_MSG));
+        getWebDriver().findElement(By.className(_CLASS_CONNECT_BTN)).click(); // click on Connect
+        getWebDriver().findElement(By.className(_CLASS_ADD_NOTE_BTN)).click(); // Click on "Add a note"
+        WebElement textarea = tryToFindElement(By.id(_ID_CUSTOM_MSG));
         textarea.sendKeys(message);
     }
 
@@ -260,11 +260,11 @@ public class LinkedInBot extends Bot {
      * @param message The connect message.
      */
     private void _hardConnectRequest(String message) {
-        WebElement more = getWebDriver().findElement(By.className(LinkedInBot._CLASS_MORE_BTN));
+        WebElement more = getWebDriver().findElement(By.className(_CLASS_MORE_BTN));
         more.click();
-        more.findElement(By.className(LinkedInBot._CLASS_CONNECT_BTN)).click();
-        waitOnElementAndClick(By.className(LinkedInBot._CLASS_ADD_NOTE_BTN)); // Click on "Add a note"
-        WebElement textarea = tryToFindElement(By.id(LinkedInBot._ID_CUSTOM_MSG));
+        more.findElement(By.className(_CLASS_CONNECT_BTN)).click();
+        waitOnElementAndClick(By.className(_CLASS_ADD_NOTE_BTN)); // Click on "Add a note"
+        WebElement textarea = tryToFindElement(By.id(_ID_CUSTOM_MSG));
         textarea.sendKeys(message);
     }
 
