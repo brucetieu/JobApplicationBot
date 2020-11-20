@@ -2,7 +2,6 @@ package net.codejava.swing;
 
 import java.awt.EventQueue;
 
-import javax.swing.border.EmptyBorder;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
