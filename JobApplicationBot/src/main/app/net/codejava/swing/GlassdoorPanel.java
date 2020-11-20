@@ -28,7 +28,7 @@ import com.btieu.JobApplicationBot.WriteFiles;
 public class GlassdoorPanel extends CreateGUIComponents {
 
     private static final long serialVersionUID = 1L;
-    
+
     private JTextField _firstName;
     private JTextField _lastName;
     private JTextField _fullName;
@@ -49,21 +49,22 @@ public class GlassdoorPanel extends CreateGUIComponents {
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
 
-
     /**
      * Create the Glassdoor panel.
+     * 
      * @param _contentPane The panel for storing content.
      */
     public void createGlassdoorPanel(JPanel _contentPane) {
-        
+
         createTab("Glassdoor", _contentPane, _tabbedPane, 0, 0, 650, 650);
         _addApplicantFields();
         _addJobPreferenceFields();
         addUploadResume(210, 475, 200, 29);
     }
-    
+
     /**
-     * This method launches the browser and grabs all information from filled out fields.
+     * This method launches the browser and grabs all information from filled out
+     * fields.
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
@@ -87,7 +88,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 jobAppData.linkedin = _linkedIn.getText();
                 jobAppData.github = _github.getText();
                 jobAppData.portfolio = _portfolio.getText();
-                
+
                 jobAppData.phone = null;
                 try {
                     jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
@@ -96,24 +97,27 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 }
                 JobApplicationData.resumePath = getResumeFile().toString();
                 jobAppData.platformUrl = "https://www.glassdoor.com/index.htm";
-              
+
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
-                JobPostingData.pagesToScrape =  Integer.parseInt(_pageNumBox.getSelectedItem().toString());
+                JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
                 ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
                 JobIterator jobIterator = new JobIterator(writeFiles, appType);
                 Pagination page = new Pagination(jobAppData);
+
+                // Run the GlassdoorBot
+                new RunGlassdoorBot(appType, jobAppData, jobIterator, page, writeFiles);
 
             }
         });
 
     }
-    
+
     /**
      * Add applicant information fields.
      */
     private void _addApplicantFields() {
-        
+
         createGoodiesTitle("Fill below for LEVER_GREENHOUSE", 10, 33, 250, 16);
         addLabels("First name", 20, 65, 100, 16);
         addLabels("Last name", 20, 97, 100, 16);
@@ -125,7 +129,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
         addLabels("LinkedIn", 20, 289, 91, 16);
         addLabels("GitHub", 20, 321, 91, 16);
         addLabels("Portfolio", 20, 353, 91, 16);
-        
+
         createGoodiesTitle("Glassdoor Login Info", 391, 232, 175, 16);
         addLabels("Email", 285, 270, 61, 16);
         addLabels("Password", 285, 308, 61, 16);
@@ -140,14 +144,14 @@ public class GlassdoorPanel extends CreateGUIComponents {
         _linkedIn = addTextField(125, 284, 130, 26, 10);
         _github = addTextField(125, 316, 130, 26, 10);
         _portfolio = addTextField(125, 348, 130, 26, 10);
-        
+
         _email = addTextField(401, 265, 130, 26, 10);
         _password = addPasswordField(401, 303, 130, 26, 10);
 
     }
-    
+
     /**
-     * Add Job preferences fields. 
+     * Add Job preferences fields.
      */
     private void _addJobPreferenceFields() {
         createGoodiesTitle("Job Preferences", 391, 32, 122, 16);
@@ -156,14 +160,12 @@ public class GlassdoorPanel extends CreateGUIComponents {
         addLabels("Application type", 285, 128, 150, 16);
         addLabels("Pages to scrape", 285, 156, 100, 16);
         addLabels("CSV output path", 285, 194, 150, 16);
-    
+
         _whatJob = addTextField(401, 60, 130, 26, 10);
         _jobLoc = addTextField(401, 92, 130, 26, 10);
         _appBox = addAppTypeDropdown(401, 124, 150, 27);
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(1), 401, 156, 150, 27);
         _csvOutputName = addTextField(401, 192, 180, 26, 10);
     }
-
-
 
 }
