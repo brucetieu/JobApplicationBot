@@ -3,6 +3,7 @@ package net.codejava.swing;
 import com.btieu.JobApplicationBot.JobApplicationData;
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -66,10 +67,11 @@ public class CreateGUIComponents extends JFrame {
      * @param width  The new width of the component.
      * @param height The new height of the component.
      */
-    public void addLabels(String name, int x, int y, int width, int height) {
+    public JLabel addLabels(String name, int x, int y, int width, int height) {
         JLabel label = new JLabel(name);
         label.setBounds(x, y, width, height);
         _panel.add(label);
+        return label;
     }
 
     /**
@@ -85,8 +87,8 @@ public class CreateGUIComponents extends JFrame {
     public JTextField addTextField(int x, int y, int width, int height, int column) {
         _field = new JTextField();
         _field.setBounds(x, y, width, height);
-        _panel.add(_field);
         _field.setColumns(column);
+        _panel.add(_field);
         return _field;
     }
 
@@ -207,17 +209,20 @@ public class CreateGUIComponents extends JFrame {
      */
     public void addUploadResume(int x, int y, int width, int height) {
 
-        JButton openFileBtn = addButton("Upload resume (PDF only)", 280, 250, 200, 29);
+        JLabel chosenFilelabel = addLabels("", x, y, width, height);
+        
+        JButton openFileBtn = addButton("Upload resume (PDF only)", 200, 450, 200, 29);
         openFileBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int returnValue = _openFileChooser.showOpenDialog(_contentPane);
 
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = _openFileChooser.getSelectedFile();
-                    addLabels("File Successfully Loaded!", x, y, width, height);
+                    chosenFilelabel.setText("File successfully loaded!");
                     _file = selectedFile;
                 } else {
-                    addLabels("No file chosen!", x, y, width, height);
+                    chosenFilelabel.setText("");
+                    chosenFilelabel.setText("No file chosen!");
                 }
             }
         });
