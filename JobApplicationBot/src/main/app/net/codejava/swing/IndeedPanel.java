@@ -30,6 +30,7 @@ import com.btieu.JobApplicationBot.WriteFiles;
 public class IndeedPanel extends CreateGUIComponents {
 
     private static final long serialVersionUID = 1L;
+    private static final int _STARTING_PAGE = 0;
     private JTextField _email;
     private JPasswordField _password;
     private JTextField _whatJob;
@@ -53,9 +54,8 @@ public class IndeedPanel extends CreateGUIComponents {
     public void createIndeedPanel(JPanel _contentPane) {
 
         createTab("Indeed", _contentPane, _tabbedPane, 0, 0, 0, 0);
-        _addApplicantFields(); // Applicant info fields.
         _addJobPreferenceFields(); // Job preferences fields.
-        addUploadResume(285, 275, 200, 29);
+        addUploadResume(210, 475, 200, 29);
     }
 
     /**
@@ -63,7 +63,7 @@ public class IndeedPanel extends CreateGUIComponents {
      * fields.
      */
     public void launchApp() {
-        JButton launchButton = addButton("Launch", 280, 525, 117, 29);
+        JButton launchButton = addButton("Launch", 245, 525, 117, 29);
     
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -94,36 +94,23 @@ public class IndeedPanel extends CreateGUIComponents {
         });
 
     }
-
-    /**
-     * Add applicant information fields.
-     */
-    private void _addApplicantFields() {
-        createGoodiesTitle("Indeed Login Info", 20, 32, 231, 16);
-        addLabels("Email", 20, 65, 100, 16);
-        addLabels("Password", 20, 97, 100, 16);
-
-        _email = addTextField(125, 60, 130, 26, 10);
-        _password = addPasswordField(125, 92, 130, 26, 10);
-
-    }
     
     /**
      * Add Job preferences fields.
      */
     private void _addJobPreferenceFields() {
-        createGoodiesTitle("Job Preferences", 391, 32, 122, 16);
-        addLabels("What job", 285, 65, 61, 16);
-        addLabels("Location of job", 285, 97, 100, 16);
-        addLabels("Application type", 285, 128, 150, 16);
-        addLabels("Pages to scrape", 285, 156, 100, 16);
-        addLabels("CSV output name", 285, 194, 150, 16);
+        createGoodiesTitle("Job Preferences", 230, 32, 122, 16);
+        addLabels("What job", 150, 65, 61, 16);
+        addLabels("Location of job", 150, 97, 100, 16);
+        addLabels("Application type", 150, 128, 150, 16);
+        addLabels("Pages to scrape", 150, 156, 100, 16);
+        addLabels("CSV output path", 150, 194, 150, 16);
 
-        _whatJob = addTextField(401, 60, 130, 26, 10);
-        _jobLoc = addTextField(401, 92, 130, 26, 10);
-        _appBox = addAppTypeDropdown(401, 124, 150, 27);
-        _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(), 401, 156, 150, 27);
-        _csvOutputName = addTextField(401, 192, 180, 26, 10);
+        _whatJob = addTextField(280, 60, 130, 26, 10);
+        _jobLoc = addTextField(280, 92, 130, 26, 10);
+        _appBox = addAppTypeDropdown(280, 124, 150, 27);
+        _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(_STARTING_PAGE), 280, 156, 150, 27);
+        _csvOutputName = addTextField(280, 192, 180, 26, 10);
     }
 
 
