@@ -34,6 +34,7 @@ public class RunIndeedBot {
 
         // Handle easy apply applications.
         if (appType == JobApplicationData.ApplicationType.EASILY_APPLY) {
+            MessageDialog.infoBox(MessageDialog.INDEED_EASY_APPLY_MSG, MessageDialog.SUCCESSFUL_LAUNCH_MSG);
             IndeedApplyBot easyApp = new IndeedApplyBot(jobAppData, appType);
             easyApp.navigateToJobPage();
             easyApp.searchJobs();
@@ -43,9 +44,11 @@ public class RunIndeedBot {
                         easyApp.saveEasyApplyJobs(index,
                                 easyApp.tryToFindElements(_INDEED_JOB_CARD));
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
+            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_MSG);
 
             // Handle all applications.
         } else if (appType == JobApplicationData.ApplicationType.ALL) {
+            MessageDialog.infoBox(MessageDialog.INDEED_ALL_MSG, MessageDialog.SUCCESSFUL_LAUNCH_MSG);
             IndeedApplyBot greedy = new IndeedApplyBot(jobAppData, appType);
             greedy.navigateToJobPage();
             greedy.searchJobs();
@@ -54,9 +57,11 @@ public class RunIndeedBot {
 
                         greedy.saveAllJobs(index, greedy.tryToFindElements(_INDEED_JOB_CARD));
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
-
+            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_MSG);
+            
             // Handle not easy apply apps.
         } else if (appType == JobApplicationData.ApplicationType.NOT_EASY_APPLY) {
+            MessageDialog.infoBox(MessageDialog.INDEED_NOT_EASY_APPLY_MSG, MessageDialog.SUCCESSFUL_LAUNCH_MSG);
             IndeedApplyBot notEa = new IndeedApplyBot(jobAppData, appType);
             notEa.navigateToJobPage();
             notEa.searchJobs();
@@ -66,9 +71,11 @@ public class RunIndeedBot {
                         notEa.saveNonEasyApplyJobs(index,
                                 notEa.tryToFindElements(_INDEED_JOB_CARD));
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
+            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_MSG);
         }
         // Don't do anything with the lever greenhouse ones.
         else
-            return;
+            MessageDialog.infoBox(MessageDialog.INVALID_LEVER_GREENHOUSE_MSG, MessageDialog.INVALID_OPTION_MSG);
+            new BotGUI();
     }
 }
