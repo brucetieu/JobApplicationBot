@@ -15,9 +15,14 @@ import javax.swing.JPanel;
 public class BotGUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
+    private static final int _GUI_X_AXIS = 0;
+    private static final int _GUI_Y_AXIS = 0;
+    private static final int _GUI_WIDTH = 650;
+    private static final int _GUI_HEIGHT = 650;
     private JPanel _contentPane;
     private IndeedPanel _indeedPanel;
     private GlassdoorPanel _glassdoorPanel;
+    private static final String _GUI_TITLE = "Job Application Bot";
 
     /**
      * Launch the application.
@@ -29,7 +34,6 @@ public class BotGUI extends JFrame {
                     IndeedPanel indeedPanel = new IndeedPanel();
                     GlassdoorPanel glassdoorPanel = new GlassdoorPanel();
                     BotGUI frame = new BotGUI(indeedPanel, glassdoorPanel);
-                    frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -45,10 +49,13 @@ public class BotGUI extends JFrame {
      * @param glassdoorPanel Object which creates the Glassdoor panel.
      */
     public BotGUI(IndeedPanel indeedPanel, GlassdoorPanel glassdoorPanel) {
+        super(_GUI_TITLE);
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(500, 100, 650, 650);
+        setBounds(_GUI_X_AXIS, _GUI_Y_AXIS, _GUI_WIDTH, _GUI_HEIGHT);
+        setLocationRelativeTo(null);
+       
         this._contentPane = new JPanel();
-        this._contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(this._contentPane);
         this._contentPane.setLayout(null);
 
