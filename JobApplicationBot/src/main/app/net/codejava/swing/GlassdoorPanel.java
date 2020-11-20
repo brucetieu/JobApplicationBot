@@ -1,12 +1,23 @@
 package net.codejava.swing;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.text.ParseException;
+
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import com.btieu.JobApplicationBot.JobApplicationData;
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
+import com.btieu.JobApplicationBot.JobIterator;
+import com.btieu.JobApplicationBot.JobPostingData;
+import com.btieu.JobApplicationBot.Pagination;
+import com.btieu.JobApplicationBot.WriteFiles;
 
 /**
  * Create a Glassdoor tab with fields to let users apply to Glassdoor jobs.
@@ -48,10 +59,55 @@ public class GlassdoorPanel extends CreateGUIComponents {
         createTab("Glassdoor", _contentPane, _tabbedPane, 0, 0, 650, 650);
         _addApplicantFields();
         _addJobPreferenceFields();
-        addUploadResume(285, 275, 200, 29);
+        addUploadResume(210, 475, 200, 29);
     }
     
-    
+    /**
+     * This method launches the browser and grabs all information from filled out fields.
+     */
+    public void launchApp() {
+        JButton launchButton = addButton("Launch", 245, 525, 117, 29);
+        launchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JobApplicationData jobAppData = new JobApplicationData();
+                WriteFiles writeFiles = null;
+                try {
+                    writeFiles = new WriteFiles(_csvOutputName.getText());
+                } catch (IOException e2) {
+                    e2.printStackTrace();
+                }
+                jobAppData.firstname = _firstName.getText();
+                jobAppData.lastname = _lastName.getText();
+                jobAppData.fullname = _fullName.getText();
+                jobAppData.email = _email.getText();
+                jobAppData.password = String.valueOf(_password.getPassword());
+                jobAppData.school = _school.getText();
+                jobAppData.location = _location.getText();
+                jobAppData.currentCompany = _company.getText();
+                jobAppData.linkedin = _linkedIn.getText();
+                jobAppData.github = _github.getText();
+                jobAppData.portfolio = _portfolio.getText();
+                
+                jobAppData.phone = null;
+                try {
+                    jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                JobApplicationData.resumePath = getResumeFile().toString();
+                jobAppData.platformUrl = "https://www.glassdoor.com/index.htm";
+              
+                jobAppData.whatJob = _whatJob.getText();
+                jobAppData.locationOfJob = _jobLoc.getText();
+                JobPostingData.pagesToScrape =  Integer.parseInt(_pageNumBox.getSelectedItem().toString());
+                ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
+                JobIterator jobIterator = new JobIterator(writeFiles, appType);
+                Pagination page = new Pagination(jobAppData);
+
+            }
+        });
+
+    }
     
     /**
      * Add applicant information fields.
