@@ -19,6 +19,8 @@ import org.openqa.selenium.WebElement;
  *
  */
 public class RunGlassdoorBot {
+    
+    private static final By _GLASSDOOR_JOB_CARD = By.className("react-job-listing");
 
     /**
      * When this constructor is called, it will execute the GlassdoorBot.
@@ -38,10 +40,10 @@ public class RunGlassdoorBot {
             easyApp.navigateToJobPage();
             easyApp.login();
             easyApp.searchJobs();
-            jobIterator.loopThroughJob(easyApp.tryToFindElements(By.className("react-job-listing")),
+            jobIterator.loopThroughJob(easyApp.tryToFindElements(_GLASSDOOR_JOB_CARD),
                     (int index, List<WebElement> jobList) -> {
 
-                        easyApp.saveEasyApplyJobs(index, easyApp.tryToFindElements(By.className("react-job-listing")));
+                        easyApp.saveEasyApplyJobs(index, easyApp.tryToFindElements(_GLASSDOOR_JOB_CARD));
                     }, (int pageNum) -> page.goToNextGlassdoorPage(pageNum));
 
             // Handle all applications.
@@ -50,10 +52,10 @@ public class RunGlassdoorBot {
             greedy.navigateToJobPage();
             greedy.login();
             greedy.searchJobs();
-            jobIterator.loopThroughJob(greedy.tryToFindElements(By.className("react-job-listing")),
+            jobIterator.loopThroughJob(greedy.tryToFindElements(_GLASSDOOR_JOB_CARD),
                     (int index, List<WebElement> jobList) -> {
 
-                        greedy.saveAllJobs(index, greedy.tryToFindElements(By.className("react-job-listing")));
+                        greedy.saveAllJobs(index, greedy.tryToFindElements(_GLASSDOOR_JOB_CARD));
                     }, (int pageNum) -> page.goToNextGlassdoorPage(pageNum));
 
             // Handle not easy apply apps.
@@ -62,10 +64,10 @@ public class RunGlassdoorBot {
             notEa.navigateToJobPage();
             notEa.login();
             notEa.searchJobs();
-            jobIterator.loopThroughJob(notEa.tryToFindElements(By.className("react-job-listing")),
+            jobIterator.loopThroughJob(notEa.tryToFindElements(_GLASSDOOR_JOB_CARD),
                     (int index, List<WebElement> jobList) -> {
 
-                        notEa.saveNonEasyApplyJobs(index, notEa.tryToFindElements(By.className("react-job-listing")));
+                        notEa.saveNonEasyApplyJobs(index, notEa.tryToFindElements(_GLASSDOOR_JOB_CARD));
                     }, (int pageNum) -> page.goToNextGlassdoorPage(pageNum));
         }
         // Handle the Lever and Greenhouse jobs.
@@ -74,10 +76,10 @@ public class RunGlassdoorBot {
             lg.navigateToJobPage();
             lg.login();
             lg.searchJobs();
-            jobIterator.loopThroughJob(lg.tryToFindElements(By.className("react-job-listing")),
+            jobIterator.loopThroughJob(lg.tryToFindElements(_GLASSDOOR_JOB_CARD),
                     (int index, List<WebElement> jobList) -> {
 
-                        lg.saveLGJobs(index, lg.tryToFindElements(By.className("react-job-listing")));
+                        lg.saveLGJobs(index, lg.tryToFindElements(_GLASSDOOR_JOB_CARD));
                     }, (int pageNum) -> page.goToNextGlassdoorPage(pageNum));
             
             // Apply to lever and greenhouse jobs.
