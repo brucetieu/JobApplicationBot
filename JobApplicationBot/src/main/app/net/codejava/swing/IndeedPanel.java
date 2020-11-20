@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
@@ -29,9 +28,7 @@ public class IndeedPanel extends CreateGUIComponents {
 
     private static final long serialVersionUID = 1L;
     private static final int _STARTING_PAGE = 0;
-    private static final String _platformURL = "https://www.indeed.com/?from=gnav-util-homepage";
-    private JTextField _email;
-    private JPasswordField _password;
+    private static final String _INDEED_URL = "https://www.indeed.com/?from=gnav-util-homepage";
     private JTextField _whatJob;
     private JTextField _jobLoc;
     private JTextField _csvOutputName;
@@ -77,7 +74,7 @@ public class IndeedPanel extends CreateGUIComponents {
 
                 JobApplicationData.resumePath = getResumeFile().toString();
           
-                jobAppData.platformUrl = _platformURL;
+                jobAppData.platformUrl = _INDEED_URL;
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
                 JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
