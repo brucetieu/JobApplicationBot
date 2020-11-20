@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -28,7 +29,9 @@ import javax.swing.SwingConstants;
  */
 public class CreateGUIComponents extends JFrame {
 
+
     private static final long serialVersionUID = 1L;
+    private static final int MAX_CHARACTERS = 270;
     private JPanel _panel;
     private JPanel _contentPane;
     private JLabel _lblNewJgoodiesTitle;
@@ -38,6 +41,10 @@ public class CreateGUIComponents extends JFrame {
     private JTextField _field;
     private JPasswordField _password;
     private SingletonTab _singletonTab;
+    private JTextArea _textArea;
+    private JTextArea _changeLog;
+    private String newline = "\n";
+
 
     /**
      * Initialize a new JPanel and file chooser object.
@@ -90,6 +97,40 @@ public class CreateGUIComponents extends JFrame {
                 + "\"Hi, 'person's name', \" followed by your message. </body></html>");
         label.setBounds(x, y, width, height);
         _panel.add(label);
+    }
+    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @return
+     */
+    public JTextArea addTextArea(int x, int y, int width, int height) {
+        _textArea = new JTextArea(
+                "Example: \"your profile appeared in my search of software engineers. I am currently pursuing a career in software engineering and it would be great to hear about your journey and experience in the field. Kindly, accept my invitation. You would be a big help! Sincerely, \"",
+                100, 100);
+        _textArea.setLineWrap(true);
+        _textArea.setWrapStyleWord(true);
+        _textArea.setBounds(x, y, width, height);
+
+        AbstractDocument pDoc = (AbstractDocument) _textArea.getDocument();
+        
+        // Set max num of characters text area can have.
+        pDoc.setDocumentFilter(new DocumentSizeFilter(MAX_CHARACTERS));
+
+        // Create the text area for the status log and configure it.
+        _changeLog = new JTextArea(5, 30);
+        _changeLog.setEditable(false);
+        JScrollPane scrollPaneForLog = new JScrollPane(_changeLog);
+        scrollPaneForLog.setBounds(20, 450, 400, 100);
+
+        pDoc.addDocumentListener(new MyDocumentListener());
+
+        _panel.add(scrollPaneForLog);
+        _panel.add(_textArea);
+        return _textArea;
     }
 
 
