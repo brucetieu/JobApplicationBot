@@ -1,6 +1,9 @@
 package net.codejava.swing;
 
+import com.btieu.JobApplicationBot.JobApplicationData;
+import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -34,12 +37,14 @@ public class CreateGUIComponents extends JFrame {
     private JButton _button;
     private JTextField _field;
     private JPasswordField _password;
+    private SingletonTab _singletonTab;
 
     /**
      * Initialize a new JPanel and file chooser object.
      */
     public CreateGUIComponents() {
         _panel = new JPanel();
+        _singletonTab = SingletonTab.getInstance();
         _openFileChooser = new JFileChooser();
         this._openFileChooser.setCurrentDirectory(new File("./"));
 
@@ -62,10 +67,11 @@ public class CreateGUIComponents extends JFrame {
      * @param width  The new width of the component.
      * @param height The new height of the component.
      */
-    public void addLabels(String name, int x, int y, int width, int height) {
+    public JLabel addLabels(String name, int x, int y, int width, int height) {
         JLabel label = new JLabel(name);
         label.setBounds(x, y, width, height);
         _panel.add(label);
+        return label;
     }
 
     /**
@@ -81,8 +87,8 @@ public class CreateGUIComponents extends JFrame {
     public JTextField addTextField(int x, int y, int width, int height, int column) {
         _field = new JTextField();
         _field.setBounds(x, y, width, height);
-        _panel.add(_field);
         _field.setColumns(column);
+        _panel.add(_field);
         return _field;
     }
 
@@ -117,7 +123,7 @@ public class CreateGUIComponents extends JFrame {
      */
     public void createTab(String name, JPanel contentPane, JTabbedPane tabbedPane, int x, int y, int width,
             int height) {
-        tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPane = _singletonTab.getTabbedPane();
         tabbedPane.setBounds(x, y, width, height);
         contentPane.add(tabbedPane);
         tabbedPane.addTab(name, null, _panel, null);
@@ -139,21 +145,42 @@ public class CreateGUIComponents extends JFrame {
         _lblNewJgoodiesTitle.setBounds(x, y, width, height);
         _panel.add(_lblNewJgoodiesTitle);
     }
+    
+    /**
+     * This method creates a drop down menu of application types.
+     * 
+     * @param applicationTypes  An array of names which represents options in the dropdown.
+     * @param x      The new x-coordinate of the component.
+     * @param y      The new y-coordinate of the component.
+     * @param width  The new width of the component.
+     * @param height The new height of the component.
+     * @return The ApplicationType combo box. 
+     */
+    public JComboBox<ApplicationType> addAppTypeDropdown(int x, int y, int width, int height) {
+        JComboBox<ApplicationType> comboBox = new JComboBox<ApplicationType>(JobApplicationData.ApplicationType.values());
+        comboBox.setBounds(x, y, width, height);
+        _panel.add(comboBox);
+        return comboBox;
+    }
+
 
     /**
-     * This method creates a drop down menu.
+     * This method creates a drop down menu of numbers.
      * 
      * @param names  An array of names which represents options in the dropdown.
      * @param x      The new x-coordinate of the component.
      * @param y      The new y-coordinate of the component.
      * @param width  The new width of the component.
      * @param height The new height of the component.
+     * @return The Integer combo box.
      */
-    public void addDropDown(String[] names, int x, int y, int width, int height) {
-        JComboBox<String> comboBox = new JComboBox<String>(names);
+    public JComboBox<Integer> addDropdown(Integer[] nums, int x, int y, int width, int height) {
+        JComboBox<Integer> comboBox = new JComboBox<Integer>(nums);
         comboBox.setBounds(x, y, width, height);
         _panel.add(comboBox);
+        return comboBox;
     }
+
 
     /**
      * This method adds a JButton.
@@ -182,17 +209,20 @@ public class CreateGUIComponents extends JFrame {
      */
     public void addUploadResume(int x, int y, int width, int height) {
 
-        JButton openFileBtn = addButton("Upload resume (PDF only)", 20, 290, 200, 29);
+        JLabel chosenFilelabel = addLabels("", x, y, width, height);
+        
+        JButton openFileBtn = addButton("Upload resume (PDF only)", 200, 450, 200, 29);
         openFileBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int returnValue = _openFileChooser.showOpenDialog(_contentPane);
 
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = _openFileChooser.getSelectedFile();
-                    addLabels("File Successfully Loaded!", x, y, width, height);
+                    chosenFilelabel.setText("File successfully loaded!");
                     _file = selectedFile;
                 } else {
-                    addLabels("No file chosen!", x, y, width, height);
+                    chosenFilelabel.setText("");
+                    chosenFilelabel.setText("No file chosen!");
                 }
             }
         });
