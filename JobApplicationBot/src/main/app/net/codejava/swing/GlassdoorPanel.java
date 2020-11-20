@@ -28,6 +28,7 @@ import com.btieu.JobApplicationBot.WriteFiles;
 public class GlassdoorPanel extends CreateGUIComponents {
 
     private static final long serialVersionUID = 1L;
+    private static final String _platformURL = "https://www.glassdoor.com/index.htm";
 
     private JTextField _firstName;
     private JTextField _lastName;
@@ -43,7 +44,6 @@ public class GlassdoorPanel extends CreateGUIComponents {
     private JTextField _portfolio;
     private JTextField _whatJob;
     private JTextField _jobLoc;
-    private JTextField _pageNum;
     private JTextField _csvOutputName;
     private JComboBox<ApplicationType> _appBox;
     private JComboBox<Integer> _pageNumBox;
@@ -96,7 +96,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
                     e1.printStackTrace();
                 }
                 JobApplicationData.resumePath = getResumeFile().toString();
-                jobAppData.platformUrl = "https://www.glassdoor.com/index.htm";
+                jobAppData.platformUrl = _platformURL;
 
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
