@@ -19,9 +19,9 @@ public class GUIComponentsHelper {
      * Generate page numbers to add as a dropdown.
      * @return An Integer array page numbers.
      */
-    public static Integer[] generatePageNumbers() {
+    public static Integer[] generatePageNumbers(int start) {
         Integer pageNumContainer[] = new Integer[_MAX_PAGE_NUM];
-        for (int i = 0; i < _MAX_PAGE_NUM; i++) {
+        for (int i = start; i < _MAX_PAGE_NUM; i++) {
             pageNumContainer[i] = i;
         }
         return pageNumContainer;
