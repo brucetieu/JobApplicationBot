@@ -47,6 +47,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
         
         createTab("Glassdoor", _contentPane, _tabbedPane, 0, 0, 650, 650);
         _addApplicantFields();
+        _addJobPreferenceFields();
         addUploadResume(285, 275, 200, 29);
     }
     
@@ -69,9 +70,9 @@ public class GlassdoorPanel extends CreateGUIComponents {
         addLabels("GitHub", 20, 321, 91, 16);
         addLabels("Portfolio", 20, 353, 91, 16);
         
-        createGoodiesTitle("Glassdoor Login Info", 10, 405, 175, 16);
-        addLabels("Email", 20, 437, 61, 16);
-        addLabels("Password", 20, 469, 61, 16);
+        createGoodiesTitle("Glassdoor Login Info", 391, 232, 175, 16);
+        addLabels("Email", 285, 270, 61, 16);
+        addLabels("Password", 285, 308, 61, 16);
 
         _firstName = addTextField(125, 60, 130, 26, 10);
         _lastName = addTextField(125, 92, 130, 26, 10);
@@ -84,10 +85,29 @@ public class GlassdoorPanel extends CreateGUIComponents {
         _github = addTextField(125, 316, 130, 26, 10);
         _portfolio = addTextField(125, 348, 130, 26, 10);
         
-        _email = addTextField(125, 432, 130, 26, 10);
-        _password = addPasswordField(125, 464, 130, 26, 10);
+        _email = addTextField(401, 265, 130, 26, 10);
+        _password = addPasswordField(401, 303, 130, 26, 10);
 
     }
+    
+    /**
+     * Add Job preferences fields. 
+     */
+    private void _addJobPreferenceFields() {
+        createGoodiesTitle("Job Preferences", 391, 32, 122, 16);
+        addLabels("What job", 285, 65, 61, 16);
+        addLabels("Location of job", 285, 97, 100, 16);
+        addLabels("Application type", 285, 128, 150, 16);
+        addLabels("Pages to scrape", 285, 156, 100, 16);
+        addLabels("CSV output path", 285, 194, 150, 16);
+    
+        _whatJob = addTextField(401, 60, 130, 26, 10);
+        _jobLoc = addTextField(401, 92, 130, 26, 10);
+        _appBox = addAppTypeDropdown(401, 124, 150, 27);
+        _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(1), 401, 156, 150, 27);
+        _csvOutputName = addTextField(401, 192, 180, 26, 10);
+    }
+
 
 
 }
