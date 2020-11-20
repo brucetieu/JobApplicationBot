@@ -40,6 +40,13 @@ public class BotGUI extends JFrame {
             }
         });
     }
+    
+    /**
+     * Default constructor.
+     */
+    public BotGUI() {
+
+    }
 
     /**
      * Create the Desktop app.
