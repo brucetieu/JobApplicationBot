@@ -40,6 +40,13 @@ public class BotGUI extends JFrame {
             }
         });
     }
+    
+    /**
+     * Default constructor.
+     */
+    public BotGUI() {
+
+    }
 
     /**
      * Create the Desktop app.
@@ -64,6 +71,7 @@ public class BotGUI extends JFrame {
 
         this._glassdoorPanel = glassdoorPanel;
         this._glassdoorPanel.createGlassdoorPanel(this._contentPane);
+        this._glassdoorPanel.launchApp();
 
     }
 
