@@ -64,6 +64,7 @@ public class BotGUI extends JFrame {
 
         this._glassdoorPanel = glassdoorPanel;
         this._glassdoorPanel.createGlassdoorPanel(this._contentPane);
+        this._glassdoorPanel.launchApp();
 
     }
 
