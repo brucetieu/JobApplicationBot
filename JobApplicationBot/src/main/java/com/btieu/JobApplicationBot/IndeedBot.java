@@ -40,29 +40,6 @@ public class IndeedBot extends Bot {
     }
 
     /**
-     * This method logs in to the job site.
-     * 
-     * @throws InterruptedException
-     */
-    public void login() throws InterruptedException {
-
-        // Wait for element to appear before clicking on it.
-        waitOnElementAndClick(By.className("gnav-LoggedOutAccountLink-text"));
-
-        // Make sure the Email and Password fields are cleared out of any text.
-        getWebDriver().findElement(By.id("login-email-input")).clear();
-        getWebDriver().findElement(By.id("login-password-input")).clear();
-
-        // Populate the fields with an email and a password
-        WebElement email = getWebDriver().findElement(By.id("login-email-input"));
-        WebElement password = getWebDriver().findElement(By.id("login-password-input"));
-        typeLikeAHuman(email, this._jobAppData.email);
-        typeLikeAHuman(password, this._jobAppData.password);
-
-        waitOnElementAndClick(By.id("login-submit-button"));
-    }
-
-    /**
      * This method searches for jobs based on job position name and location.
      * 
      * @throws InterruptedException Catch errors if element is not found.
