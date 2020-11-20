@@ -11,12 +11,15 @@ import com.btieu.JobApplicationBot.JobIterator;
 import com.btieu.JobApplicationBot.Pagination;
 
 /**
- * Run the IndeedBot
+ * Run the IndeedBot.
  * 
  * @author Bruce Tieu
  *
  */
 public class RunIndeedBot {
+    
+    // Magic string: the job div which contains all the a tags to each job link.
+    private static final By _INDEED_JOB_CARD = By.className("jobsearch-SerpJobCard");
 
     /**
      * When this constructor is called, it will execute the IndeedBot.
@@ -34,11 +37,11 @@ public class RunIndeedBot {
             IndeedApplyBot easyApp = new IndeedApplyBot(jobAppData, appType);
             easyApp.navigateToJobPage();
             easyApp.searchJobs();
-            jobIterator.loopThroughJob(easyApp.tryToFindElements(By.className("jobsearch-SerpJobCard")),
+            jobIterator.loopThroughJob(easyApp.tryToFindElements(_INDEED_JOB_CARD),
                     (int index, List<WebElement> jobList) -> {
 
                         easyApp.saveEasyApplyJobs(index,
-                                easyApp.tryToFindElements(By.className("jobsearch-SerpJobCard")));
+                                easyApp.tryToFindElements(_INDEED_JOB_CARD));
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
 
             // Handle all applications.
@@ -46,10 +49,10 @@ public class RunIndeedBot {
             IndeedApplyBot greedy = new IndeedApplyBot(jobAppData, appType);
             greedy.navigateToJobPage();
             greedy.searchJobs();
-            jobIterator.loopThroughJob(greedy.tryToFindElements(By.className("jobsearch-SerpJobCard")),
+            jobIterator.loopThroughJob(greedy.tryToFindElements(_INDEED_JOB_CARD),
                     (int index, List<WebElement> jobList) -> {
 
-                        greedy.saveAllJobs(index, greedy.tryToFindElements(By.className("jobsearch-SerpJobCard")));
+                        greedy.saveAllJobs(index, greedy.tryToFindElements(_INDEED_JOB_CARD));
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
 
             // Handle not easy apply apps.
@@ -57,11 +60,11 @@ public class RunIndeedBot {
             IndeedApplyBot notEa = new IndeedApplyBot(jobAppData, appType);
             notEa.navigateToJobPage();
             notEa.searchJobs();
-            jobIterator.loopThroughJob(notEa.tryToFindElements(By.className("jobsearch-SerpJobCard")),
+            jobIterator.loopThroughJob(notEa.tryToFindElements(_INDEED_JOB_CARD),
                     (int index, List<WebElement> jobList) -> {
 
                         notEa.saveNonEasyApplyJobs(index,
-                                notEa.tryToFindElements(By.className("jobsearch-SerpJobCard")));
+                                notEa.tryToFindElements(_INDEED_JOB_CARD));
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
         }
         // Don't do anything with the lever greenhouse ones.
