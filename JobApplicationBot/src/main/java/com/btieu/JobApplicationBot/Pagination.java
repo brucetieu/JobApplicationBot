@@ -1,6 +1,5 @@
 package com.btieu.JobApplicationBot;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -56,7 +55,7 @@ public class Pagination {
     public List<WebElement> goToNextGlassdoorPage(int pageNum) {
 
         String pageUrl = _bot.getRequestURL(_bot.getWebDriver().getCurrentUrl());
-        String newPageNum = "_IP" + Integer.toString(pageNum) + ".htm";
+        String newPageNum = "_IP" + Integer.toString(pageNum + 1) + ".htm";
         String newPageUrl = pageUrl.replace(".htm", newPageNum);
         System.out.println("Continuing search on next page...");
         _bot.getWebDriver().get(newPageUrl);
