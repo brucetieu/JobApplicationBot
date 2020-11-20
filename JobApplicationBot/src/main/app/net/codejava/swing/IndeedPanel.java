@@ -75,10 +75,8 @@ public class IndeedPanel extends CreateGUIComponents {
                     System.out.println(e2.toString());
                 }
 
-                jobAppData.email = _email.getText();
-                jobAppData.password = String.valueOf(_password.getPassword());
-
                 JobApplicationData.resumePath = getResumeFile().toString();
+          
                 jobAppData.platformUrl = _platformURL;
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
