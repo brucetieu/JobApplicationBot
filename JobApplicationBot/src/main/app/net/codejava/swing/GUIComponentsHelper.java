@@ -11,6 +11,7 @@ import javax.swing.text.MaskFormatter;
 public class GUIComponentsHelper {
     
     private static final int _MAX_PAGE_NUM = 50;
+    private static final int _MAX_CONNECTION_REQUESTS = 500;
     private static MaskFormatter _maskFormatter;
     
     public static final String PHONE_MASK = "##########";
@@ -25,6 +26,18 @@ public class GUIComponentsHelper {
             pageNumContainer[i] = i;
         }
         return pageNumContainer;
+    }
+    
+    /**
+     * Generate a list of connection request numbers, the max being 500.
+     * @return An Integer array of connection numbers.
+     */
+    public static Integer[] generateMaxConnectRequests() {
+        Integer maxConnectContainer[] = new Integer[_MAX_CONNECTION_REQUESTS + 1];
+        for (int i = 1; i <= _MAX_CONNECTION_REQUESTS; i++) {
+            maxConnectContainer[i] = i;
+        }
+        return maxConnectContainer;
     }
     
     /**
