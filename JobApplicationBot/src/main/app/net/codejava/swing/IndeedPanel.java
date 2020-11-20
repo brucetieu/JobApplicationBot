@@ -2,9 +2,7 @@ package net.codejava.swing;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,6 +29,7 @@ public class IndeedPanel extends CreateGUIComponents {
 
     private static final long serialVersionUID = 1L;
     private static final int _STARTING_PAGE = 0;
+    private static final String _platformURL = "https://www.indeed.com/?from=gnav-util-homepage";
     private JTextField _email;
     private JPasswordField _password;
     private JTextField _whatJob;
@@ -80,7 +79,7 @@ public class IndeedPanel extends CreateGUIComponents {
                 jobAppData.password = String.valueOf(_password.getPassword());
 
                 JobApplicationData.resumePath = getResumeFile().toString();
-                jobAppData.platformUrl = "https://www.indeed.com/?from=gnav-util-homepage";
+                jobAppData.platformUrl = _platformURL;
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
                 JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
