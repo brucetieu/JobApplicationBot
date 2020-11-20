@@ -73,6 +73,25 @@ public class CreateGUIComponents extends JFrame {
         _panel.add(label);
         return label;
     }
+    
+    /**
+     * Add a fixed label which will go specifically in the LinkedInPanel.
+     * @param x      The new x-coordinate of the component.
+     * @param y      The new y-coordinate of the component.
+     * @param width  The new width of the component.
+     * @param height The new height of the component.
+     */
+    public void addFixedLabel(int x, int y, int width, int height) {
+        JLabel label = new JLabel();
+        label.setText("<html><body>Write your message like the format below, making sure<br> "
+                + "that there's always a \"Sincerely, \" at the end, <br>"
+                + "or an ending greeting of your choice. The beginning <br> "
+                + "of the message will be substituted with <br>"
+                + "\"Hi, 'person's name', \" followed by your message. </body></html>");
+        label.setBounds(x, y, width, height);
+        _panel.add(label);
+    }
+
 
     /**
      * This method adds JTextFields.
