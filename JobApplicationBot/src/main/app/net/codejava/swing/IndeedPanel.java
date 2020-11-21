@@ -3,12 +3,17 @@ package net.codejava.swing;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.btieu.JobApplicationBot.JobApplicationData;
 import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
@@ -16,7 +21,6 @@ import com.btieu.JobApplicationBot.JobIterator;
 import com.btieu.JobApplicationBot.JobPostingData;
 import com.btieu.JobApplicationBot.Pagination;
 import com.btieu.JobApplicationBot.WriteFiles;
-
 
 /**
  * This class creates the Indeed panel.
@@ -35,11 +39,13 @@ public class IndeedPanel extends CreateGUIComponents {
     private JComboBox<ApplicationType> _appBox;
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
+    private List<JTextField> _listOfTextFields;
 
     /**
      * Default constructor.
      */
     public IndeedPanel() {
+        _listOfTextFields = new ArrayList<>();
     }
 
     /**
@@ -60,12 +66,23 @@ public class IndeedPanel extends CreateGUIComponents {
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
-    
+        
+        // Add textfield to the list of textfields.
+        _listOfTextFields.add(_whatJob);
+        _listOfTextFields.add(_jobLoc);
+        _listOfTextFields.add(_csvOutputName);
+
+        // Disable launch button if any text fields are blank.
+        for (JTextField tf : _listOfTextFields) {
+            tf.getDocument().addDocumentListener(new TextfieldListener(tf, launchButton));
+        }
+
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 JobApplicationData jobAppData = new JobApplicationData();
                 WriteFiles writeFiles = null;
-                
+
                 try {
                     writeFiles = new WriteFiles(_csvOutputName.getText());
                 } catch (IOException e2) {
@@ -73,7 +90,7 @@ public class IndeedPanel extends CreateGUIComponents {
                 }
 
                 JobApplicationData.resumePath = getResumeFile().toString();
-          
+
                 jobAppData.platformUrl = _INDEED_URL;
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
@@ -81,14 +98,14 @@ public class IndeedPanel extends CreateGUIComponents {
                 ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
                 JobIterator jobIterator = new JobIterator(writeFiles, appType);
                 Pagination page = new Pagination(jobAppData);
-                
+
                 // Run the IndeedBot.
                 new RunIndeedBot(appType, jobAppData, jobIterator, page);
             }
         });
 
     }
-    
+
     /**
      * Add Job preferences fields.
      */
@@ -103,9 +120,10 @@ public class IndeedPanel extends CreateGUIComponents {
         _whatJob = addTextField(280, 60, 130, 26, 10);
         _jobLoc = addTextField(280, 92, 130, 26, 10);
         _appBox = addAppTypeDropdown(280, 124, 150, 27);
+
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(_STARTING_PAGE), 280, 156, 150, 27);
         _csvOutputName = addTextField(280, 192, 180, 26, 10);
-    }
 
+    }
 
 }
