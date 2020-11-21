@@ -35,7 +35,7 @@ public class IndeedPanel extends CreateGUIComponents {
     private static final String _INDEED_URL = "https://www.indeed.com/?from=gnav-util-homepage";
     private JTextField _whatJob;
     private JTextField _jobLoc;
-    private JTextField _csvOutputName;
+    private JTextField _csvOutputPath;
     private JComboBox<ApplicationType> _appBox;
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
@@ -59,7 +59,10 @@ public class IndeedPanel extends CreateGUIComponents {
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
-       
+        
+        // Disable button by default.
+        launchButton.setEnabled(false);
+        
         // Enable launch button if all TextFields are filled.
         _validateTextFields(launchButton);
         
@@ -70,7 +73,7 @@ public class IndeedPanel extends CreateGUIComponents {
                 WriteFiles writeFiles = null;
 
                 try {
-                    writeFiles = new WriteFiles(_csvOutputName.getText());
+                    writeFiles = new WriteFiles(_csvOutputPath.getText());
                 } catch (IOException e2) {
                     System.out.println(e2.toString());
                 }
@@ -108,7 +111,7 @@ public class IndeedPanel extends CreateGUIComponents {
         _appBox = addAppTypeDropdown(280, 124, 150, 27);
 
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(_STARTING_PAGE), 280, 156, 150, 27);
-        _csvOutputName = addTextField(280, 192, 180, 26, 10);
+        _csvOutputPath = addTextField(280, 192, 180, 26, 10);
 
     }
     
@@ -120,7 +123,7 @@ public class IndeedPanel extends CreateGUIComponents {
         // Add text field to the list of text fields.
         _listOfTextFields.add(_whatJob);
         _listOfTextFields.add(_jobLoc);
-        _listOfTextFields.add(_csvOutputName);
+        _listOfTextFields.add(_csvOutputPath);
 
         // Disable launch button if any text fields are blank.
         for (JTextField tf : _listOfTextFields) {
