@@ -39,14 +39,7 @@ public class IndeedPanel extends CreateGUIComponents {
     private JComboBox<ApplicationType> _appBox;
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
-    private List<JTextField> _listOfTextFields;
-
-    /**
-     * Default constructor.
-     */
-    public IndeedPanel() {
-        _listOfTextFields = new ArrayList<>();
-    }
+    private List<JTextField> _listOfTextFields = new ArrayList<>();
 
     /**
      * Create the Indeed panel with labels and application fields.
@@ -66,17 +59,10 @@ public class IndeedPanel extends CreateGUIComponents {
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
+       
+        // Enable launch button if all TextFields are filled.
+        _validateTextFields(launchButton);
         
-        // Add textfield to the list of textfields.
-        _listOfTextFields.add(_whatJob);
-        _listOfTextFields.add(_jobLoc);
-        _listOfTextFields.add(_csvOutputName);
-
-        // Disable launch button if any text fields are blank.
-        for (JTextField tf : _listOfTextFields) {
-            tf.getDocument().addDocumentListener(new TextfieldListener(tf, launchButton));
-        }
-
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -124,6 +110,22 @@ public class IndeedPanel extends CreateGUIComponents {
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(_STARTING_PAGE), 280, 156, 150, 27);
         _csvOutputName = addTextField(280, 192, 180, 26, 10);
 
+    }
+    
+    /**
+     * Check if the text fields are completed by listening to each one.
+     */
+    private void _validateTextFields(JButton launchButton) {
+        
+        // Add text field to the list of text fields.
+        _listOfTextFields.add(_whatJob);
+        _listOfTextFields.add(_jobLoc);
+        _listOfTextFields.add(_csvOutputName);
+
+        // Disable launch button if any text fields are blank.
+        for (JTextField tf : _listOfTextFields) {
+            tf.getDocument().addDocumentListener(new TextfieldListener(_listOfTextFields, launchButton));
+        }
     }
 
 }
