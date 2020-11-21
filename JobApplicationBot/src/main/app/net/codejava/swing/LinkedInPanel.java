@@ -23,9 +23,12 @@ import javax.swing.JTextField;
 public class LinkedInPanel extends CreateGUIComponents {
 
     private static final long serialVersionUID = 1L;
-    private static final String _LINKEDIN_URL = "https://www.indeed.com/?from=gnav-util-homepage";
+    private static final String _LINKEDIN_URL = "https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin";
     private JTextField _email;
     private JPasswordField _password;
+    private JTextField _firstname;
+    private JTextField _fullname;
+    private JTextField _linkedin;
     private JTextField _keywords;
     private JComboBox<Integer> _maxConnects;
     private JTabbedPane _tabbedPane;
@@ -63,7 +66,10 @@ public class LinkedInPanel extends CreateGUIComponents {
 
                 jobAppData.email = _email.getText();
                 jobAppData.password = String.valueOf(_password.getPassword());
+                jobAppData.firstname = _firstname.getText();
+                jobAppData.fullname = _fullname.getText();
                 jobAppData.platformUrl = _LINKEDIN_URL;
+                jobAppData.linkedin = _linkedin.getText();
 
                 linkedInPerson.message = _messageText.getText();
                 linkedInPerson.keywords = _keywords.getText();
@@ -85,10 +91,16 @@ public class LinkedInPanel extends CreateGUIComponents {
         addLabels("Email", 20, 65, 100, 16);
         addLabels("Password", 20, 97, 100, 16);
         addFixedLabel(20, 175, 500, 200);
+        addLabels("First Name", 20, 129, 100, 16);
+        addLabels("Full Name", 20, 161, 100, 16);
+        addLabels("LinkedIn profile", 285, 141, 200, 16);
 
         _email = addTextField(125, 60, 130, 26, 10);
         _password = addPasswordField(125, 92, 130, 26, 10);
         _messageText = addTextArea(20, 325, 500, 100);
+        _firstname = addTextField(125, 124, 130, 26, 10);
+        _fullname = addTextField(125, 156, 130, 26, 10);
+        _linkedin = addTextField(401, 136, 130, 26, 10);
 
     }
 
