@@ -133,12 +133,12 @@ public class CreateGUIComponents extends JFrame {
     }
     
     /**
-     * 
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     * @return
+     * Add a text area so the user can assemble a message.
+     * @param x      The new x-coordinate of the component.
+     * @param y      The new y-coordinate of the component.
+     * @param width  The new width of the component.
+     * @param height The new height of the component.
+     * @return The text area as an object.
      */
     public JTextArea addTextArea(int x, int y, int width, int height) {
         _textArea = new JTextArea(
