@@ -1,3 +1,35 @@
+/*
+ * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   - Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   - Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in the
+ *     documentation and/or other materials provided with the distribution.
+ *
+ *   - Neither the name of Oracle or the names of its
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
 package net.codejava.swing;
 
 import com.btieu.JobApplicationBot.JobApplicationData;
@@ -15,9 +47,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.text.AbstractDocument;
 
 /**
  * This class contains the methods used to create swing panels, labels, buttons,
@@ -28,7 +63,9 @@ import javax.swing.SwingConstants;
  */
 public class CreateGUIComponents extends JFrame {
 
+
     private static final long serialVersionUID = 1L;
+    private static final int MAX_CHARACTERS = 270;
     private JPanel _panel;
     private JPanel _contentPane;
     private JLabel _lblNewJgoodiesTitle;
@@ -38,6 +75,9 @@ public class CreateGUIComponents extends JFrame {
     private JTextField _field;
     private JPasswordField _password;
     private SingletonTab _singletonTab;
+    private JTextArea _textArea;
+    private JTextArea _changeLog;
+
 
     /**
      * Initialize a new JPanel and file chooser object.
@@ -73,6 +113,59 @@ public class CreateGUIComponents extends JFrame {
         _panel.add(label);
         return label;
     }
+    
+    /**
+     * Add a fixed label which will go specifically in the LinkedInPanel.
+     * @param x      The new x-coordinate of the component.
+     * @param y      The new y-coordinate of the component.
+     * @param width  The new width of the component.
+     * @param height The new height of the component.
+     */
+    public void addFixedLabel(int x, int y, int width, int height) {
+        JLabel label = new JLabel();
+        label.setText("<html><body>Write your message like the format below, making sure<br> "
+                + "that there's always a \"Sincerely, \" at the end, <br>"
+                + "or an ending greeting of your choice. The beginning <br> "
+                + "of the message will be substituted with <br>"
+                + "\"Hi, 'person's name', \" followed by your message. </body></html>");
+        label.setBounds(x, y, width, height);
+        _panel.add(label);
+    }
+    
+    /**
+     * Add a text area so the user can assemble a message.
+     * @param x      The new x-coordinate of the component.
+     * @param y      The new y-coordinate of the component.
+     * @param width  The new width of the component.
+     * @param height The new height of the component.
+     * @return The text area as an object.
+     */
+    public JTextArea addTextArea(int x, int y, int width, int height) {
+        _textArea = new JTextArea(
+                "Example: \"your profile appeared in my search of software engineers. I am currently pursuing a career in software engineering and it would be great to hear about your journey and experience in the field. Kindly, accept my invitation. You would be a big help! Sincerely, \"",
+                100, 100);
+        _textArea.setLineWrap(true);
+        _textArea.setWrapStyleWord(true);
+        _textArea.setBounds(x, y, width, height);
+
+        AbstractDocument pDoc = (AbstractDocument) _textArea.getDocument();
+        
+        // Set max num of characters text area can have.
+        pDoc.setDocumentFilter(new DocumentSizeFilter(MAX_CHARACTERS));
+
+        // Create the text area for the status log and configure it.
+        _changeLog = new JTextArea(5, 30);
+        _changeLog.setEditable(false);
+        JScrollPane scrollPaneForLog = new JScrollPane(_changeLog);
+        scrollPaneForLog.setBounds(20, 450, 300, 50);
+
+        pDoc.addDocumentListener(new ADocumentListener(_changeLog));
+
+        _panel.add(scrollPaneForLog);
+        _panel.add(_textArea);
+        return _textArea;
+    }
+
 
     /**
      * This method adds JTextFields.
