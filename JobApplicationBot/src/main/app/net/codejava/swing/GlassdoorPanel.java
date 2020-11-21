@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -44,10 +46,12 @@ public class GlassdoorPanel extends CreateGUIComponents {
     private JTextField _portfolio;
     private JTextField _whatJob;
     private JTextField _jobLoc;
-    private JTextField _csvOutputName;
+    private JTextField _csvOutputPath;
     private JComboBox<ApplicationType> _appBox;
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
+    private List<JTextField> _listOfLGFields = new ArrayList<>();
+    private List<JTextField> _listOfNonLGFields = new ArrayList<>();
 
     /**
      * Create the Glassdoor panel.
@@ -68,12 +72,19 @@ public class GlassdoorPanel extends CreateGUIComponents {
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
+
+        launchButton.setEnabled(false);
+        
+        
+        ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
+        _validateTextFields(launchButton, _appBox);
+
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JobApplicationData jobAppData = new JobApplicationData();
                 WriteFiles writeFiles = null;
                 try {
-                    writeFiles = new WriteFiles(_csvOutputName.getText());
+                    writeFiles = new WriteFiles(_csvOutputPath.getText());
                 } catch (IOException e2) {
                     e2.printStackTrace();
                 }
@@ -101,7 +112,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
                 JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
-                ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
+//                ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
                 JobIterator jobIterator = new JobIterator(writeFiles, appType);
                 Pagination page = new Pagination(jobAppData);
 
@@ -165,7 +176,73 @@ public class GlassdoorPanel extends CreateGUIComponents {
         _jobLoc = addTextField(401, 92, 130, 26, 10);
         _appBox = addAppTypeDropdown(401, 124, 150, 27);
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(0), 401, 156, 150, 27);
-        _csvOutputName = addTextField(401, 192, 180, 26, 10);
+        _csvOutputPath = addTextField(401, 192, 180, 26, 10);
+    }
+
+    private void _validateTextFields(JButton launchButton, JComboBox<ApplicationType> comboBox) {
+        comboBox.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                JComboBox<ApplicationType> comboBox = (JComboBox<ApplicationType>) e.getSource();
+                Object selected = comboBox.getSelectedItem();
+                launchButton.setEnabled(false);
+                if (selected == ApplicationType.LEVER_GREENHOUSE) {
+                   
+                
+                    _listOfLGFields.add(_firstName);
+                    _listOfLGFields.add(_lastName);
+                    _listOfLGFields.add(_fullName);
+                    _listOfLGFields.add(_phoneNumber);
+                    _listOfLGFields.add(_location);
+                    
+                    // Disable launch button if any text fields are blank.
+                    for (JTextField tf : _listOfLGFields) {
+                        tf.getDocument().addDocumentListener(new TextfieldListener(_listOfLGFields, launchButton));
+                    }
+                }
+                else {
+                   
+                  
+                    _listOfNonLGFields.add(_whatJob);
+                    _listOfNonLGFields.add(_jobLoc);
+                    _listOfNonLGFields.add(_csvOutputPath);
+                    _listOfNonLGFields.add(_email);
+                    _listOfNonLGFields.add(_password);
+                    
+                    // Disable launch button if any text fields are blank.
+                    for (JTextField tf : _listOfNonLGFields) {
+                        tf.getDocument().addDocumentListener(new TextfieldListener(_listOfNonLGFields, launchButton));
+                    }
+                }
+            }
+            
+        });
+        
+//        if (appType == ApplicationType.LEVER_GREENHOUSE) {
+//            _listOfLGFields.add(_firstName);
+//            _listOfLGFields.add(_lastName);
+//            _listOfLGFields.add(_fullName);
+//            _listOfLGFields.add(_phoneNumber);
+//            _listOfLGFields.add(_location);
+//            
+//            // Disable launch button if any text fields are blank.
+//            for (JTextField tf : _listOfLGFields) {
+//                tf.getDocument().addDocumentListener(new TextfieldListener(_listOfLGFields, launchButton));
+//            }
+//        }
+//        else {
+//            _listOfNonLGFields.add(_whatJob);
+//            _listOfNonLGFields.add(_jobLoc);
+//            _listOfNonLGFields.add(_csvOutputPath);
+//            _listOfNonLGFields.add(_email);
+//            _listOfNonLGFields.add(_password);
+//            
+//            // Disable launch button if any text fields are blank.
+//            for (JTextField tf : _listOfNonLGFields) {
+//                tf.getDocument().addDocumentListener(new TextfieldListener(_listOfNonLGFields, launchButton));
+//            }
+//        }
     }
 
 }
