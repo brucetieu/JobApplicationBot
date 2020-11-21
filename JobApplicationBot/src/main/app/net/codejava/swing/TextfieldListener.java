@@ -44,7 +44,7 @@ public class TextfieldListener implements DocumentListener {
     @Override
     public void changedUpdate(DocumentEvent e) {
         boolean isEnabled = true;
-
+ 
         // Enable the launch button if and only if all textfields are filled out.
         for (JTextField tf : _listOfTextfields) {
             if (tf.getText().isEmpty()) {
