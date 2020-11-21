@@ -159,7 +159,7 @@ public class CreateGUIComponents extends JFrame {
         JScrollPane scrollPaneForLog = new JScrollPane(_changeLog);
         scrollPaneForLog.setBounds(20, 450, 300, 50);
 
-        pDoc.addDocumentListener(new ADocumentListener(_changeLog));
+        pDoc.addDocumentListener(new CharLengthDocumentListener(_changeLog));
 
         _panel.add(scrollPaneForLog);
         _panel.add(_textArea);
