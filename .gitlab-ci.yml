@@ -3,8 +3,12 @@ image:
 
 before_script:
   - make install
-
-pages:
+  
+install_and_build:
+  script:
+    - make test
+  
+  pages:
   stage: deploy
   script:
   - mkdir .public
@@ -15,7 +19,3 @@ pages:
     - public
   only:
   - master
-  
-install_and_build:
-  script:
-    - make test
