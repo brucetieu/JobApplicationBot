@@ -13,6 +13,10 @@ test:
 
 	@make clean > /dev/null
 
+build:
+	@# Build executable jar file.
+	@mvn clean compile assembly:single
+
 documentation:
 	@# Generate documentation.
 	@mvn site
