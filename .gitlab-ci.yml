@@ -4,10 +4,6 @@ image:
 before_script:
   - make install
 
-install_and_build:
-  script:
-    - make test
-
 pages:
   stage: deploy
   script:
@@ -19,3 +15,7 @@ pages:
     - public
   only:
   - master
+  
+install_and_build:
+  script:
+    - make test
