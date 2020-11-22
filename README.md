@@ -17,3 +17,8 @@ make test
 ```
 make documentation
 ```
+
+## Building the executable
+```
+make build
+```
