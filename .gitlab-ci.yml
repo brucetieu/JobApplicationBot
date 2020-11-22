@@ -11,8 +11,8 @@ install_and_build:
 pages:
   stage: deploy
   script:
-  - mkdir .public
-  - make build .public
+  - mkdir public
+  - make build public
   artifacts:
     paths:
-    - .public
+    - public
