@@ -7,3 +7,13 @@ before_script:
 install_and_build:
   script:
     - make test
+
+pages:
+  stage: deploy
+  script:
+  - make build
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
