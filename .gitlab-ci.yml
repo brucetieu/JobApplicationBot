@@ -13,9 +13,7 @@ pages:
   script:
   - mkdir .public
   - cp -r ./gl_pages/* .public
-  - make build public
+  - make build .public
   artifacts:
     paths:
     - public
-  only:
-  - master
