@@ -12,7 +12,7 @@ pages:
   stage: deploy
   script:
   - mkdir .public
-  - make build public
+  - make build .public
   artifacts:
     paths:
-    - public
+    - .public
