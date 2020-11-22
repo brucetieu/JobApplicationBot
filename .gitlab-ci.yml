@@ -8,7 +8,7 @@ install_and_build:
   script:
     - make test
   
-  pages:
+pages:
   stage: deploy
   script:
   - mkdir .public
