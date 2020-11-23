@@ -3,17 +3,18 @@ image:
 
 before_script:
   - make install
-
+  
 install_and_build:
   script:
     - make test
-
+  
 pages:
   stage: deploy
   script:
-  - make build
+   - mkdir .public
+   - cp -r * .public
+   - mv .public public
+   - make build 
   artifacts:
     paths:
     - public
-  only:
-  - master
