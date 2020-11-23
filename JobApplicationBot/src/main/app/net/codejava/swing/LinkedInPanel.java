@@ -15,7 +15,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
- * This class creates the Indeed panel.
+ * This class creates the LinkedIn panel.
  * 
  * @author bruce
  *
