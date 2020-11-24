@@ -14,7 +14,7 @@ pages:
    - mkdir .public
    - cp -r * .public
    - mv .public public
-   - make build 
+   - make build .public
   artifacts:
     paths:
     - public
