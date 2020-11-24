@@ -109,7 +109,6 @@ public class IndeedPanel extends CreateGUIComponents {
         _whatJob = addTextField(280, 60, 130, 26, 10);
         _jobLoc = addTextField(280, 92, 130, 26, 10);
         _appBox = addAppTypeDropdown(280, 124, 150, 27);
-
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(_STARTING_PAGE), 280, 156, 150, 27);
         _csvOutputPath = addTextField(280, 192, 180, 26, 10);
 
