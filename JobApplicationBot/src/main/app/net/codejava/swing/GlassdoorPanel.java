@@ -34,6 +34,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
 
     private static final long serialVersionUID = 1L;
     private static final String _GLASSDOOR_URL = "https://www.glassdoor.com/index.htm";
+    private static final int _STARTING_PAGE = 0;
 
     private JTextField _firstName;
     private JTextField _lastName;
@@ -41,12 +42,12 @@ public class GlassdoorPanel extends CreateGUIComponents {
     private JTextField _email;
     private JTextField _phoneNumber;
     private JPasswordField _password;
-    private JTextField _school;
+//    private JTextField _school;
     private JTextField _location;
-    private JTextField _company;
-    private JTextField _linkedIn;
-    private JTextField _github;
-    private JTextField _portfolio;
+//    private JTextField _company;
+//    private JTextField _linkedIn;
+//    private JTextField _github;
+//    private JTextField _portfolio;
     private JTextField _whatJob;
     private JTextField _jobLoc;
     private JTextField _csvOutputPath;
@@ -65,14 +66,12 @@ public class GlassdoorPanel extends CreateGUIComponents {
      */
     public void createGlassdoorPanel(JPanel _contentPane) {
 
-//        _contentPane = new CardLayoutExample().displayGUI();
-        createTabWithCards("Glassdoor", new CardLayoutExample().displayGUI(), _contentPane, _tabbedPane, 0, 0, 650, 650);
-//        _addApplicantFields();
-//        new CardLayoutExample().displayGUI();
-//        _addJobPreferenceFields();
-//        create();
-//        addUploadResume(210, 475, 200, 29);
+        createTab("Glassdoor", _contentPane, _tabbedPane, 0, 0, 650, 650);
+        _addApplicantFields();
+        _addJobPreferenceFields();
+        addUploadResume(210, 475, 200, 29);
     }
+
 
     /**
      * This method launches the browser and grabs all information from filled out
@@ -83,8 +82,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
 
         launchButton.setEnabled(false);
         
-        
-        ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
+       
         _validateTextFields(launchButton, _appBox);
 
         launchButton.addActionListener(new ActionListener() {
@@ -96,31 +94,32 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 } catch (IOException e2) {
                     e2.printStackTrace();
                 }
-                jobAppData.firstname = _firstName.getText();
-                jobAppData.lastname = _lastName.getText();
-                jobAppData.fullname = _fullName.getText();
+//                jobAppData.firstname = _firstName.getText();
+//                jobAppData.lastname = _lastName.getText();
+//                jobAppData.fullname = _fullName.getText();
                 jobAppData.email = _email.getText();
                 jobAppData.password = String.valueOf(_password.getPassword());
-                jobAppData.school = _school.getText();
-                jobAppData.location = _location.getText();
-                jobAppData.currentCompany = _company.getText();
-                jobAppData.linkedin = _linkedIn.getText();
-                jobAppData.github = _github.getText();
-                jobAppData.portfolio = _portfolio.getText();
+//                jobAppData.school = _school.getText();
+//                jobAppData.location = _location.getText();
+//                jobAppData.currentCompany = _company.getText();
+//                jobAppData.linkedin = _linkedIn.getText();
+//                jobAppData.github = _github.getText();
+//                jobAppData.portfolio = _portfolio.getText();
 
-                jobAppData.phone = null;
-                try {
-                    jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
+//                jobAppData.phone = null;
+//                try {
+//                    jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
+//                } catch (ParseException e1) {
+//                    e1.printStackTrace();
+//                }
+                
                 JobApplicationData.resumePath = getResumeFile().toString();
                 jobAppData.platformUrl = _GLASSDOOR_URL;
 
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
                 JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
-//                ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
+                ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
                 JobIterator jobIterator = new JobIterator(writeFiles, appType);
                 Pagination page = new Pagination(jobAppData);
 
@@ -137,35 +136,35 @@ public class GlassdoorPanel extends CreateGUIComponents {
      */
     private void _addApplicantFields() {
 
-        createGoodiesTitle("Fill below for LEVER_GREENHOUSE", 10, 33, 250, 16);
-        addLabels("First name", 20, 65, 100, 16);
-        addLabels("Last name", 20, 97, 100, 16);
-        addLabels("Full name", 20, 128, 100, 16);
-        addLabels("Phone number", 20, 161, 100, 16);
-        addLabels("School", 20, 193, 100, 16);
-        addLabels("Location", 20, 225, 91, 16);
-        addLabels("Company", 20, 257, 91, 16);
-        addLabels("LinkedIn", 20, 289, 91, 16);
-        addLabels("GitHub", 20, 321, 91, 16);
-        addLabels("Portfolio", 20, 353, 91, 16);
+//        createGoodiesTitle("Fill below for LEVER_GREENHOUSE", 10, 33, 250, 16);
+//        addLabels("First name", 20, 65, 100, 16);
+//        addLabels("Last name", 20, 97, 100, 16);
+//        addLabels("Full name", 20, 128, 100, 16);
+//        addLabels("Phone number", 20, 161, 100, 16);
+//        addLabels("School", 20, 193, 100, 16);
+//        addLabels("Location", 20, 225, 91, 16);
+//        addLabels("Company", 20, 257, 91, 16);
+//        addLabels("LinkedIn", 20, 289, 91, 16);
+//        addLabels("GitHub", 20, 321, 91, 16);
+//        addLabels("Portfolio", 20, 353, 91, 16);
 
-        createGoodiesTitle("Glassdoor Login Info", 391, 232, 175, 16);
-        addLabels("Email", 285, 270, 61, 16);
-        addLabels("Password", 285, 308, 61, 16);
+        createGoodiesTitle("Glassdoor Login Info", 230, 232, 175, 16);
+        addLabels("Email", 150, 270, 61, 16);
+        addLabels("Password", 150, 308, 61, 16);
 
-        _firstName = addTextField(125, 60, 130, 26, 10);
-        _lastName = addTextField(125, 92, 130, 26, 10);
-        _fullName = addTextField(125, 123, 130, 26, 10);
-        _phoneNumber = addTextField(125, 156, 130, 26, 10);
-        _school = addTextField(125, 188, 130, 26, 10);
-        _location = addTextField(125, 220, 130, 26, 10);
-        _company = addTextField(125, 252, 130, 26, 10);
-        _linkedIn = addTextField(125, 284, 130, 26, 10);
-        _github = addTextField(125, 316, 130, 26, 10);
-        _portfolio = addTextField(125, 348, 130, 26, 10);
+//        _firstName = addTextField(125, 60, 130, 26, 10);
+//        _lastName = addTextField(125, 92, 130, 26, 10);
+//        _fullName = addTextField(125, 123, 130, 26, 10);
+//        _phoneNumber = addTextField(125, 156, 130, 26, 10);
+//        _school = addTextField(125, 188, 130, 26, 10);
+//        _location = addTextField(125, 220, 130, 26, 10);
+//        _company = addTextField(125, 252, 130, 26, 10);
+//        _linkedIn = addTextField(125, 284, 130, 26, 10);
+//        _github = addTextField(125, 316, 130, 26, 10);
+//        _portfolio = addTextField(125, 348, 130, 26, 10);
 
-        _email = addTextField(401, 265, 130, 26, 10);
-        _password = addPasswordField(401, 303, 130, 26, 10);
+        _email = addTextField(280, 265, 130, 26, 10);
+        _password = addPasswordField(280, 303, 130, 26, 10);
 
     }
 
@@ -173,18 +172,18 @@ public class GlassdoorPanel extends CreateGUIComponents {
      * Add Job preferences fields.
      */
     private void _addJobPreferenceFields() {
-        createGoodiesTitle("Job Preferences", 391, 32, 122, 16);
-        addLabels("What job", 285, 65, 61, 16);
-        addLabels("Location of job", 285, 97, 100, 16);
-        addLabels("Application type", 285, 128, 150, 16);
-        addLabels("Pages to scrape", 285, 156, 100, 16);
-        addLabels("CSV output path", 285, 194, 150, 16);
+        createGoodiesTitle("Job Preferences", 230, 32, 122, 16);
+        addLabels("What job", 150, 65, 61, 16);
+        addLabels("Location of job", 150, 97, 100, 16);
+        addLabels("Application type", 150, 128, 150, 16);
+        addLabels("Pages to scrape", 150, 156, 100, 16);
+        addLabels("CSV output path", 150, 194, 150, 16);
 
-        _whatJob = addTextField(401, 60, 130, 26, 10);
-        _jobLoc = addTextField(401, 92, 130, 26, 10);
-        _appBox = addAppTypeDropdown(401, 124, 150, 27);
-        _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(0), 401, 156, 150, 27);
-        _csvOutputPath = addTextField(401, 192, 180, 26, 10);
+        _whatJob = addTextField(280, 60, 130, 26, 10);
+        _jobLoc = addTextField(280, 92, 130, 26, 10);
+        _appBox = addAppTypeDropdown(280, 124, 150, 27);
+        _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(_STARTING_PAGE), 280, 156, 150, 27);
+        _csvOutputPath = addTextField(280, 192, 180, 26, 10);
     }
 
     private void _validateTextFields(JButton launchButton, JComboBox<ApplicationType> comboBox) {
@@ -228,31 +227,31 @@ public class GlassdoorPanel extends CreateGUIComponents {
         });
     }
         
-        private void create() {
-            JFrame f = new JFrame();
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//            for (int i = 1; i < 9; i++) {
-//                CardPanel p = new CardPanel("Panel " + String.valueOf(i));
-//                combo.addItem(p);
-//                cards.add(p, p.toString());
-//            }
-            JPanel control = new JPanel();
-            _appBox.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JComboBox<ApplicationType> jcb = (JComboBox<ApplicationType>) e.getSource();
-                    CardLayout cl = (CardLayout) cards.getLayout();
-                    cl.show(cards, jcb.getSelectedItem().toString());
-                }
-            });
-            control.add(_appBox);
-            f.add(cards, BorderLayout.CENTER);
-            f.add(control, BorderLayout.SOUTH);
-            f.pack();
-            f.setLocationRelativeTo(null);
-            f.setVisible(true);
-        }
+//        private void create() {
+//            JFrame f = new JFrame();
+//            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+////            for (int i = 1; i < 9; i++) {
+////                CardPanel p = new CardPanel("Panel " + String.valueOf(i));
+////                combo.addItem(p);
+////                cards.add(p, p.toString());
+////            }
+//            JPanel control = new JPanel();
+//            _appBox.addActionListener(new ActionListener() {
+//
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    JComboBox<ApplicationType> jcb = (JComboBox<ApplicationType>) e.getSource();
+//                    CardLayout cl = (CardLayout) cards.getLayout();
+//                    cl.show(cards, jcb.getSelectedItem().toString());
+//                }
+//            });
+//            control.add(_appBox);
+//            f.add(cards, BorderLayout.CENTER);
+//            f.add(control, BorderLayout.SOUTH);
+//            f.pack();
+//            f.setLocationRelativeTo(null);
+//            f.setVisible(true);
+//        }
         
 //        if (appType == ApplicationType.LEVER_GREENHOUSE) {
 //            _listOfLGFields.add(_firstName);
