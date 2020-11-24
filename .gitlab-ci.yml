@@ -15,7 +15,7 @@ pages:
    - cp -r * .public
    - mv .public public
    - make build
-   - mv ./target/BotGUI.jar .public/BotGUI.jar
+   - mv ./target/BotGUI.jar public/BotGUI.jar
   artifacts:
     paths:
     - public
