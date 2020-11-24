@@ -78,11 +78,11 @@ public class IndeedPanel extends CreateGUIComponents {
                     System.out.println(e2.toString());
                 }
 
-                JobApplicationData.resumePath = getResumeFile().toString();
-
                 jobAppData.platformUrl = _INDEED_URL;
                 jobAppData.whatJob = _whatJob.getText();
                 jobAppData.locationOfJob = _jobLoc.getText();
+                JobApplicationData.resumePath = getResumeFile().toString();
+
                 JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
                 ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
                 JobIterator jobIterator = new JobIterator(writeFiles, appType);
