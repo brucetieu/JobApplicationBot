@@ -1,5 +1,12 @@
 package net.codejava.swing;
 
+import com.btieu.JobApplicationBot.JobApplicationData;
+import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
+import com.btieu.JobApplicationBot.JobIterator;
+import com.btieu.JobApplicationBot.JobPostingData;
+import com.btieu.JobApplicationBot.Pagination;
+import com.btieu.JobApplicationBot.WriteFiles;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -8,19 +15,10 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-import com.btieu.JobApplicationBot.JobApplicationData;
-import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
-import com.btieu.JobApplicationBot.JobIterator;
-import com.btieu.JobApplicationBot.JobPostingData;
-import com.btieu.JobApplicationBot.Pagination;
-import com.btieu.JobApplicationBot.WriteFiles;
 
 /**
  * This class creates the Indeed panel.
