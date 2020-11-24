@@ -19,7 +19,7 @@ build:
 
 documentation:
 	@# Generate documentation.
-	@mvn site
+	@mvn -Dmaven.javadoc.skip=true verify clean site
 
 	@xdg-open target/site/testapidocs/index.html
 
