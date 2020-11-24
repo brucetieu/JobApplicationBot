@@ -222,6 +222,15 @@ public class CreateGUIComponents extends JFrame {
         tabbedPane.addTab(name, null, _panel, null);
         _panel.setLayout(null);
     }
+    
+    public void createTabWithCards(String name, JPanel panel, JPanel contentPane, JTabbedPane tabbedPane, int x, int y, int width,
+            int height) {
+        tabbedPane = _singletonTab.getTabbedPane();
+        tabbedPane.setBounds(x, y, width, height);
+        contentPane.add(tabbedPane);
+        tabbedPane.addTab(name, null, panel, null);
+//        _panel.setLayout(null);
+    }
 
     /**
      * This method creates titles.
