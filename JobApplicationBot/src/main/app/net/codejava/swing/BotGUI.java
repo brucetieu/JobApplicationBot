@@ -1,5 +1,6 @@
 package net.codejava.swing;
 
+import java.awt.CardLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -23,6 +24,8 @@ public class BotGUI extends JFrame {
     private GlassdoorPanel _glassdoorPanel;
     private LinkedInPanel _linkedInPanel;
     private static final String _GUI_TITLE = "Job Application Bot";
+    
+    private JPanel _contentPaneCards;
 
     /**
      * Launch the application.
@@ -62,7 +65,7 @@ public class BotGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(_GUI_X_AXIS, _GUI_Y_AXIS, _GUI_WIDTH, _GUI_HEIGHT);
         setLocationRelativeTo(null);
-       
+
         this._contentPane = new JPanel();
         setContentPane(this._contentPane);
         this._contentPane.setLayout(null);
@@ -73,7 +76,7 @@ public class BotGUI extends JFrame {
 
         this._glassdoorPanel = glassdoorPanel;
         this._glassdoorPanel.createGlassdoorPanel(this._contentPane);
-        this._glassdoorPanel.launchApp();
+//        this._glassdoorPanel.launchApp();
         
         this._linkedInPanel = linkedInPanel;
         this._linkedInPanel.createLinkedInPanel(this._contentPane);
