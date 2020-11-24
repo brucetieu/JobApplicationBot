@@ -1,5 +1,7 @@
 package net.codejava.swing;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
@@ -52,6 +55,8 @@ public class GlassdoorPanel extends CreateGUIComponents {
     private JTabbedPane _tabbedPane;
     private List<JTextField> _listOfLGFields = new ArrayList<>();
     private List<JTextField> _listOfNonLGFields = new ArrayList<>();
+    
+    private static final JPanel cards = new JPanel(new CardLayout());
 
     /**
      * Create the Glassdoor panel.
@@ -60,10 +65,13 @@ public class GlassdoorPanel extends CreateGUIComponents {
      */
     public void createGlassdoorPanel(JPanel _contentPane) {
 
-        createTab("Glassdoor", _contentPane, _tabbedPane, 0, 0, 650, 650);
-        _addApplicantFields();
-        _addJobPreferenceFields();
-        addUploadResume(210, 475, 200, 29);
+//        _contentPane = new CardLayoutExample().displayGUI();
+        createTabWithCards("Glassdoor", new CardLayoutExample().displayGUI(), _contentPane, _tabbedPane, 0, 0, 650, 650);
+//        _addApplicantFields();
+//        new CardLayoutExample().displayGUI();
+//        _addJobPreferenceFields();
+//        create();
+//        addUploadResume(210, 475, 200, 29);
     }
 
     /**
@@ -188,7 +196,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 Object selected = comboBox.getSelectedItem();
                 launchButton.setEnabled(false);
                 if (selected == ApplicationType.LEVER_GREENHOUSE) {
-                   
+                    _addApplicantFields();
                 
                     _listOfLGFields.add(_firstName);
                     _listOfLGFields.add(_lastName);
@@ -218,6 +226,33 @@ public class GlassdoorPanel extends CreateGUIComponents {
             }
             
         });
+    }
+        
+        private void create() {
+            JFrame f = new JFrame();
+            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//            for (int i = 1; i < 9; i++) {
+//                CardPanel p = new CardPanel("Panel " + String.valueOf(i));
+//                combo.addItem(p);
+//                cards.add(p, p.toString());
+//            }
+            JPanel control = new JPanel();
+            _appBox.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JComboBox<ApplicationType> jcb = (JComboBox<ApplicationType>) e.getSource();
+                    CardLayout cl = (CardLayout) cards.getLayout();
+                    cl.show(cards, jcb.getSelectedItem().toString());
+                }
+            });
+            control.add(_appBox);
+            f.add(cards, BorderLayout.CENTER);
+            f.add(control, BorderLayout.SOUTH);
+            f.pack();
+            f.setLocationRelativeTo(null);
+            f.setVisible(true);
+        }
         
 //        if (appType == ApplicationType.LEVER_GREENHOUSE) {
 //            _listOfLGFields.add(_firstName);
@@ -243,6 +278,6 @@ public class GlassdoorPanel extends CreateGUIComponents {
 //                tf.getDocument().addDocumentListener(new TextfieldListener(_listOfNonLGFields, launchButton));
 //            }
 //        }
-    }
+//    }
 
 }
