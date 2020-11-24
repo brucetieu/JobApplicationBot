@@ -1,6 +1,5 @@
 package net.codejava.swing;
 
-import java.awt.CardLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -22,10 +21,9 @@ public class BotGUI extends JFrame {
     private JPanel _contentPane;
     private IndeedPanel _indeedPanel;
     private GlassdoorPanel _glassdoorPanel;
+    private LeverGreenhousePanel _leverGreenhousePanel;
     private LinkedInPanel _linkedInPanel;
     private static final String _GUI_TITLE = "Job Application Bot";
-    
-    private JPanel _contentPaneCards;
 
     /**
      * Launch the application.
@@ -36,8 +34,9 @@ public class BotGUI extends JFrame {
                 try {
                     IndeedPanel indeedPanel = new IndeedPanel();
                     GlassdoorPanel glassdoorPanel = new GlassdoorPanel();
+                    LeverGreenhousePanel leverGreenhousePanel = new LeverGreenhousePanel();
                     LinkedInPanel linkedInPanel = new LinkedInPanel();
-                    BotGUI frame = new BotGUI(indeedPanel, glassdoorPanel, linkedInPanel);
+                    BotGUI frame = new BotGUI(indeedPanel, glassdoorPanel, leverGreenhousePanel, linkedInPanel);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -45,7 +44,7 @@ public class BotGUI extends JFrame {
             }
         });
     }
-    
+
     /**
      * Default constructor.
      */
@@ -59,9 +58,9 @@ public class BotGUI extends JFrame {
      * @param indeedPanel    Object which creates the indeed panel.
      * @param glassdoorPanel Object which creates the Glassdoor panel.
      */
-    public BotGUI(IndeedPanel indeedPanel, GlassdoorPanel glassdoorPanel, LinkedInPanel linkedInPanel) {
+    public BotGUI(IndeedPanel indeedPanel, GlassdoorPanel glassdoorPanel, LeverGreenhousePanel leverGreenhouse, LinkedInPanel linkedInPanel) {
         super(_GUI_TITLE);
-        
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(_GUI_X_AXIS, _GUI_Y_AXIS, _GUI_WIDTH, _GUI_HEIGHT);
         setLocationRelativeTo(null);
@@ -70,14 +69,22 @@ public class BotGUI extends JFrame {
         setContentPane(this._contentPane);
         this._contentPane.setLayout(null);
 
+        // Create Indeed tab.
         this._indeedPanel = indeedPanel;
         this._indeedPanel.createIndeedPanel(this._contentPane);
         this._indeedPanel.launchApp();
 
+        // Create Glassdoor tab.
         this._glassdoorPanel = glassdoorPanel;
         this._glassdoorPanel.createGlassdoorPanel(this._contentPane);
         this._glassdoorPanel.launchApp();
         
+        // Create LeverGreenhouse tab.
+        this._leverGreenhousePanel = leverGreenhouse;
+        this._leverGreenhousePanel.createLeverGreenhousePanel(this._contentPane);
+        this._leverGreenhousePanel.launchApp();
+
+        // Create LinkedIn tab.
         this._linkedInPanel = linkedInPanel;
         this._linkedInPanel.createLinkedInPanel(this._contentPane);
         this._linkedInPanel.launchApp();
