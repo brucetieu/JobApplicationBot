@@ -1,17 +1,13 @@
 package net.codejava.swing;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
@@ -66,9 +62,11 @@ public class GlassdoorPanel extends CreateGUIComponents {
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
-
+        
+        // Disable button by default.
         launchButton.setEnabled(false);
-       
+        
+        // Enable launch button if all TextFields are filled.
         _validateTextFields(launchButton);
 
         launchButton.addActionListener(new ActionListener() {
