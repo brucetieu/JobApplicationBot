@@ -123,11 +123,8 @@ public class CreateGUIComponents extends JFrame {
      */
     public void addFixedLabel(int x, int y, int width, int height) {
         JLabel label = new JLabel();
-        label.setText("<html><body>Write your message like the format below, making sure<br> "
-                + "that there's always a \"Sincerely, \" at the end, <br>"
-                + "or an ending greeting of your choice. The beginning <br> "
-                + "of the message will be substituted with <br>"
-                + "\"Hi, 'person's name', \" followed by your message. </body></html>");
+        label.setText("<html><body>Write your message like the format below, making sure that there's always a \"Sincerely, \" at the end, "
+                + "or an ending greeting of your choice. The beginning of the message will be substituted with \"Hi, 'person's name', \" followed by your message. </body></html>");
         label.setBounds(x, y, width, height);
         _panel.add(label);
     }
