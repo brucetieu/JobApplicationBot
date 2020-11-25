@@ -55,7 +55,7 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
         createTab("Lever / Greenhouse", _contentPane, _tabbedPane, 0, 0, 650, 650);
         _addApplicantFields();
         _addJobPreferenceFields();
-        addUploadResume(210, 475, 200, 29);
+       
     }
 
     /**
@@ -102,15 +102,14 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
-                JobApplicationData.resumePath = getResumeFile().toString();
                
                 JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
                 JobApplicationData.ApplicationType appType = JobApplicationData.ApplicationType.LEVER_GREENHOUSE;
                 JobIterator jobIterator = new JobIterator(writeFiles, appType);
                 Pagination page = new Pagination(jobAppData);
 
-                // Run the GlassdoorBot
-                new RunGlassdoorBot(appType, jobAppData, jobIterator, page, writeFiles);
+                // Run the LeverGreenhouseBot
+                new RunLeverGreenhouseBot(appType, jobAppData, jobIterator, page, writeFiles);
 
             }
         });
