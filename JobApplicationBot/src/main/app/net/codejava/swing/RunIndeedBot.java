@@ -73,9 +73,5 @@ public class RunIndeedBot {
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
             MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_MSG);
         }
-        // Don't do anything with the lever greenhouse ones.
-        else
-            MessageDialog.infoBox(MessageDialog.INVALID_LEVER_GREENHOUSE_MSG, MessageDialog.INVALID_OPTION_MSG);
-            new BotGUI();
     }
 }
