@@ -249,6 +249,7 @@ public class CreateGUIComponents extends JFrame {
      */
     public JComboBox<ApplicationType> addAppTypeDropdown(int x, int y, int width, int height) {
         JComboBox<ApplicationType> comboBox = new JComboBox<ApplicationType>(JobApplicationData.ApplicationType.values());
+        comboBox.removeItemAt(comboBox.getItemCount() - 1); // Remove LEVER_GREENHOUSE option.
         comboBox.setBounds(x, y, width, height);
         _panel.add(comboBox);
         return comboBox;
