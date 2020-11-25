@@ -154,7 +154,8 @@ public class CreateGUIComponents extends JFrame {
         _changeLog = new JTextArea(5, 30);
         _changeLog.setEditable(false);
         JScrollPane scrollPaneForLog = new JScrollPane(_changeLog);
-        scrollPaneForLog.setBounds(20, 450, 300, 50);
+        createGoodiesTitle("Character count", 20, 440, 122, 16);
+        scrollPaneForLog.setBounds(20, 460, 300, 50);
 
         pDoc.addDocumentListener(new CharLengthDocumentListener(_changeLog));
 
