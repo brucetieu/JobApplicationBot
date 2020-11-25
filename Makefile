@@ -21,7 +21,5 @@ documentation:
 	@# Generate documentation.
 	@mvn -Dmaven.javadoc.skip=true verify clean site
 
-	@open target/site/index.html
-
 clean:
 	@rm -rf target
