@@ -42,12 +42,12 @@ import javax.swing.text.Document;
  * @author Oracle
  *
  */
-public class ADocumentListener implements DocumentListener {
+public class CharLengthDocumentListener implements DocumentListener {
 
     private JTextArea _changeLog;
     private String _NEWLINE = "\n";
 
-    public ADocumentListener(JTextArea changeLog) {
+    public CharLengthDocumentListener(JTextArea changeLog) {
         _changeLog = changeLog;
     }
 
