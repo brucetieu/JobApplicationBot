@@ -5,7 +5,6 @@ import java.util.List;
 import com.btieu.JobApplicationBot.GlassdoorApplyBot;
 import com.btieu.JobApplicationBot.JobApplicationData;
 import com.btieu.JobApplicationBot.JobIterator;
-import com.btieu.JobApplicationBot.LeverGreenhouseBot;
 import com.btieu.JobApplicationBot.Pagination;
 import com.btieu.JobApplicationBot.WriteFiles;
 
@@ -20,7 +19,7 @@ import org.openqa.selenium.WebElement;
  */
 public class RunGlassdoorBot {
     
-    private static final By _GLASSDOOR_JOB_CARD = By.className("react-job-listing");
+    public static final By _GLASSDOOR_JOB_CARD = By.className("react-job-listing");
 
     /**
      * When this constructor is called, it will execute the GlassdoorBot.
@@ -70,22 +69,6 @@ public class RunGlassdoorBot {
                         notEa.saveNonEasyApplyJobs(index, notEa.tryToFindElements(_GLASSDOOR_JOB_CARD));
                     }, (int pageNum) -> page.goToNextGlassdoorPage(pageNum));
         }
-        // Handle the Lever and Greenhouse jobs.
-        else if (appType == JobApplicationData.ApplicationType.LEVER_GREENHOUSE) {
-            LeverGreenhouseBot lg = new LeverGreenhouseBot(jobAppData, appType, writeFiles);
-            lg.navigateToJobPage();
-            lg.login();
-            lg.searchJobs();
-            jobIterator.loopThroughJob(lg.tryToFindElements(_GLASSDOOR_JOB_CARD),
-                    (int index, List<WebElement> jobList) -> {
-
-                        lg.saveLGJobs(index, lg.tryToFindElements(_GLASSDOOR_JOB_CARD));
-                    }, (int pageNum) -> page.goToNextGlassdoorPage(pageNum));
-            
-            // Apply to lever and greenhouse jobs.
-            lg.apply();
-        }
-
     }
 
 }
