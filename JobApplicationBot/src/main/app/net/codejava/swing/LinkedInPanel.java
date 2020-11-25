@@ -5,6 +5,8 @@ import com.btieu.JobApplicationBot.LinkedInPerson;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -33,6 +35,7 @@ public class LinkedInPanel extends CreateGUIComponents {
     private JComboBox<Integer> _maxConnects;
     private JTabbedPane _tabbedPane;
     private JTextArea _messageText;
+    private List<JTextField> _listOfTextFields = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -58,7 +61,14 @@ public class LinkedInPanel extends CreateGUIComponents {
      * fields.
      */
     public void launchApp() {
-        JButton launchButton = addButton("Launch", 280, 525, 117, 29);
+        JButton launchButton = addButton("Launch", 245, 525, 117, 29);
+        
+        // Disable button by default.
+        launchButton.setEnabled(false);
+        
+        // Enable launch button if all TextFields are filled.
+        _validateTextFields(launchButton);
+        
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JobApplicationData jobAppData = new JobApplicationData();
@@ -117,5 +127,24 @@ public class LinkedInPanel extends CreateGUIComponents {
         addLabels("Connect requests", 285, 103, 200, 16);
         _maxConnects = addDropdown(GUIComponentsHelper.generateMaxConnectRequests(), 401, 98, 150, 27);
     }
+    
+    /**
+     * Check if the text fields are completed by listening to each one.
+     */
+    private void _validateTextFields(JButton launchButton) {
+        
+        // Add text field to the list of text fields.
+        _listOfTextFields.add(_email);
+        _listOfTextFields.add(_password);
+        _listOfTextFields.add(_firstname);
+        _listOfTextFields.add(_fullname);
+        _listOfTextFields.add(_linkedin);
+
+        // Disable launch button if any text fields are blank.
+        for (JTextField tf : _listOfTextFields) {
+            tf.getDocument().addDocumentListener(new TextFieldListener(_listOfTextFields, launchButton));
+        }
+    }
+
 
 }
