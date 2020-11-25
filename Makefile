@@ -13,11 +13,13 @@ test:
 
 	@make clean > /dev/null
 
+build:
+	@# Build executable jar file.
+	@mvn clean compile assembly:single
+
 documentation:
 	@# Generate documentation.
-	@mvn site
-
-	@xdg-open target/site/testapidocs/index.html
+	@mvn -Dmaven.javadoc.skip=true verify clean site
 
 clean:
 	@rm -rf target
