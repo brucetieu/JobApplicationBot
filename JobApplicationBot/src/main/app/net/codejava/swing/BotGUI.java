@@ -45,7 +45,6 @@ public class BotGUI extends JFrame {
         });
     }
 
-    
     /**
      * Default constructor.
      */
@@ -56,16 +55,20 @@ public class BotGUI extends JFrame {
     /**
      * Create the Desktop app.
      * 
-     * @param indeedPanel    Object which creates the indeed panel.
-     * @param glassdoorPanel Object which creates the Glassdoor panel.
+     * @param indeedPanel     Object which creates the indeed panel.
+     * @param glassdoorPanel  Object which creates the Glassdoor panel.
+     * @param leverGreenhouse Object which creates the LeverGreenhouse panel.
+     * @param linkedInPanel   Object which creates the LinkedInPanel.
      */
-    public BotGUI(IndeedPanel indeedPanel, GlassdoorPanel glassdoorPanel, LeverGreenhousePanel leverGreenhouse, LinkedInPanel linkedInPanel) {
+    public BotGUI(IndeedPanel indeedPanel, GlassdoorPanel glassdoorPanel, LeverGreenhousePanel leverGreenhouse,
+            LinkedInPanel linkedInPanel) {
         super(_GUI_TITLE);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(_GUI_X_AXIS, _GUI_Y_AXIS, _GUI_WIDTH, _GUI_HEIGHT);
         setLocationRelativeTo(null);
 
+        // Create content pane to put labels and text fields on.
         this._contentPane = new JPanel();
         setContentPane(this._contentPane);
         this._contentPane.setLayout(null);
@@ -79,7 +82,7 @@ public class BotGUI extends JFrame {
         this._glassdoorPanel = glassdoorPanel;
         this._glassdoorPanel.createGlassdoorPanel(this._contentPane);
         this._glassdoorPanel.launchApp();
-        
+
         // Create LeverGreenhouse tab.
         this._leverGreenhousePanel = leverGreenhouse;
         this._leverGreenhousePanel.createLeverGreenhousePanel(this._contentPane);
