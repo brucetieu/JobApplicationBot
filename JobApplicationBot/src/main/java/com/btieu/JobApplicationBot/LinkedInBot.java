@@ -142,9 +142,7 @@ public class LinkedInBot extends Bot {
             } catch (Exception e) {
                 System.out.println("Some error");
             }
-
         }
-
     }
 
     /**
