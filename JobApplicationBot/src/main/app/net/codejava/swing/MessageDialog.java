@@ -13,9 +13,13 @@ public class MessageDialog {
     public static final String INDEED_NOT_EASY_APPLY_MSG = "Saving Indeed Not Easy Apply jobs... Cick Ok to continue.";
     public static final String INDEED_ALL_MSG = "Saving all Indeed jobs... Click Ok to continue.";
     
+    public static final String GLASSDOOR_EASY_APPLY_MSG = "Saving Glassdoor Easily Apply jobs... Click Ok to continue.";
+    public static final String GLASSDOOR_NOT_EASY_APPLY_MSG = "Saving Glassdoor Not Easily Apply jobs... Click Ok to continue.";
+    public static final String GLASSDOOR_ALL_MSG = "Saving all Glasdoor jobs... Click Ok to continue.";
+    
     public static final String SUCCESS_JOB_SAVE_MSG = "Job successfully saved. You may search again with a different config or close the app.";
-    public static final String SUCCESS_MSG = "Success";
-    public static final String SUCCESSFUL_LAUNCH_MSG = "Successful launch";
+    public static final String SUCCESS_TITLE = "Success";
+    public static final String SUCCESSFUL_LAUNCH_TITLE = "Successful launch";
     
     public static final String INVALID_EMAIL_MSG = "Invalid email format! Try again.";
     public static final String INVALID_EMAIL_TITLE = "Invalid email";
