@@ -143,6 +143,9 @@ public class GlassdoorPanel extends CreateGUIComponents {
         }
     }
     
+    /**
+     * Get the completed text field info.
+     */
     private void _getCompleteFields() {
         _writeFiles = null;
         

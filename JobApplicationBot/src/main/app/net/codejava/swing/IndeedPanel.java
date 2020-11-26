@@ -38,7 +38,6 @@ public class IndeedPanel extends CreateGUIComponents {
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
     private List<JTextField> _listOfTextFields = new ArrayList<>();
-    private EmailValidator _emailValidator = new EmailValidator();
     private JobApplicationData _jobAppData;
     private WriteFiles _writeFiles;
     private JobIterator _jobIterator;
@@ -124,8 +123,10 @@ public class IndeedPanel extends CreateGUIComponents {
         }
     }
     
+    /**
+     * Get the completed fields. 
+     */
     private void _getCompleteFields() {
-
         _writeFiles = null;
 
         // Verify the csv output is actually a csv.
