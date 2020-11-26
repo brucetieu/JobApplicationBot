@@ -27,8 +27,8 @@ public class GUIComponentsHelper {
      */
     public static Integer[] generateMaxConnectRequests() {
         Integer maxConnectContainer[] = new Integer[_MAX_CONNECTION_REQUESTS + 1];
-        for (int i = 1; i <= _MAX_CONNECTION_REQUESTS; i++) {
-            maxConnectContainer[i] = i;
+        for (int i = 0; i <= _MAX_CONNECTION_REQUESTS; i++) {
+            maxConnectContainer[i] = i + 1;
         }
         return maxConnectContainer;
     }
