@@ -1,9 +1,5 @@
 package net.codejava.swing;
 
-import java.text.ParseException;
-
-import javax.swing.text.MaskFormatter;
-
 /**
  * Helper class for creating some components in CreateGUIComponents.
  * @author Bruce Tieu
