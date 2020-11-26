@@ -18,6 +18,7 @@ public class RunLinkedInBot {
      * @param linkedInPerson The LinkedInPerson object represent any given profile.
      */
     public RunLinkedInBot(JobApplicationData jobAppData, LinkedInPerson linkedInPerson) {
+        MessageDialog.infoBox(MessageDialog.LINKEDIN_MSG, MessageDialog.SUCCESSFUL_LAUNCH_TITLE);
         LinkedInBot linkedinBot = new LinkedInBot(jobAppData, linkedInPerson);
         linkedinBot.navigateToJobPage();
         linkedinBot.login();
