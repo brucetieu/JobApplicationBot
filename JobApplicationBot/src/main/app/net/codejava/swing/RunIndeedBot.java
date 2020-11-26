@@ -31,11 +31,12 @@ public class RunIndeedBot {
      */
     public RunIndeedBot(JobApplicationData.ApplicationType appType, JobApplicationData jobAppData,
             JobIterator jobIterator, Pagination page) {
-
+        
         // Handle easy apply applications.
         if (appType == JobApplicationData.ApplicationType.EASILY_APPLY) {
             MessageDialog.infoBox(MessageDialog.INDEED_EASY_APPLY_MSG, MessageDialog.SUCCESSFUL_LAUNCH_MSG);
             IndeedApplyBot easyApp = new IndeedApplyBot(jobAppData, appType);
+            
             easyApp.navigateToJobPage();
             easyApp.searchJobs();
             jobIterator.loopThroughJob(easyApp.tryToFindElements(_INDEED_JOB_CARD),
