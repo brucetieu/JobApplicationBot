@@ -41,7 +41,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
     private List<JTextField> _listOfTextFields = new ArrayList<>();
-    private EmailValidator _emailValidator = new EmailValidator();
+    private Validator _validator = new Validator();
     private JobApplicationData _jobAppData;
     private WriteFiles _writeFiles;
     private JobIterator _jobIterator;
@@ -158,7 +158,6 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 MessageDialog.infoBox(MessageDialog.INVALID_CSV_MSG, MessageDialog.INVALID_CSV_TITLE);
                 return;
             }
-           
         } catch (IOException e2) {
             System.out.println(e2.toString());
         }
@@ -170,7 +169,7 @@ public class GlassdoorPanel extends CreateGUIComponents {
         _jobAppData.locationOfJob = _jobLoc.getText();
 
         // Validate the email.
-        if (!_emailValidator.validate(_jobAppData.email.trim())) {
+        if (!_validator.validateEmail(_jobAppData.email.trim())) {
             MessageDialog.infoBox(MessageDialog.INVALID_EMAIL_MSG, MessageDialog.INVALID_EMAIL_TITLE);
             return;
         }
