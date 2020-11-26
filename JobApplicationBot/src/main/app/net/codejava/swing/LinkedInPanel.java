@@ -76,11 +76,12 @@ public class LinkedInPanel extends CreateGUIComponents {
 
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
-                _getCompleteFields();
-                
-                // Run the LinkedInBot.
-                new RunLinkedInBot(_jobAppData, _linkedInPerson);
+
+                if (_isCompleteFields()) {
+
+                    // Run the LinkedInBot.
+                    new RunLinkedInBot(_jobAppData, _linkedInPerson);
+                }
 
             }
         });
@@ -143,7 +144,7 @@ public class LinkedInPanel extends CreateGUIComponents {
     /**
      * Get the completed info from text fields.
      */
-    private void _getCompleteFields() {
+    private boolean _isCompleteFields() {
 
         _jobAppData.email = _email.getText();
         _jobAppData.password = String.valueOf(_password.getPassword());
@@ -155,12 +156,14 @@ public class LinkedInPanel extends CreateGUIComponents {
         // Validate the email.
         if (!_validator.validateEmail(_jobAppData.email.trim())) {
             MessageDialog.infoBox(MessageDialog.INVALID_EMAIL_MSG, MessageDialog.INVALID_EMAIL_TITLE);
-            return;
+            return false;
         }
 
         _linkedInPerson.message = _messageText.getText();
         _linkedInPerson.keywords = _keywords.getText();
         LinkedInPerson.MAX_CONNECTIONS = Integer.parseInt(_maxConnects.getSelectedItem().toString());
+
+        return true;
     }
 
 }
