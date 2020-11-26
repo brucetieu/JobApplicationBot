@@ -9,16 +9,13 @@ import javax.swing.JOptionPane;
  */
 public class MessageDialog {
     
-    public static final String INDEED_EASY_APPLY_MSG = "Saving Indeed Easily Apply jobs...";
-    public static final String INDEED_NOT_EASY_APPLY_MSG = "Saving Indeed Not Easy Apply jobs...";
-    public static final String INDEED_ALL_MSG = "Saving all Indeed jobs...";
+    public static final String INDEED_EASY_APPLY_MSG = "Saving Indeed Easily Apply jobs... Click Ok to continue.";
+    public static final String INDEED_NOT_EASY_APPLY_MSG = "Saving Indeed Not Easy Apply jobs... Cick Ok to continue.";
+    public static final String INDEED_ALL_MSG = "Saving all Indeed jobs... Click Ok to continue.";
     
     public static final String SUCCESS_JOB_SAVE_MSG = "Job successfully saved. You may search again with a different config or close the app.";
     public static final String SUCCESS_MSG = "Success";
     public static final String SUCCESSFUL_LAUNCH_MSG = "Successful launch";
-    
-    public static final String INVALID_LEVER_GREENHOUSE_MSG = "Error: LEVER_GREENHOUSE is invalid. Select from EASILY_APPLY, NOT_EASY_APPLY, ALL";
-    public static final String INVALID_OPTION_MSG = "Invalid Option";
     
     public static final String INVALID_EMAIL_MSG = "Invalid email format! Try again.";
     public static final String INVALID_EMAIL_TITLE = "Invalid email";
@@ -29,9 +26,8 @@ public class MessageDialog {
     public static final String INVALID_CSV_MSG = "Path specified does not end with .csv!";
     public static final String INVALID_CSV_TITLE = "Invalid upload file format";
     
-    
-    
-    
+    public static final String INVALID_PHONE_MSG = "Incorrect phone number format! Try again.";
+    public static final String INVALID_PHONE_TITLE = "Invalid phone number format";
     
 
     /**
