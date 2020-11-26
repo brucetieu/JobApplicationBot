@@ -36,7 +36,7 @@ public class LinkedInPanel extends CreateGUIComponents {
     private JTabbedPane _tabbedPane;
     private JTextArea _messageText;
     private List<JTextField> _listOfTextFields = new ArrayList<>();
-    private EmailValidator _emailValidator = new EmailValidator();
+    private Validator _validator = new Validator();
     private JobApplicationData _jobAppData;
     private LinkedInPerson _linkedInPerson;
 
@@ -153,7 +153,7 @@ public class LinkedInPanel extends CreateGUIComponents {
         _jobAppData.linkedin = _linkedin.getText();
 
         // Validate the email.
-        if (!_emailValidator.validate(_jobAppData.email.trim())) {
+        if (!_validator.validateEmail(_jobAppData.email.trim())) {
             MessageDialog.infoBox(MessageDialog.INVALID_EMAIL_MSG, MessageDialog.INVALID_EMAIL_TITLE);
             return;
         }
