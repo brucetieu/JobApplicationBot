@@ -3,6 +3,12 @@ package net.codejava.swing;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Validate email typed in the email text field.
+ * 
+ * @author Bruce Tieu
+ *
+ */
 public class EmailValidator {
     private Pattern _pattern;
     private Matcher _matcher;
