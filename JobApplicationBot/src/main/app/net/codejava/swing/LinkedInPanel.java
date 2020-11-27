@@ -80,7 +80,12 @@ public class LinkedInPanel extends CreateGUIComponents {
                 if (_isCompleteFields()) {
 
                     // Run the LinkedInBot.
-                    new RunLinkedInBot(_jobAppData, _linkedInPerson);
+                    try {
+                        new RunLinkedInBot(_jobAppData, _linkedInPerson);
+                    } catch (Exception e1) {
+                        MessageDialog.infoBox(MessageDialog.ERROR_RUNNING_BOT_MSG,
+                                MessageDialog.ERROR_RUNNING_BOT_TITLE);
+                    }
                 }
 
             }
