@@ -41,7 +41,7 @@ public class LinkedInPanel extends CreateGUIComponents {
     private LinkedInPerson _linkedInPerson;
 
     /**
-     * Default constructor.
+     * Default constructor - initialize JobApplicationData and LinkedInPerson objects.
      */
     public LinkedInPanel() {
         _jobAppData = new JobApplicationData();
@@ -115,7 +115,7 @@ public class LinkedInPanel extends CreateGUIComponents {
     }
 
     /**
-     * Add keyword textfield.
+     * Add the keyword textfield.
      */
     private void _addKeywordsField() {
         createGoodiesTitle("Separate keywords with a comma and space", 250, 32, 300, 16);
@@ -123,6 +123,9 @@ public class LinkedInPanel extends CreateGUIComponents {
         _keywords = addTextField(401, 60, 130, 26, 10);
     }
 
+    /**
+     * Add a dropdown to generate choices for max connection requests.
+     */
     private void _addDropdownForMaxConnects() {
         addLabels("Connect requests", 285, 103, 200, 16);
         _maxConnects = addDropdown(GUIComponentsHelper.generateMaxConnectRequests(), 401, 98, 150, 27);
@@ -148,6 +151,7 @@ public class LinkedInPanel extends CreateGUIComponents {
 
     /**
      * Get the completed info from text fields.
+     * @return True, if the fields are complete without errors, false otherwise.
      */
     private boolean _isCompleteFields() {
 

@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Validate email typed in the email text field.
+ * Class to make sure the email and phone number are of the correct format.
  * 
  * @author Bruce Tieu
  *
@@ -18,10 +18,12 @@ public class Validator {
     // Common email regex.
     private static final String _EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    
+    // USA phone regex pattern.
     private static final String _PHONE_PATTERN = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$";
 
     /**
-     * Compile the email regular expression.
+     * Compile the email regular expression and phone regex.
      */
     public Validator() {
         _emailPattern = Pattern.compile(_EMAIL_PATTERN);

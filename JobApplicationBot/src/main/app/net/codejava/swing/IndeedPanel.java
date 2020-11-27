@@ -44,7 +44,7 @@ public class IndeedPanel extends CreateGUIComponents {
     private ApplicationType _appType;
 
     /**
-     * Default constructor.
+     * Default constructor - initialize the JobApplicationData.
      */
     public IndeedPanel() {
         _jobAppData = new JobApplicationData();

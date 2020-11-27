@@ -47,6 +47,10 @@ public class CharLengthDocumentListener implements DocumentListener {
     private JTextArea _changeLog;
     private String _NEWLINE = "\n";
 
+    /**
+     * Initialize the char length log.
+     * @param changeLog
+     */
     public CharLengthDocumentListener(JTextArea changeLog) {
         _changeLog = changeLog;
     }

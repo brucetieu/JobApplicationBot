@@ -53,6 +53,9 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
     private Pagination _page;
     private ApplicationType _appType;
 
+    /**
+     * Default constructor - initialize the job application data object.
+     */
     public LeverGreenhousePanel() {
         _jobAppData = new JobApplicationData();
     }
@@ -177,6 +180,9 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
         }
     }
 
+    /**
+     * Get the completed text field info.
+     */
     private void _getCompleteFields() {
 
         // Validate the csv output is actually a csv.

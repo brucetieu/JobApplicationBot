@@ -49,8 +49,8 @@ public class MessageDialog {
 
     /**
      * Generate messages for the message dialog box.
-     * @param infoMessage The message.
-     * @param titleBar The title of the message.
+     * @param infoMessage The message displayed inside the GUI.
+     * @param titleBar The title of the message displayed at the top of the GUI.
      */
     public static void infoBox(String infoMessage, String titleBar) {
         JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
