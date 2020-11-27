@@ -43,6 +43,9 @@ public class MessageDialog {
     
     public static final String INVALID_KEYWORD_TITLE = "No keyword matches found.";
     
+    public static final String ERROR_RUNNING_BOT_MSG = "Error running the bot.";
+    public static final String ERROR_RUNNING_BOT_TITLE = "Fatal Error.";
+    
 
     /**
      * Generate messages for the message dialog box.
