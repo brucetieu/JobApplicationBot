@@ -86,7 +86,11 @@ public class GlassdoorPanel extends CreateGUIComponents {
                 _getCompleteFields();
                 
                 // Run the GlassdoorBot
-                new RunGlassdoorBot(_appType, _jobAppData, _jobIterator, _page, _writeFiles);
+                try {
+                    new RunGlassdoorBot(_appType, _jobAppData, _jobIterator, _page, _writeFiles);
+                } catch (Exception e1) {
+                    MessageDialog.infoBox(MessageDialog.ERROR_RUNNING_BOT_MSG, MessageDialog.ERROR_RUNNING_BOT_TITLE);
+                }
 
             }
         });
