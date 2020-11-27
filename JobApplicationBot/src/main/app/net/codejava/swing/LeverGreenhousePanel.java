@@ -67,6 +67,7 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
         createTab("Lever / Greenhouse", _contentPane, _tabbedPane, 0, 0, 650, 650);
         _addApplicantFields();
         _addJobPreferenceFields();
+        addUploadResume(210, 475, 200, 29);
 
     }
 
@@ -216,6 +217,14 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
         // Validate the email.
         if (!_validator.validateEmail(_jobAppData.email.trim())) {
             MessageDialog.infoBox(MessageDialog.INVALID_EMAIL_MSG, MessageDialog.INVALID_EMAIL_TITLE);
+            return;
+        }
+        
+        // Verify a resume has been uploaded.
+        try {
+            JobApplicationData.resumePath = getResumeFile().toString();
+        } catch (Exception e1) {
+            MessageDialog.infoBox(MessageDialog.NO_RESUME_MSG, MessageDialog.NO_RESUME_TITLE);
             return;
         }
 
