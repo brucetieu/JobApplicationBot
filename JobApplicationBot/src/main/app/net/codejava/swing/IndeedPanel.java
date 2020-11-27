@@ -19,7 +19,6 @@ import com.btieu.JobApplicationBot.JobPostingData;
 import com.btieu.JobApplicationBot.Pagination;
 import com.btieu.JobApplicationBot.WriteFiles;
 
-
 /**
  * This class creates the Indeed panel.
  * 
@@ -69,26 +68,29 @@ public class IndeedPanel extends CreateGUIComponents {
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
-        
+
         // Disable button by default.
         launchButton.setEnabled(false);
-        
+
         // Enable launch button if all TextFields are filled.
         _validateTextFields(launchButton);
-        
+
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
                 _getCompleteFields();
-                
+
                 // Run the IndeedBot.
-                new RunIndeedBot(_appType, _jobAppData, _jobIterator, _page);
+                try {
+                    new RunIndeedBot(_appType, _jobAppData, _jobIterator, _page);
+                } catch (Exception e1) {
+                    MessageDialog.infoBox(MessageDialog.ERROR_RUNNING_BOT_MSG, MessageDialog.ERROR_RUNNING_BOT_TITLE);
+                }
             }
         });
 
     }
 
-    
     /**
      * Add Job preferences fields.
      */
@@ -106,12 +108,12 @@ public class IndeedPanel extends CreateGUIComponents {
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(_STARTING_PAGE), 280, 156, 150, 27);
         _csvOutputPath = addTextField(280, 192, 180, 26, 10);
     }
-    
+
     /**
      * Check if the text fields are filled by listening to each one.
      */
     private void _validateTextFields(JButton launchButton) {
-        
+
         // Add text field to the list of text fields.
         _listOfTextFields.add(_whatJob);
         _listOfTextFields.add(_jobLoc);
@@ -122,9 +124,9 @@ public class IndeedPanel extends CreateGUIComponents {
             tf.getDocument().addDocumentListener(new TextFieldListener(_listOfTextFields, launchButton));
         }
     }
-    
+
     /**
-     * Get the completed fields. 
+     * Get the completed fields.
      */
     private void _getCompleteFields() {
         _writeFiles = null;
@@ -133,12 +135,11 @@ public class IndeedPanel extends CreateGUIComponents {
         try {
             if (_csvOutputPath.getText().endsWith(".csv") && _csvOutputPath.getText().length() > 4) {
                 _writeFiles = new WriteFiles(_csvOutputPath.getText());
-            }
-            else {
+            } else {
                 MessageDialog.infoBox(MessageDialog.INVALID_CSV_MSG, MessageDialog.INVALID_CSV_TITLE);
                 return;
             }
-           
+
         } catch (IOException e2) {
             System.out.println(e2.toString());
         }
@@ -146,7 +147,7 @@ public class IndeedPanel extends CreateGUIComponents {
         _jobAppData.platformUrl = _INDEED_URL;
         _jobAppData.whatJob = _whatJob.getText();
         _jobAppData.locationOfJob = _jobLoc.getText();
-        
+
         // Verify a resume has been uploaded.
         try {
             JobApplicationData.resumePath = getResumeFile().toString();
@@ -154,7 +155,7 @@ public class IndeedPanel extends CreateGUIComponents {
             MessageDialog.infoBox(MessageDialog.NO_RESUME_MSG, MessageDialog.NO_RESUME_TITLE);
             return;
         }
-        
+
         JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
         _appType = (ApplicationType) _appBox.getSelectedItem();
         _jobIterator = new JobIterator(_writeFiles, _appType);
