@@ -41,7 +41,19 @@ public class GlassdoorPanel extends CreateGUIComponents {
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
     private List<JTextField> _listOfTextFields = new ArrayList<>();
+    private Validator _validator = new Validator();
+    private JobApplicationData _jobAppData;
+    private WriteFiles _writeFiles;
+    private JobIterator _jobIterator;
+    private Pagination _page;
+    private ApplicationType _appType;
 
+    /**
+     * Initialize a JobApplicationData.
+     */
+    public GlassdoorPanel() {
+        _jobAppData = new JobApplicationData();
+    }
     /**
      * Create the Glassdoor panel.
      * 
@@ -55,46 +67,30 @@ public class GlassdoorPanel extends CreateGUIComponents {
         addUploadResume(210, 475, 200, 29);
     }
 
-
     /**
      * This method launches the browser and grabs all information from filled out
      * fields.
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
-        
+
         // Disable button by default.
         launchButton.setEnabled(false);
-        
+
         // Enable launch button if all TextFields are filled.
         _validateTextFields(launchButton);
 
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JobApplicationData jobAppData = new JobApplicationData();
-                WriteFiles writeFiles = null;
+                           
+                _getCompleteFields();
                 
-                try {
-                    writeFiles = new WriteFiles(_csvOutputPath.getText());
-                } catch (IOException e2) {
-                    e2.printStackTrace();
-                }
-
-                jobAppData.platformUrl = _GLASSDOOR_URL;
-                jobAppData.email = _email.getText();
-                jobAppData.password = String.valueOf(_password.getPassword());
-                jobAppData.whatJob = _whatJob.getText();
-                jobAppData.locationOfJob = _jobLoc.getText();
-                
-                JobApplicationData.resumePath = getResumeFile().toString();
-               
-                JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
-                ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
-                JobIterator jobIterator = new JobIterator(writeFiles, appType);
-                Pagination page = new Pagination(jobAppData);
-
                 // Run the GlassdoorBot
-                new RunGlassdoorBot(appType, jobAppData, jobIterator, page, writeFiles);
+                try {
+                    new RunGlassdoorBot(_appType, _jobAppData, _jobIterator, _page, _writeFiles);
+                } catch (Exception e1) {
+                    MessageDialog.infoBox(MessageDialog.ERROR_RUNNING_BOT_MSG, MessageDialog.ERROR_RUNNING_BOT_TITLE);
+                }
 
             }
         });
@@ -132,23 +128,69 @@ public class GlassdoorPanel extends CreateGUIComponents {
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(_STARTING_PAGE), 280, 156, 150, 27);
         _csvOutputPath = addTextField(280, 192, 180, 26, 10);
     }
-    
+
     /**
      * Check if the text fields are completed by listening to each one.
      */
     private void _validateTextFields(JButton launchButton) {
-        
+
         // Add text field to the list of text fields.
         _listOfTextFields.add(_email);
         _listOfTextFields.add(_password);
         _listOfTextFields.add(_whatJob);
         _listOfTextFields.add(_jobLoc);
         _listOfTextFields.add(_csvOutputPath);
-        
+
         // Disable launch button if any text fields are blank.
         for (JTextField tf : _listOfTextFields) {
             tf.getDocument().addDocumentListener(new TextFieldListener(_listOfTextFields, launchButton));
         }
+    }
+    
+    /**
+     * Get the completed text field info.
+     */
+    private void _getCompleteFields() {
+        _writeFiles = null;
+        
+        // Validate the csv output is actually a csv.
+        try {
+            if (_csvOutputPath.getText().endsWith(".csv") && _csvOutputPath.getText().length() > 4) {
+                _writeFiles = new WriteFiles(_csvOutputPath.getText());
+            }
+            else {
+                MessageDialog.infoBox(MessageDialog.INVALID_CSV_MSG, MessageDialog.INVALID_CSV_TITLE);
+                return;
+            }
+        } catch (IOException e2) {
+            System.out.println(e2.toString());
+        }
+        
+        _jobAppData.platformUrl = _GLASSDOOR_URL;
+        _jobAppData.email = _email.getText();
+        _jobAppData.password = String.valueOf(_password.getPassword());
+        _jobAppData.whatJob = _whatJob.getText();
+        _jobAppData.locationOfJob = _jobLoc.getText();
+
+        // Validate the email.
+        if (!_validator.validateEmail(_jobAppData.email.trim())) {
+            MessageDialog.infoBox(MessageDialog.INVALID_EMAIL_MSG, MessageDialog.INVALID_EMAIL_TITLE);
+            return;
+        }
+
+        // Verify a resume has been uploaded.
+        try {
+            JobApplicationData.resumePath = getResumeFile().toString();
+        } catch (Exception e1) {
+            MessageDialog.infoBox(MessageDialog.NO_RESUME_MSG, MessageDialog.NO_RESUME_TITLE);
+            return;
+        }
+
+        JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
+        _appType = (ApplicationType) _appBox.getSelectedItem();
+        _jobIterator = new JobIterator(_writeFiles, _appType);
+        _page = new Pagination(_jobAppData);
+        
     }
 
 }

@@ -35,6 +35,7 @@ public class RunGlassdoorBot {
 
         // Handle easy apply applications.
         if (appType == JobApplicationData.ApplicationType.EASILY_APPLY) {
+            MessageDialog.infoBox(MessageDialog.GLASSDOOR_EASY_APPLY_MSG, MessageDialog.SUCCESSFUL_LAUNCH_TITLE);
             GlassdoorApplyBot easyApp = new GlassdoorApplyBot(jobAppData, appType);
             easyApp.navigateToJobPage();
             easyApp.login();
@@ -44,9 +45,11 @@ public class RunGlassdoorBot {
 
                         easyApp.saveEasyApplyJobs(index, easyApp.tryToFindElements(_GLASSDOOR_JOB_CARD));
                     }, (int pageNum) -> page.goToNextGlassdoorPage(pageNum));
+            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_TITLE);
 
             // Handle all applications.
         } else if (appType == JobApplicationData.ApplicationType.ALL) {
+            MessageDialog.infoBox(MessageDialog.GLASSDOOR_ALL_MSG, MessageDialog.SUCCESSFUL_LAUNCH_TITLE);
             GlassdoorApplyBot greedy = new GlassdoorApplyBot(jobAppData, appType);
             greedy.navigateToJobPage();
             greedy.login();
@@ -56,9 +59,11 @@ public class RunGlassdoorBot {
 
                         greedy.saveAllJobs(index, greedy.tryToFindElements(_GLASSDOOR_JOB_CARD));
                     }, (int pageNum) -> page.goToNextGlassdoorPage(pageNum));
-
+            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_TITLE);
+            
             // Handle not easy apply apps.
         } else if (appType == JobApplicationData.ApplicationType.NOT_EASY_APPLY) {
+            MessageDialog.infoBox(MessageDialog.GLASSDOOR_EASY_APPLY_MSG, MessageDialog.SUCCESSFUL_LAUNCH_TITLE);
             GlassdoorApplyBot notEa = new GlassdoorApplyBot(jobAppData, appType);
             notEa.navigateToJobPage();
             notEa.login();
@@ -68,6 +73,7 @@ public class RunGlassdoorBot {
 
                         notEa.saveNonEasyApplyJobs(index, notEa.tryToFindElements(_GLASSDOOR_JOB_CARD));
                     }, (int pageNum) -> page.goToNextGlassdoorPage(pageNum));
+            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_TITLE);
         }
     }
 

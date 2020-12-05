@@ -31,11 +31,12 @@ public class RunIndeedBot {
      */
     public RunIndeedBot(JobApplicationData.ApplicationType appType, JobApplicationData jobAppData,
             JobIterator jobIterator, Pagination page) {
-
+        
         // Handle easy apply applications.
         if (appType == JobApplicationData.ApplicationType.EASILY_APPLY) {
-            MessageDialog.infoBox(MessageDialog.INDEED_EASY_APPLY_MSG, MessageDialog.SUCCESSFUL_LAUNCH_MSG);
+            MessageDialog.infoBox(MessageDialog.INDEED_EASY_APPLY_MSG, MessageDialog.SUCCESSFUL_LAUNCH_TITLE);
             IndeedApplyBot easyApp = new IndeedApplyBot(jobAppData, appType);
+            
             easyApp.navigateToJobPage();
             easyApp.searchJobs();
             jobIterator.loopThroughJob(easyApp.tryToFindElements(_INDEED_JOB_CARD),
@@ -44,11 +45,11 @@ public class RunIndeedBot {
                         easyApp.saveEasyApplyJobs(index,
                                 easyApp.tryToFindElements(_INDEED_JOB_CARD));
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
-            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_MSG);
+            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_TITLE);
 
             // Handle all applications.
         } else if (appType == JobApplicationData.ApplicationType.ALL) {
-            MessageDialog.infoBox(MessageDialog.INDEED_ALL_MSG, MessageDialog.SUCCESSFUL_LAUNCH_MSG);
+            MessageDialog.infoBox(MessageDialog.INDEED_ALL_MSG, MessageDialog.SUCCESSFUL_LAUNCH_TITLE);
             IndeedApplyBot greedy = new IndeedApplyBot(jobAppData, appType);
             greedy.navigateToJobPage();
             greedy.searchJobs();
@@ -57,11 +58,11 @@ public class RunIndeedBot {
 
                         greedy.saveAllJobs(index, greedy.tryToFindElements(_INDEED_JOB_CARD));
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
-            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_MSG);
+            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_TITLE);
             
             // Handle not easy apply apps.
         } else if (appType == JobApplicationData.ApplicationType.NOT_EASY_APPLY) {
-            MessageDialog.infoBox(MessageDialog.INDEED_NOT_EASY_APPLY_MSG, MessageDialog.SUCCESSFUL_LAUNCH_MSG);
+            MessageDialog.infoBox(MessageDialog.INDEED_NOT_EASY_APPLY_MSG, MessageDialog.SUCCESSFUL_LAUNCH_TITLE);
             IndeedApplyBot notEa = new IndeedApplyBot(jobAppData, appType);
             notEa.navigateToJobPage();
             notEa.searchJobs();
@@ -71,7 +72,7 @@ public class RunIndeedBot {
                         notEa.saveNonEasyApplyJobs(index,
                                 notEa.tryToFindElements(_INDEED_JOB_CARD));
                     }, (int pageNum) -> page.goToNextIndeedPage(pageNum));
-            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_MSG);
+            MessageDialog.infoBox(MessageDialog.SUCCESS_JOB_SAVE_MSG, MessageDialog.SUCCESS_TITLE);
         }
     }
 }

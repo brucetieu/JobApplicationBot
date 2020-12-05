@@ -19,7 +19,6 @@ import com.btieu.JobApplicationBot.JobPostingData;
 import com.btieu.JobApplicationBot.Pagination;
 import com.btieu.JobApplicationBot.WriteFiles;
 
-
 /**
  * This class creates the Indeed panel.
  * 
@@ -38,11 +37,17 @@ public class IndeedPanel extends CreateGUIComponents {
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
     private List<JTextField> _listOfTextFields = new ArrayList<>();
+    private JobApplicationData _jobAppData;
+    private WriteFiles _writeFiles;
+    private JobIterator _jobIterator;
+    private Pagination _page;
+    private ApplicationType _appType;
 
     /**
-     * Default constructor.
+     * Default constructor - initialize the JobApplicationData.
      */
     public IndeedPanel() {
+        _jobAppData = new JobApplicationData();
     }
 
     /**
@@ -63,43 +68,29 @@ public class IndeedPanel extends CreateGUIComponents {
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
-        
+
         // Disable button by default.
         launchButton.setEnabled(false);
-        
+
         // Enable launch button if all TextFields are filled.
         _validateTextFields(launchButton);
-        
+
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                JobApplicationData jobAppData = new JobApplicationData();
-                WriteFiles writeFiles = null;
-
-                try {
-                    writeFiles = new WriteFiles(_csvOutputPath.getText());
-                } catch (IOException e2) {
-                    System.out.println(e2.toString());
-                }
-
-                jobAppData.platformUrl = _INDEED_URL;
-                jobAppData.whatJob = _whatJob.getText();
-                jobAppData.locationOfJob = _jobLoc.getText();
-                JobApplicationData.resumePath = getResumeFile().toString();
-
-                JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
-                ApplicationType appType = (ApplicationType) _appBox.getSelectedItem();
-                JobIterator jobIterator = new JobIterator(writeFiles, appType);
-                Pagination page = new Pagination(jobAppData);
+                _getCompleteFields();
 
                 // Run the IndeedBot.
-                new RunIndeedBot(appType, jobAppData, jobIterator, page);
+                try {
+                    new RunIndeedBot(_appType, _jobAppData, _jobIterator, _page);
+                } catch (Exception e1) {
+                    MessageDialog.infoBox(MessageDialog.ERROR_RUNNING_BOT_MSG, MessageDialog.ERROR_RUNNING_BOT_TITLE);
+                }
             }
         });
 
     }
 
-    
     /**
      * Add Job preferences fields.
      */
@@ -117,12 +108,12 @@ public class IndeedPanel extends CreateGUIComponents {
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(_STARTING_PAGE), 280, 156, 150, 27);
         _csvOutputPath = addTextField(280, 192, 180, 26, 10);
     }
-    
+
     /**
      * Check if the text fields are filled by listening to each one.
      */
     private void _validateTextFields(JButton launchButton) {
-        
+
         // Add text field to the list of text fields.
         _listOfTextFields.add(_whatJob);
         _listOfTextFields.add(_jobLoc);
@@ -134,6 +125,41 @@ public class IndeedPanel extends CreateGUIComponents {
         }
     }
 
+    /**
+     * Get the completed fields.
+     */
+    private void _getCompleteFields() {
+        _writeFiles = null;
 
+        // Verify the csv output is actually a csv.
+        try {
+            if (_csvOutputPath.getText().endsWith(".csv") && _csvOutputPath.getText().length() > 4) {
+                _writeFiles = new WriteFiles(_csvOutputPath.getText());
+            } else {
+                MessageDialog.infoBox(MessageDialog.INVALID_CSV_MSG, MessageDialog.INVALID_CSV_TITLE);
+                return;
+            }
+
+        } catch (IOException e2) {
+            System.out.println(e2.toString());
+        }
+
+        _jobAppData.platformUrl = _INDEED_URL;
+        _jobAppData.whatJob = _whatJob.getText();
+        _jobAppData.locationOfJob = _jobLoc.getText();
+
+        // Verify a resume has been uploaded.
+        try {
+            JobApplicationData.resumePath = getResumeFile().toString();
+        } catch (Exception e1) {
+            MessageDialog.infoBox(MessageDialog.NO_RESUME_MSG, MessageDialog.NO_RESUME_TITLE);
+            return;
+        }
+
+        JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
+        _appType = (ApplicationType) _appBox.getSelectedItem();
+        _jobIterator = new JobIterator(_writeFiles, _appType);
+        _page = new Pagination(_jobAppData);
+    }
 
 }

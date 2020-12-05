@@ -1,11 +1,11 @@
 package net.codejava.swing;
 
 import com.btieu.JobApplicationBot.*;
+import com.btieu.JobApplicationBot.JobApplicationData.ApplicationType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 /**
- * Add a panel for Lever Greenhouse jobs to distinguish it from the Glassdoor jobs.
+ * Add a panel for Lever Greenhouse jobs to distinguish it from the Glassdoor
+ * jobs.
+ * 
  * @author Bruce Tieu
  *
  */
@@ -44,6 +46,19 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
     private JComboBox<Integer> _pageNumBox;
     private JTabbedPane _tabbedPane;
     private List<JTextField> _listOfTextFields = new ArrayList<>();
+    private Validator _validator = new Validator();
+    private JobApplicationData _jobAppData;
+    private WriteFiles _writeFiles;
+    private JobIterator _jobIterator;
+    private Pagination _page;
+    private ApplicationType _appType;
+
+    /**
+     * Default constructor - initialize the job application data object.
+     */
+    public LeverGreenhousePanel() {
+        _jobAppData = new JobApplicationData();
+    }
 
     /**
      * Create the Glassdoor panel.
@@ -55,7 +70,8 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
         createTab("Lever / Greenhouse", _contentPane, _tabbedPane, 0, 0, 650, 650);
         _addApplicantFields();
         _addJobPreferenceFields();
-       
+        addUploadResume(210, 475, 200, 29);
+
     }
 
     /**
@@ -64,53 +80,24 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
      */
     public void launchApp() {
         JButton launchButton = addButton("Launch", 245, 525, 117, 29);
-        
+
         // Disable button by default.
         launchButton.setEnabled(false);
-        
+
         // Enable launch button if all TextFields are filled.
         _validateTextFields(launchButton);
-        
+
         launchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JobApplicationData jobAppData = new JobApplicationData();
-                WriteFiles writeFiles = null;
-                try {
-                    writeFiles = new WriteFiles(_csvOutputPath.getText());
-                } catch (IOException e2) {
-                    e2.printStackTrace();
-                }
-                jobAppData.platformUrl = _GLASSDOOR_URL;
                 
-                jobAppData.firstname = _firstName.getText();
-                jobAppData.lastname = _lastName.getText();
-                jobAppData.fullname = _fullName.getText();
-                jobAppData.email = _email.getText();
-                jobAppData.password = String.valueOf(_password.getPassword());
-                jobAppData.school = _school.getText();
-                jobAppData.location = _location.getText();
-                jobAppData.currentCompany = _company.getText();
-                jobAppData.linkedin = _linkedIn.getText();
-                jobAppData.github = _github.getText();
-                jobAppData.portfolio = _portfolio.getText();
-                jobAppData.whatJob = _whatJob.getText();
-                jobAppData.locationOfJob = _jobLoc.getText();
-
-                jobAppData.phone = null;
-                try {
-                    jobAppData.phone = GUIComponentsHelper.phoneNumFormatter(_phoneNumber.getText());
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-               
-                JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
-                JobApplicationData.ApplicationType appType = JobApplicationData.ApplicationType.LEVER_GREENHOUSE;
-                JobIterator jobIterator = new JobIterator(writeFiles, appType);
-                Pagination page = new Pagination(jobAppData);
+                _getCompleteFields();
 
                 // Run the LeverGreenhouseBot
-                new RunLeverGreenhouseBot(appType, jobAppData, jobIterator, page, writeFiles);
-
+                try {
+                    new RunLeverGreenhouseBot(_appType, _jobAppData, _jobIterator, _page, _writeFiles);
+                } catch (Exception e1) {
+                    MessageDialog.infoBox(MessageDialog.ERROR_RUNNING_BOT_MSG, MessageDialog.ERROR_RUNNING_BOT_TITLE);
+                }
             }
         });
 
@@ -167,12 +154,12 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
         _pageNumBox = addDropdown(GUIComponentsHelper.generatePageNumbers(0), 401, 156, 150, 27);
         _csvOutputPath = addTextField(401, 192, 180, 26, 10);
     }
-    
+
     /**
      * Check if the text fields are completed by listening to each one.
      */
     private void _validateTextFields(JButton launchButton) {
-        
+
         // Add text field to the list of text fields.
         _listOfTextFields.add(_firstName);
         _listOfTextFields.add(_lastName);
@@ -193,5 +180,64 @@ public class LeverGreenhousePanel extends CreateGUIComponents {
         }
     }
 
+    /**
+     * Get the completed text field info.
+     */
+    private void _getCompleteFields() {
+
+        // Validate the csv output is actually a csv.
+        try {
+            if (_csvOutputPath.getText().endsWith(".csv") && _csvOutputPath.getText().length() > 4) {
+                _writeFiles = new WriteFiles(_csvOutputPath.getText());
+            } else {
+                MessageDialog.infoBox(MessageDialog.INVALID_CSV_MSG, MessageDialog.INVALID_CSV_TITLE);
+                return;
+            }
+        } catch (IOException e2) {
+            System.out.println(e2.toString());
+        }
+
+        _jobAppData.platformUrl = _GLASSDOOR_URL;
+
+        _jobAppData.firstname = _firstName.getText();
+        _jobAppData.lastname = _lastName.getText();
+        _jobAppData.fullname = _fullName.getText();
+        _jobAppData.phone = _phoneNumber.getText();
+        _jobAppData.email = _email.getText();
+        _jobAppData.password = String.valueOf(_password.getPassword());
+        _jobAppData.school = _school.getText();
+        _jobAppData.location = _location.getText();
+        _jobAppData.currentCompany = _company.getText();
+        _jobAppData.linkedin = _linkedIn.getText();
+        _jobAppData.github = _github.getText();
+        _jobAppData.portfolio = _portfolio.getText();
+        _jobAppData.whatJob = _whatJob.getText();
+        _jobAppData.locationOfJob = _jobLoc.getText();
+
+        // Validate phone number.
+        if (!_validator.validatePhone(_jobAppData.phone.trim())) {
+            MessageDialog.infoBox(MessageDialog.INVALID_PHONE_MSG, MessageDialog.INVALID_PHONE_TITLE);
+            return;
+        }
+
+        // Validate the email.
+        if (!_validator.validateEmail(_jobAppData.email.trim())) {
+            MessageDialog.infoBox(MessageDialog.INVALID_EMAIL_MSG, MessageDialog.INVALID_EMAIL_TITLE);
+            return;
+        }
+        
+        // Verify a resume has been uploaded.
+        try {
+            JobApplicationData.resumePath = getResumeFile().toString();
+        } catch (Exception e1) {
+            MessageDialog.infoBox(MessageDialog.NO_RESUME_MSG, MessageDialog.NO_RESUME_TITLE);
+            return;
+        }
+
+        JobPostingData.pagesToScrape = Integer.parseInt(_pageNumBox.getSelectedItem().toString());
+        _appType = JobApplicationData.ApplicationType.LEVER_GREENHOUSE;
+        _jobIterator = new JobIterator(_writeFiles, _appType);
+        _page = new Pagination(_jobAppData);
+    }
 
 }

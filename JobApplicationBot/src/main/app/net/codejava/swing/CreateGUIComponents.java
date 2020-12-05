@@ -52,6 +52,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AbstractDocument;
 
 /**
@@ -77,6 +78,7 @@ public class CreateGUIComponents extends JFrame {
     private SingletonTab _singletonTab;
     private JTextArea _textArea;
     private JTextArea _changeLog;
+    private FileNameExtensionFilter _filter;
 
 
     /**
@@ -86,7 +88,9 @@ public class CreateGUIComponents extends JFrame {
         _panel = new JPanel();
         _singletonTab = SingletonTab.getInstance();
         _openFileChooser = new JFileChooser();
+        _filter = new FileNameExtensionFilter(null, "pdf");
         this._openFileChooser.setCurrentDirectory(new File("./"));
+        this._openFileChooser.setFileFilter(_filter);
 
     }
     

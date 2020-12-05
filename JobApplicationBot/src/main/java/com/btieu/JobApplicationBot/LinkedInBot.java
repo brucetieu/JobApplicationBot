@@ -8,6 +8,8 @@ import java.util.Queue;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import net.codejava.swing.MessageDialog;
+
 /**
  * Linkedin connections bot. Connect with the people based off the "People You
  * May Know" or "People Who Also Viewed" sections in LinkedIn. Send a custom
@@ -135,13 +137,21 @@ public class LinkedInBot extends Bot {
                     }
 
                     // Stop after connecting with x number of people.
-                    if (connections == LinkedInPerson.MAX_CONNECTIONS)
+                    if (connections == LinkedInPerson.MAX_CONNECTIONS) {
+                        MessageDialog.infoBox(MessageDialog.SUCCESSFUL_CONNECT_REQUEST, MessageDialog.SUCCESS_TITLE);
                         break;
+                    }
                 }
 
             } catch (Exception e) {
                 System.out.println("Some error");
             }
+        }
+        
+        // If no results, then output a message to GUI.
+        if (_visitedProfiles.isEmpty()) {
+            MessageDialog.infoBox(MessageDialog.LINKEDIN_NO_RESULTS_MSG, MessageDialog.INVALID_KEYWORD_TITLE);
+            return;
         }
     }
 
